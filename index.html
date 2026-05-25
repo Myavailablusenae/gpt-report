@@ -253,6 +253,153 @@
       pointer-events: all;
     }
 
+    /* ── Reading Progress Bar ── */
+    .progress-bar-container {
+      position: fixed;
+      top: 56px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: transparent;
+      z-index: 201;
+      pointer-events: none;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--accent2);
+      transition: width 0.1s ease-out;
+    }
+
+    /* ── SVG Icons ── */
+    .icon {
+      width: 1.1em;
+      height: 1.1em;
+      vertical-align: -0.15em;
+      stroke: currentColor;
+      stroke-width: 2px;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
+
+    .icon-star {
+      fill: currentColor;
+      stroke: none;
+    }
+
+    /* ── Accordion / Details UI ── */
+    details.technical-deep-dive,
+    details.insight-box {
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      margin: 2rem 0;
+      background: var(--paper);
+      overflow: hidden;
+      transition: border-color 0.3s ease;
+    }
+
+    details.technical-deep-dive:hover {
+      border-color: var(--accent2);
+    }
+
+    details.insight-box {
+      background: #fdf6ea;
+      border: 1px solid #d4b896;
+      border-left: 4px solid #d97706;
+      border-radius: 4px;
+    }
+
+    details.insight-box:hover {
+      border-color: #d97706;
+    }
+
+    details summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 1.5rem;
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+      outline: none;
+    }
+
+    details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details.insight-box summary {
+      padding: 0.8rem 1.2rem;
+      color: #92400e;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .summary-title {
+      display: flex;
+      align-items: center;
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    details.insight-box .summary-title {
+      font-family: var(--body);
+      font-size: 0.88rem;
+      color: #92400e;
+    }
+
+    details summary .chevron {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2px;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 0.3s ease-in-out;
+      flex-shrink: 0;
+      color: var(--ink-light);
+    }
+
+    details.insight-box summary .chevron {
+      width: 16px;
+      height: 16px;
+      color: #d97706;
+    }
+
+    details[open] summary .chevron {
+      transform: rotate(180deg);
+    }
+
+    /* Content Wrapper transition using heights via JS */
+    details .details-content {
+      height: 0;
+      overflow: hidden;
+      transition: height 0.3s ease-in-out;
+    }
+
+    details[open]:not(.collapsing) .details-content {
+      height: auto;
+    }
+
+    details .details-inner {
+      padding: 0 1.5rem 1.5rem;
+    }
+
+    details.insight-box .details-inner {
+      padding: 0 1.2rem 1rem;
+    }
+
+    details.mask-viz .details-inner {
+      overflow-x: auto;
+    }
+
     /* ── Hero 區塊 ── */
     .hero {
       margin-top: 56px;
@@ -623,7 +770,6 @@
       padding: 1.8rem;
       border: 1px solid #e0e9f5;
       margin: 1.8rem 0;
-      overflow-x: auto;
     }
 
     .mask-grid-wrapper {
@@ -829,6 +975,10 @@
     </button>
   </nav>
 
+  <div class="progress-bar-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
   <div class="overlay" id="overlay"></div>
   <aside class="drawer" id="drawer" aria-hidden="true">
     <p class="drawer-label">目錄 / Contents</p>
@@ -872,9 +1022,15 @@
 
       <div class="evo-viz">
         <div class="evo-title-wrap">
-          <span class="evo-badge">📐 Transformer 架構演化樹</span>
+          <span class="evo-badge">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M21.3 8.11 15.89 2.7a1 1 0 0 0-1.41 0L3.29 13.89a1 1 0 0 0 0 1.41l5.41 5.41a1 1 0 0 0 1.41 0L21.3 9.52a1 1 0 0 0 0-1.41Z"/><path d="m16 6-3 3"/><path d="m14 8-1.5-1.5"/><path d="m19 11-3 3"/><path d="m17 13-1.5-1.5"/><path d="m12 14-3 3"/><path d="m10 16-1.5-1.5"/></svg>
+            Transformer 架構演化樹
+          </span>
         </div>
-        <div class="evo-root">⚛️ Transformer (2017)</div>
+        <div class="evo-root">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12a15.3 15.3 0 0 1 10-4 15.3 15.3 0 0 1 10 4 15.3 15.3 0 0 1-10 4 15.3 15.3 0 0 1-10-4z"/></svg>
+          Transformer (2017)
+        </div>
         <div class="evo-branches">
           <div class="evo-line"></div>
           <div class="evo-line"></div>
@@ -888,7 +1044,16 @@
               <div style="font-size: 1.5rem; font-weight: bold;">BERT</div>
             </div>
             <div class="evo-card-body">
-              <div class="evo-tags"><span class="evo-tag">🔍 雙向注意力</span><span class="evo-tag">📖 MLM</span></div>
+              <div class="evo-tags">
+                <span class="evo-tag">
+                  <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                  雙向注意力
+                </span>
+                <span class="evo-tag">
+                  <svg class="icon" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                  MLM
+                </span>
+              </div>
               <p style="font-size: 0.85rem;">擅長<strong>「理解」</strong>：分類、實體辨識</p>
             </div>
           </div>
@@ -898,7 +1063,16 @@
               <div style="font-size: 1.5rem; font-weight: bold;">T5</div>
             </div>
             <div class="evo-card-body">
-              <div class="evo-tags"><span class="evo-tag">🔄 雙向+自回歸</span><span class="evo-tag">🔁 Seq2Seq</span></div>
+              <div class="evo-tags">
+                <span class="evo-tag">
+                  <svg class="icon" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M16 3h5v5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 21H3v-5"/></svg>
+                  雙向+自回歸
+                </span>
+                <span class="evo-tag">
+                  <svg class="icon" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>
+                  Seq2Seq
+                </span>
+              </div>
               <p style="font-size: 0.85rem;">擅長<strong>「轉換」</strong>：翻譯、摘要</p>
             </div>
           </div>
@@ -908,9 +1082,21 @@
               <div style="font-size: 1.5rem; font-weight: bold;">GPT</div>
             </div>
             <div class="evo-card-body">
-              <div class="evo-tags"><span class="evo-tag">🎯 自回歸</span><span class="evo-tag">🔒 因果遮罩</span></div>
+              <div class="evo-tags">
+                <span class="evo-tag">
+                  <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                  自回歸
+                </span>
+                <span class="evo-tag">
+                  <svg class="icon" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  因果遮罩
+                </span>
+              </div>
               <p style="font-size: 0.85rem;">擅長<strong>「生成」</strong>：對話、推理、程式碼</p>
-              <div style="font-size: 0.75rem; color: #c0392b; margin-top: 10px; font-weight: bold;">⭐ 本報告重點</div>
+              <div style="font-size: 0.75rem; color: #c0392b; margin-top: 10px; font-weight: bold; display: flex; align-items: center; gap: 4px;">
+                <svg class="icon icon-star" viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="margin: 0; color: #c0392b;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                本報告重點
+              </div>
             </div>
           </div>
         </div>
@@ -936,138 +1122,166 @@
         $Q$（Query）、$K$（Key）、$V$（Value）矩陣進行動態權重計算。</p>
 
       <!-- 改善版：注意力機制五步核心流程 -->
-      <div class="attention-mechanism">
-        <h3 style="font-size: 1.1rem; margin-bottom: 1.2rem;">Scaled Dot-Product Attention 的五步核心</h3>
-
-        <!-- 數學公式置頂 -->
-        <div class="formula-block">
-          $$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
-        </div>
-
-        <!-- 層次化流程：分成兩組 -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem; margin: 2rem 0;">
-
-          <!-- 左欄：核心計算層 -->
-          <div>
-            <p
-              style="font-size: 0.85rem; color: var(--ink-light); font-weight: 600; margin-bottom: 1rem; letter-spacing: 0.08em;">
-              核心計算層</p>
-
-            <div class="flow-item" style="border-left: 3px solid #3b82f6; padding-left: 1rem; margin-bottom: 1.2rem;">
-              <div
-                style="font-family: var(--mono); font-size: 0.75rem; color: #3b82f6; margin-bottom: 0.3rem; font-weight: 600;">
-                步驟 1</div>
-              <h4 style="font-size: 0.95rem; margin-bottom: 0.4rem;">線性投影：得到 Q、K、V</h4>
-              <p style="font-size: 0.85rem; color: var(--ink-mid); line-height: 1.6;">輸入向量經三個獨立權重矩陣變換，產生
-                Query（查詢）、Key（鍵）、Value（值）三個表示。</p>
+      <details class="technical-deep-dive attention-mechanism">
+        <summary>
+          <span class="summary-title">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M21.3 8.11 15.89 2.7a1 1 0 0 0-1.41 0L3.29 13.89a1 1 0 0 0 0 1.41l5.41 5.41a1 1 0 0 0 1.41 0L21.3 9.52a1 1 0 0 0 0-1.41Z"/><path d="m16 6-3 3"/><path d="m14 8-1.5-1.5"/><path d="m19 11-3 3"/><path d="m17 13-1.5-1.5"/><path d="m12 14-3 3"/><path d="m10 16-1.5-1.5"/></svg>
+            Scaled Dot-Product Attention 的五步核心
+          </span>
+          <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="details-content">
+          <div class="details-inner">
+            <!-- 數學公式置頂 -->
+            <div class="formula-block">
+              $$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
             </div>
 
-            <div class="flow-item" style="border-left: 3px solid #06b6d4; padding-left: 1rem; margin-bottom: 1.2rem;">
-              <div
-                style="font-family: var(--mono); font-size: 0.75rem; color: #06b6d4; margin-bottom: 0.3rem; font-weight: 600;">
-                步驟 2</div>
-              <h4 style="font-size: 0.95rem; margin-bottom: 0.4rem;">點積相似度：計算 $QK^T$</h4>
-              <p style="font-size: 0.85rem; color: var(--ink-mid); line-height: 1.6;">Query 與 Key
-                的點積得到「關聯分數矩陣」，數值越大代表語義相關性越強。</p>
+            <!-- 層次化流程：分成兩組 -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem; margin: 2rem 0;">
+
+              <!-- 左欄：核心計算層 -->
+              <div>
+                <p
+                  style="font-size: 0.85rem; color: var(--ink-light); font-weight: 600; margin-bottom: 1rem; letter-spacing: 0.08em;">
+                  核心計算層</p>
+
+                <div class="flow-item" style="border-left: 3px solid #3b82f6; padding-left: 1rem; margin-bottom: 1.2rem;">
+                  <div
+                    style="font-family: var(--mono); font-size: 0.75rem; color: #3b82f6; margin-bottom: 0.3rem; font-weight: 600;">
+                    步驟 1</div>
+                  <h4 style="font-size: 0.95rem; margin-bottom: 0.4rem;">線性投影：得到 Q、K、V</h4>
+                  <p style="font-size: 0.85rem; color: var(--ink-mid); line-height: 1.6;">輸入向量經三個獨立權重矩陣變換，產生
+                    Query（查詢）、Key（鍵）、Value（值）三個表示。</p>
+                </div>
+
+                <div class="flow-item" style="border-left: 3px solid #06b6d4; padding-left: 1rem; margin-bottom: 1.2rem;">
+                  <div
+                    style="font-family: var(--mono); font-size: 0.75rem; color: #06b6d4; margin-bottom: 0.3rem; font-weight: 600;">
+                    步驟 2</div>
+                  <h4 style="font-size: 0.95rem; margin-bottom: 0.4rem;">點積相似度：計算 $QK^T$</h4>
+                  <p style="font-size: 0.85rem; color: var(--ink-mid); line-height: 1.6;">Query 與 Key
+                    的點積得到「關聯分數矩陣」，數值越大代表語義相關性越強。</p>
+                </div>
+
+                <div class="flow-item" style="border-left: 3px solid #8b5cf6; padding-left: 1rem;">
+                  <div
+                    style="font-family: var(--mono); font-size: 0.75rem; color: #8b5cf6; margin-bottom: 0.3rem; font-weight: 600;">
+                    步驟 3</div>
+                  <h4 style="font-size: 0.95rem; margin-bottom: 0.4rem;">梯度穩定：除以 $\sqrt{d_k}$</h4>
+                  <p style="font-size: 0.85rem; color: var(--ink-mid); line-height: 1.6;">方差縮放防止高維點積過大，穩定 softmax
+                    後的梯度，避免訓練時梯度消失。</p>
+                </div>
+              </div>
+
+              <!-- 右欄：正則化與融合層 -->
+              <div>
+                <p
+                  style="font-size: 0.85rem; color: var(--ink-light); font-weight: 600; margin-bottom: 1rem; letter-spacing: 0.08em;">
+                  正則化與融合層</p>
+
+                <div class="flow-item" style="border-left: 3px solid #f59e0b; padding-left: 1rem; margin-bottom: 1.2rem;">
+                  <div
+                    style="font-family: var(--mono); font-size: 0.75rem; color: #f59e0b; margin-bottom: 0.3rem; font-weight: 600;">
+                    步驟 4</div>
+                  <h4 style="font-size: 0.95rem; margin-bottom: 0.4rem;">機率正則化：$\text{softmax}(\cdot)$</h4>
+                  <p style="font-size: 0.85rem; color: var(--ink-mid); line-height: 1.6;">將分數轉換為總和為 1
+                    的機率分布（注意力權重），形成「注意力地圖」。</p>
+                </div>
+
+                <div class="flow-item" style="border-left: 3px solid #10b981; padding-left: 1rem; margin-bottom: 1.2rem;">
+                  <div
+                    style="font-family: var(--mono); font-size: 0.75rem; color: #10b981; margin-bottom: 0.3rem; font-weight: 600;">
+                    步驟 5</div>
+                  <h4 style="font-size: 0.95rem; margin-bottom: 0.4rem;">加權融合：乘上 V</h4>
+                  <p style="font-size: 0.85rem; color: var(--ink-mid); line-height: 1.6;">注意力權重對 Value
+                    向量進行加權求和，輸出包含上下文資訊的新向量表示。</p>
+                </div>
+
+                <details class="insight-box">
+                  <summary>
+                    <span class="summary-title">
+                      <svg class="icon" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                      GPT 獨有機制
+                    </span>
+                    <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                  </summary>
+                  <div class="details-content">
+                    <div class="details-inner">
+                      <p style="font-size: 0.85rem; color: #92400e; margin: 0; line-height: 1.6;">
+                        <strong>GPT 獨有機制：</strong> 在步驟 2 計算 $QK^T$ 前，加入<strong>因果遮罩（Causal Mask）</strong>，強制未來位置的分數設為
+                        $-\infty$，經 softmax 後權重歸零，確保生成時遵循時序。
+                      </p>
+                    </div>
+                  </div>
+                </details>
+              </div>
             </div>
 
-            <div class="flow-item" style="border-left: 3px solid #8b5cf6; padding-left: 1rem;">
-              <div
-                style="font-family: var(--mono); font-size: 0.75rem; color: #8b5cf6; margin-bottom: 0.3rem; font-weight: 600;">
-                步驟 3</div>
-              <h4 style="font-size: 0.95rem; margin-bottom: 0.4rem;">梯度穩定：除以 $\sqrt{d_k}$</h4>
-              <p style="font-size: 0.85rem; color: var(--ink-mid); line-height: 1.6;">方差縮放防止高維點積過大，穩定 softmax
-                後的梯度，避免訓練時梯度消失。</p>
-            </div>
-          </div>
-
-          <!-- 右欄：正則化與融合層 -->
-          <div>
-            <p
-              style="font-size: 0.85rem; color: var(--ink-light); font-weight: 600; margin-bottom: 1rem; letter-spacing: 0.08em;">
-              正則化與融合層</p>
-
-            <div class="flow-item" style="border-left: 3px solid #f59e0b; padding-left: 1rem; margin-bottom: 1.2rem;">
-              <div
-                style="font-family: var(--mono); font-size: 0.75rem; color: #f59e0b; margin-bottom: 0.3rem; font-weight: 600;">
-                步驟 4</div>
-              <h4 style="font-size: 0.95rem; margin-bottom: 0.4rem;">機率正則化：$\text{softmax}(\cdot)$</h4>
-              <p style="font-size: 0.85rem; color: var(--ink-mid); line-height: 1.6;">將分數轉換為總和為 1
-                的機率分布（注意力權重），形成「注意力地圖」。</p>
-            </div>
-
-            <div class="flow-item" style="border-left: 3px solid #10b981; padding-left: 1rem; margin-bottom: 1.2rem;">
-              <div
-                style="font-family: var(--mono); font-size: 0.75rem; color: #10b981; margin-bottom: 0.3rem; font-weight: 600;">
-                步驟 5</div>
-              <h4 style="font-size: 0.95rem; margin-bottom: 0.4rem;">加權融合：乘上 V</h4>
-              <p style="font-size: 0.85rem; color: var(--ink-mid); line-height: 1.6;">注意力權重對 Value
-                向量進行加權求和，輸出包含上下文資訊的新向量表示。</p>
-            </div>
-
+            <!-- 簡潔總結，去掉冗長圖說 -->
             <div
-              style="background: #fef3c7; border-left: 4px solid #d97706; padding: 1rem 1rem 1rem 1rem; border-radius: 4px;">
-              <p style="font-size: 0.85rem; color: #92400e; margin: 0; line-height: 1.6;">
-                <strong>GPT 獨有機制：</strong> 在步驟 2 計算 $QK^T$ 前，加入<strong>因果遮罩（Causal Mask）</strong>，強制未來位置的分數設為
-                $-\infty$，經 softmax 後權重歸零，確保生成時遵循時序。
+              style="margin-top: 1.5rem; padding: 1rem; background: #f0f9ff; border-left: 3px solid #3b82f6; border-radius: 0;">
+              <p style="font-size: 0.9rem; color: #1e3a8a; margin: 0; line-height: 1.7;">
+                <strong>核心洞察：</strong> 注意力機制的精妙在於用「軟選擇」（softmax 權重）取代「硬選擇」（one-hot），讓每個位置都能與所有上文建立加權連接。這種動態、可微分的資訊路由方式，是
+                Transformer 相比 RNN 的根本優勢。
               </p>
             </div>
           </div>
         </div>
-
-        <!-- 簡潔總結，去掉冗長圖說 -->
-        <div
-          style="margin-top: 1.5rem; padding: 1rem; background: #f0f9ff; border-left: 3px solid #3b82f6; border-radius: 0;">
-          <p style="font-size: 0.9rem; color: #1e3a8a; margin: 0; line-height: 1.7;">
-            <strong>核心洞察：</strong> 注意力機制的精妙在於用「軟選擇」（softmax 權重）取代「硬選擇」（one-hot），讓每個位置都能與所有上文建立加權連接。這種動態、可微分的資訊路由方式，是
-            Transformer 相比 RNN 的根本優勢。
-          </p>
-        </div>
-      </div>
+      </details>
 
       <div class="tech-note">
         <p><strong>縮放因子 $\sqrt{d_k}$ 的物理意義：</strong> 當特徵維度 $d_k$ 極大時，加入 $\sqrt{d_k}$ 進行方差縮放，能防止 $\text{softmax}$
           後的梯度陷入極平緩區域，避免反向傳播時的<strong>梯度消失</strong>。</p>
       </div>
 
-      <div class="mask-viz">
-        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">📊 因果遮罩（Causal Masking）矩陣示意圖</h3>
-        <p style="font-size: 0.85rem; color: #4b5563;">展示預測「我 ➔ 喜歡 ➔ 吃 ➔ 蘋果」時的內部遮蔽狀態。<br><span
-            style="color: var(--danger);">✗ 區域</span> 代表未來資訊被物理遮蔽。</p>
+      <details class="technical-deep-dive mask-viz">
+        <summary>
+          <span class="summary-title">
+            <svg class="icon" viewBox="0 0 24 24"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>
+            因果遮罩（Causal Masking）矩陣示意圖
+          </span>
+          <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="details-content">
+          <div class="details-inner">
+            <p style="font-size: 0.85rem; color: #4b5563; margin-top: 0.5rem;">展示預測「我 ➔ 喜歡 ➔ 吃 ➔ 蘋果」時的內部遮蔽狀態。<br><span
+                style="color: var(--danger);">✗ 區域</span> 代表未來資訊被物理遮蔽。</p>
 
-        <div class="mask-grid-wrapper">
-          <div class="grid-cell grid-corner">Key →<br>Query ↓</div>
-          <div class="grid-cell grid-hdr">我</div>
-          <div class="grid-cell grid-hdr">喜歡</div>
-          <div class="grid-cell grid-hdr">吃</div>
-          <div class="grid-cell grid-hdr">蘋果</div>
+            <div class="mask-grid-wrapper">
+              <div class="grid-cell grid-corner">Key →<br>Query ↓</div>
+              <div class="grid-cell grid-hdr">我</div>
+              <div class="grid-cell grid-hdr">喜歡</div>
+              <div class="grid-cell grid-hdr">吃</div>
+              <div class="grid-cell grid-hdr">蘋果</div>
 
-          <div class="grid-cell grid-hdr">我</div>
-          <div class="grid-cell grid-active">✓</div>
-          <div class="grid-cell grid-masked">✗</div>
-          <div class="grid-cell grid-masked">✗</div>
-          <div class="grid-cell grid-masked">✗</div>
+              <div class="grid-cell grid-hdr">我</div>
+              <div class="grid-cell grid-active">✓</div>
+              <div class="grid-cell grid-masked">✗</div>
+              <div class="grid-cell grid-masked">✗</div>
+              <div class="grid-cell grid-masked">✗</div>
 
-          <div class="grid-cell grid-hdr">喜歡</div>
-          <div class="grid-cell grid-active">✓</div>
-          <div class="grid-cell grid-active">✓</div>
-          <div class="grid-cell grid-masked">✗</div>
-          <div class="grid-cell grid-masked">✗</div>
+              <div class="grid-cell grid-hdr">喜歡</div>
+              <div class="grid-cell grid-active">✓</div>
+              <div class="grid-cell grid-active">✓</div>
+              <div class="grid-cell grid-masked">✗</div>
+              <div class="grid-cell grid-masked">✗</div>
 
-          <div class="grid-cell grid-hdr">吃</div>
-          <div class="grid-cell grid-active">✓</div>
-          <div class="grid-cell grid-active">✓</div>
-          <div class="grid-cell grid-active">✓</div>
-          <div class="grid-cell grid-masked">✗</div>
+              <div class="grid-cell grid-hdr">吃</div>
+              <div class="grid-cell grid-active">✓</div>
+              <div class="grid-cell grid-active">✓</div>
+              <div class="grid-cell grid-active">✓</div>
+              <div class="grid-cell grid-masked">✗</div>
 
-          <div class="grid-cell grid-hdr">蘋果</div>
-          <div class="grid-cell grid-active">✓</div>
-          <div class="grid-cell grid-active">✓</div>
-          <div class="grid-cell grid-active">✓</div>
-          <div class="grid-cell grid-active">✓</div>
+              <div class="grid-cell grid-hdr">蘋果</div>
+              <div class="grid-cell grid-active">✓</div>
+              <div class="grid-cell grid-active">✓</div>
+              <div class="grid-cell grid-active">✓</div>
+              <div class="grid-cell grid-active">✓</div>
+            </div>
+          </div>
         </div>
-
-      </div>
+      </details>
     </section>
 
     <section id="evolution" class="section">
@@ -1173,7 +1387,12 @@
     </div>
   </footer>
 
-  <a href="#" class="btn-top" id="btnTop">↑</a>
+  <a href="#" class="btn-top" id="btnTop" aria-label="回到頂部">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="19" x2="12" y2="5"></line>
+      <polyline points="5 12 12 5 19 12"></polyline>
+    </svg>
+  </a>
 
   <script>
     // Drawer Menu Logic
@@ -1233,6 +1452,71 @@
       s.style.opacity = '0';
       s.style.transform = 'translateY(20px)';
       observer.observe(s);
+    });
+
+    // Reading Progress Bar
+    const progressBar = document.getElementById('progressBar');
+    window.addEventListener('scroll', () => {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      if (scrollable > 0) {
+        const scrolled = (window.scrollY / scrollable) * 100;
+        progressBar.style.width = `${scrolled}%`;
+      } else {
+        progressBar.style.width = '0%';
+      }
+    }, { passive: true });
+
+    // Accordion / Details UI Transition
+    document.querySelectorAll('details.technical-deep-dive, details.insight-box').forEach(details => {
+      const summary = details.querySelector('summary');
+      const content = details.querySelector('.details-content');
+      
+      summary.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        if (details.classList.contains('collapsing') || details.classList.contains('expanding')) {
+          return;
+        }
+
+        if (details.hasAttribute('open')) {
+          // Close animation
+          details.classList.add('collapsing');
+          content.style.height = `${content.offsetHeight}px`;
+          
+          // Force reflow
+          content.offsetHeight;
+          content.style.height = '0px';
+          
+          const onTransitionEnd = (event) => {
+            if (event.propertyName === 'height') {
+              details.removeAttribute('open');
+              details.classList.remove('collapsing');
+              content.style.height = '';
+              content.removeEventListener('transitionend', onTransitionEnd);
+            }
+          };
+          content.addEventListener('transitionend', onTransitionEnd);
+        } else {
+          // Open animation
+          details.classList.add('expanding');
+          details.setAttribute('open', '');
+          const targetHeight = content.scrollHeight;
+          
+          content.style.height = '0px';
+          // Force reflow
+          content.offsetHeight;
+          content.style.height = `${targetHeight}px`;
+          
+          const onTransitionEnd = (event) => {
+            if (event.propertyName === 'height') {
+              details.classList.remove('expanding');
+              content.style.height = '';
+              content.removeEventListener('transitionend', onTransitionEnd);
+            }
+          };
+          content.addEventListener('transitionend', onTransitionEnd);
+        }
+      });
     });
   </script>
 
