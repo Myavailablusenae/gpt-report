@@ -1,15 +1,367 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
-  onload="renderMathInElement(document.body);"></script>
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GPT 演算法期末評量報告 | 游騰睿</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>GPT 演算法深度解析 | 國北教大資科系 期末評量報告</title>
+
+  <!-- KaTeX 數學渲染 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', 'Noto Sans', sans-serif;
+      background: #f5f7fb;
+      color: #1e293b;
+      line-height: 1.5;
+      scroll-behavior: smooth;
+    }
+
+    /* 自定義捲軸 */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #e2e8f0;
+      border-radius: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #94a3b8;
+      border-radius: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #5b6e8c;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header 區域 */
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+      padding: 3rem 0 2rem;
+      border-bottom: 4px solid #3b82f6;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(120deg, #fff, #b9e0ff);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #cbd5e6;
+      margin-bottom: 2rem;
+      border-left: 3px solid #3b82f6;
+      padding-left: 1rem;
+    }
+
+    nav ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      list-style: none;
+      margin-top: 1.5rem;
+    }
+
+    nav ul li a {
+      color: #e2e8f0;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 0.25rem;
+      transition: 0.2s;
+      border-bottom: 2px solid transparent;
+    }
+
+    nav ul li a:hover {
+      color: white;
+      border-bottom-color: #3b82f6;
+    }
+
+    /* 主內容卡片 */
+    main.container {
+      margin-top: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 1.5rem;
+      padding: 2rem 2rem 2.2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s;
+      scroll-margin-top: 90px;
+    }
+
+    .card:hover {
+      box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.12);
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 3px solid #3b82f6;
+      display: inline-block;
+      letter-spacing: -0.01em;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.8rem 0;
+      color: #0f172a;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: #2d3a4b;
+    }
+
+    .quick-summary {
+      background: #f1f5f9;
+      border-left: 5px solid #3b82f6;
+      padding: 1.2rem 1.5rem;
+      border-radius: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .quick-summary ul {
+      margin-left: 1.2rem;
+    }
+
+    .quick-summary li {
+      margin: 0.5rem 0;
+    }
+
+    .technical-deep-dive {
+      background: #fef9e3;
+      border-radius: 1rem;
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      border: 1px solid #ffe2a4;
+    }
+
+    .formula {
+      background: #f8fafc;
+      padding: 1.2rem;
+      text-align: center;
+      border-radius: 1rem;
+      margin: 1.8rem 0;
+      font-size: 1.1rem;
+      overflow-x: auto;
+      border: 1px solid #e2edff;
+    }
+
+    .insight-box {
+      background: linear-gradient(105deg, #eef2ff 0%, #ffffff 100%);
+      border-radius: 1rem;
+      padding: 1.4rem 1.8rem;
+      margin: 1.8rem 0;
+      border: 1px solid #cbdffc;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    }
+
+    .insight-box h3 {
+      margin-top: 0;
+      color: #1e3a8a;
+    }
+
+    .visual-container {
+      background: #fafcff;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-align: center;
+      border: 1px solid #e0e9f5;
+      margin: 1.5rem 0;
+    }
+
+    .mask-demo {
+      display: inline-block;
+      background: #ffffff;
+      padding: 0.6rem 1.2rem;
+      border-radius: 1rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .mask-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 48px);
+      gap: 6px;
+      justify-content: center;
+      margin: 1rem 0;
+    }
+
+    .grid-cell {
+      width: 48px;
+      height: 48px;
+      background: #eef2ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      border-radius: 12px;
+      font-size: 14px;
+      color: #1e293b;
+      transition: 0.1s;
+    }
+
+    .masked {
+      background: #cbd5e1;
+      color: #94a3b8;
+      background-image: repeating-linear-gradient(45deg, #aaa 0px, #aaa 2px, transparent 2px, transparent 8px);
+    }
+
+    .attn-label {
+      font-size: 0.8rem;
+      margin-top: 0.8rem;
+      color: #475569;
+    }
+
+    .security-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1.2rem 0;
+    }
+
+    .risk-card {
+      background: #fef2f2;
+      border-radius: 1rem;
+      padding: 1rem 1.2rem;
+      flex: 1 1 200px;
+      border-left: 4px solid #ef4444;
+    }
+
+    .risk-card strong {
+      color: #b91c1c;
+    }
+
+    footer {
+      background: #0f172a;
+      color: #cbd5e6;
+      padding: 2rem 0;
+      margin-top: 2rem;
+      border-top: 1px solid #1e293b;
+    }
+
+    footer h3 {
+      color: #f1f5f9;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+
+    footer ol {
+      margin-left: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    footer li {
+      margin: 0.5rem 0;
+    }
+
+    footer p {
+      color: #94a3b8;
+      font-size: 0.9rem;
+    }
+
+    .placeholder {
+      color: #4b5563;
+      font-style: italic;
+      background: #f1f5f9;
+      padding: 1rem;
+      border-radius: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2rem;
+      }
+
+      .container {
+        padding: 0 16px;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      .mask-grid {
+        grid-template-columns: repeat(4, 36px);
+        gap: 4px;
+      }
+
+      .grid-cell {
+        width: 36px;
+        height: 36px;
+        font-size: 11px;
+      }
+    }
+
+    a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    .btn-up {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #1e293b;
+      color: white;
+      padding: 0.6rem 1rem;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      opacity: 0.7;
+      transition: 0.2s;
+      z-index: 99;
+    }
+
+    .btn-up:hover {
+      opacity: 1;
+      background: #3b82f6;
+    }
+
+    code {
+      background: #eef2ff;
+      padding: 0.2rem 0.4rem;
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9em;
+    }
+  </style>
 </head>
 
 <body>
@@ -17,13 +369,13 @@
   <header>
     <div class="container">
       <h1>GPT 演算法深度解析</h1>
-      <p class="subtitle">國立臺北教育大學 - 資科系期末評量報告</p>
+      <p class="subtitle">國立臺北教育大學 · 資訊科學系 期末評量報告 | 指導教授：前瞻AI實驗室</p>
       <nav>
         <ul>
-          <li><a href="#introduction">1. 架構血統</a></li>
-          <li><a href="#technical">2. 技術核心</a></li>
-          <li><a href="#security">3. 資安與實務</a></li>
-          <li><a href="#reflection">4. 學習反思</a></li>
+          <li><a href="#introduction">📌 1. 架構血統</a></li>
+          <li><a href="#technical">⚙️ 2. 技術核心</a></li>
+          <li><a href="#security">🛡️ 3. 資安與實務</a></li>
+          <li><a href="#reflection">🧠 4. 學習反思</a></li>
         </ul>
       </nav>
     </div>
@@ -31,52 +383,180 @@
 
   <main class="container">
 
+    <!-- 章節 1：架構血統 -->
     <section id="introduction" class="card">
       <h2>一、從 Transformer 到 GPT：解碼器架構的崛起</h2>
-      <p>在 2017 年 <em>Attention Is All You Need</em> 論文問世後...</p>
+      <p>在 2017 年 <em>“Attention Is All You Need”</em> 論文問世後，Transformer 架構分化出了三種不同的演化路徑：以 BERT
+        為代表的編碼器（Encoder-Only）陣營、以 T5 為代表的混合（Encoder-Decoder）陣營，以及本報告的主角——以 <strong>GPT</strong>
+        為首的<strong>純解碼器（Decoder-Only）</strong>陣營。</p>
+      <p>與傳統追求雙向語境理解的模型不同，GPT 採取了更具挑戰性的「自回歸（Autoregressive）」路徑，僅透過預測下一個 Token 的簡單目標，卻在百億級參數的推升下，展現出了令人驚訝的零樣本學習（Zero-shot
+        Learning）與能力湧現。GPT 系列向世界證明了：<strong>足夠大的解碼器 + 足夠多的資料 + 自回歸預訓練</strong>，能夠讓語言模型產生「推理」的雛形。</p>
+
+      <div class="quick-summary">
+        <ul>
+          <li><strong>演算法定義：</strong> 基於 Transformer Decoder 的自回歸語言模型，每次生成一個 token 並以先前輸出為條件。</li>
+          <li><strong>核心解決痛點：</strong> 徹底屏棄傳統 RNN 難以並行訓練與無法有效處理長距離依賴（Long-range Dependency）的問題，同時透過因果遮罩實現合乎邏輯的序列生成。</li>
+          <li><strong>現代實務應用：</strong> 智慧程式碼輔助生成（如 GitHub Copilot）、自動化資安弱點分析報告、自主 AI Agent 推理核心、即時對話代理人。</li>
+        </ul>
+      </div>
+      <p>相較於 BERT 擅長「理解」任務，GPT 架構的優勢在於「創造」與「續寫」。從 GPT-3 的提示學習到 ChatGPT 的 RLHF 對齊，再至 GPT-4 的多模態能力，純解碼器架構已成為生成式 AI 的事實標準。
+      </p>
     </section>
 
+    <!-- 章節 2：技術核心 + 自注意力數學底層 + 視覺化矩陣 -->
     <section id="technical" class="card">
       <h2>二、技術前沿：自注意力機制與數學底層</h2>
-      <p>GPT 的核心在於 Scaled Dot-Product Attention，其公式如下：</p>
+      <p>GPT 的核心能力建立在 <strong>Scaled Dot-Product Attention（縮放點積注意力）</strong> 機制上。模型透過將輸入向量映射至三個獨立的矩陣：$Q$ (Query)、$K$
+        (Key)、$V$ (Value) 進行動態權重計算，其底層數學公式如下：</p>
 
       <div class="formula">
-        $$Attention(Q, K, V) = softmax( (QK^T) / sqrt(d_k) ) V$$
+        $$Attention(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
+      </div>
+
+      <div class="technical-deep-dive">
+        <h3>🔍 關鍵技術查證與修正（對應評量任務 3）</h3>
+        <p>在查證原始文獻時，多數通俗教學常忽略分母中<strong>縮放因子 $\sqrt{d_k}$</strong> 的物理意義。經深入論文查證發現：當特徵維度 $d_k$
+          極大時，點積（Dot-Product）的數值會劇烈增長，導致經由 $\text{softmax}$ 函數計算後的梯度陷入極其平緩的區域。加入 $\sqrt{d_k}$
+          能有效進行方差縮放，防止在反向傳播（Backpropagation）時發生<strong>梯度消失</strong>現象，穩定訓練過程。</p>
+        <p>此外，GPT 作為 Decoder-Only 模型，在進行自注意力計算時，會強制引入一個上三角的<strong>遮罩矩陣（Masking Matrix）</strong>。此機制使模型在預測第 $n$ 個 Token
+          時，其 Attention 權重無法分配給第 $n+1$ 之後的未來資訊，確保了其嚴格的自回歸特性。下圖展示了 4×4 的因果遮罩概念（灰色區塊代表遮蔽位置，模型無法看見未來 token）。</p>
+      </div>
+
+      <!-- 簡易視覺化：注意力遮蔽矩陣示意圖 -->
+      <div class="visual-container">
+        <div class="mask-demo">
+          <div style="font-weight: 600; margin-bottom: 8px;">🔒 因果遮罩示意圖 (Causal Mask) — 上三角遮蔽</div>
+          <div class="mask-grid">
+            <div class="grid-cell">✓</div>
+            <div class="grid-cell masked">✗</div>
+            <div class="grid-cell masked">✗</div>
+            <div class="grid-cell masked">✗</div>
+            <div class="grid-cell">✓</div>
+            <div class="grid-cell">✓</div>
+            <div class="grid-cell masked">✗</div>
+            <div class="grid-cell masked">✗</div>
+            <div class="grid-cell">✓</div>
+            <div class="grid-cell">✓</div>
+            <div class="grid-cell">✓</div>
+            <div class="grid-cell masked">✗</div>
+            <div class="grid-cell">✓</div>
+            <div class="grid-cell">✓</div>
+            <div class="grid-cell">✓</div>
+            <div class="grid-cell">✓</div>
+          </div>
+          <div class="attn-label">✅ 可看見當前及過去位置 &nbsp;|&nbsp; 🚫 遮蔽未來信息 (token 無法窺探後續)</div>
+          <p style="font-size: 0.8rem; margin-top: 12px;">此設計確保生成時符合時間順序，並實現真正的自回歸預測。</p>
+        </div>
       </div>
 
       <div class="insight-box">
-        <h3>💡 智庫觀點：圖書館索引模擬</h3>
-        <p>對政商決策者而言，GPT 內部就像一座無限大的圖書館...</p>
+        <h3>💡 智庫觀點：圖書館索引模擬（給非技術決策者）</h3>
+        <p><strong>給政商與非技術決策者的報告：</strong> 各位可以想像 GPT
+          內部運行著一座無限大的圖書館。當使用者給出指令時，它並非在僵硬地查閱字典，而是同步進行三件事：第一，確認你到底在問什麼（<strong>Query</strong>）；第二，掃描所有架上資料的標籤（<strong>Key</strong>）；第三，根據匹配程度，精準提取最有價值的內容（<strong>Value</strong>）。
+        </p>
+        <p>
+          這意味著大語言模型的強大不在於它「背下」了死板的知識，而在於它極其高效的<strong>資源動態調度能力</strong>。這也是為什麼我們不能將其當作百分之百正確的「知識百科」，而應將其視為一個具備極高產出效率的「機率預測與推理引擎」。同時，<strong>位置編碼</strong>與多頭注意力的協同作用使得
+          GPT 能掌握語序與層次語義。</p>
       </div>
 
-      <div class="visual-container">
-        <p class="placeholder">[GPT 預測下一詞流程圖預留位置]</p>
-      </div>
+      <p>多頭注意力（Multi-Head Attention）進一步將 $Q,K,V$ 投影到多個子空間，讓模型能同時關注不同範圍的上下文關係，這也是 GPT 能捕捉複雜語法結構與篇章邏輯的關鍵。</p>
     </section>
 
+    <!-- 章節 3：實務應用與安全性（OWASP Top 10 for LLM） -->
     <section id="security" class="card">
-      <h2>三、實務應用與安全性（OWASP Top 10）</h2>
-      <p>將 GPT 引入軟體開發與資安防禦時，我們必須面對的風險包括...</p>
+      <h2>三、實務應用與安全性（OWASP Top 10 視角）</h2>
+      <p>將 GPT 導入企業軟體開發、資安監控及對話系統時，除了效能增益，也必須正視大型語言模型特有的資安風險。OWASP 基金會於 2023 年發佈了 <strong>LLM Top 10</strong> 風險清單，以下摘錄與
+        GPT 實務最相關的威脅與對策：</p>
+
+      <div class="security-grid">
+        <div class="risk-card"><strong>🔓 提示注入</strong><br>攻擊者透過精心建構的輸入覆蓋原始指令，可能導致模型洩漏系統提示或繞過安全護欄。</div>
+        <div class="risk-card"><strong>📊 訓練資料 poisoning</strong><br>若預訓練或微調資料遭汙染，模型可能輸出後門或偏差內容，需嚴格的資料溯源。</div>
+        <div class="risk-card"><strong>⚖️ 敏感資訊外洩</strong><br>模型可能記憶並重現訓練集中的機敏資料 (PII、API Key)，需搭配差分隱私與輸出過濾。</div>
+        <div class="risk-card"><strong>🎭 幻覺導致錯誤決策</strong><br>生成看似合理但錯誤的資訊，在自動化報告或資安告警場景可能造成嚴重誤判。</div>
+      </div>
+      <p>實務上整合 GPT 時，可採用內容安全過濾器、最小權限原則、定期紅隊演練，以及將模型輸出與可靠知識庫（RAG）檢索結合以降低幻覺。本學期透過實務案例探討，認知到「AI 並非信任根源，而是可信輔助工具」。</p>
+      <p>應用亮點：利用 GPT 自動生成弱點掃描的解讀摘要、加速資安事件回應劇本撰寫，以及對抗社交工程郵件的分析。但務必搭配人機協作與稽核機制，方能實現安全增益。</p>
     </section>
 
+    <!-- 章節 4：學習反思 + 幻覺本質 -->
     <section id="reflection" class="card">
       <h2>四、學習反思：統計引擎與幻覺的本質</h2>
-      <p>透過這次查證，我發現 AI 不是真理機器，而是機率預測器...</p>
+      <p>透過這個學期對原始論文《Attention Is All You Need》與 GPT 系列技術報告的查證與實作，最大的體悟是：<strong>AI 不是真理機器，而是基於海量文本的高階機率預測器</strong>。GPT
+        本質上是在最大化「給定上文時，下一個 token 的條件機率」，因此它所生成的「知識」其實是機率分佈下最合理的組合，而非經過驗證的事實。</p>
+      <p>所謂<strong>「幻覺
+          (Hallucination)」</strong>現象，正是模型在低信心區域或缺乏訓練資料時，選擇了高機率卻錯誤的路徑。這不代表模型「說謊」，而是反映了統計模型在對抗不確定性時的本質缺陷。因此在專業領域（醫療、法律、關鍵基礎設施）採用
+        GPT 時，必須引入外部驗證鏈與檢索增強生成（RAG）。</p>
+      <div class="insight-box" style="background:#eef2ff;">
+        <h3>📌 我的觀點與未來方向</h3>
+        <p>
+          本次報告亦讓我反思：未來開發者不應迷信模型規模盲目擴大，反而應追求<strong>可解釋性注意力</strong>與<strong>輕量化推論架構</strong>。同時，理解「因果遮罩」與「位置編碼」等細節，才能真正掌握
+          GPT 背後的運算邏輯，而非停留在 API 呼叫層次。透過這份期末報告，我深刻理解為何 Transformer 被譽為「改變深度學習格局」的里程碑，也期許自己能投入更具安全意識的生成式 AI 應用開發。</p>
+      </div>
+      <p>總結來說，GPT 演算法賦予了機器驚人的語言流暢度，但作為新一代資訊人員，我們必須同時具備演算法素養與風險意識，才能在 AI 浪潮中穩健前進。</p>
     </section>
 
   </main>
 
   <footer>
     <div class="container">
-      <h3>參考文獻 (References)</h3>
+      <h3>📚 參考文獻 (References)</h3>
       <ol>
-        <li>Vaswani, A., et al. (2017). "Attention Is All You Need."</li>
-        <li>Radford, A., et al. (2018). "Improving Language Understanding by Generative Pre-Training."</li>
+        <li>Vaswani, A., et al. (2017). "Attention Is All You Need." <em>Advances in Neural Information Processing
+            Systems</em>, 30.</li>
+        <li>Radford, A., et al. (2018). "Improving Language Understanding by Generative Pre-Training." <em>OpenAI
+            Technical Report</em>.</li>
+        <li>Radford, A., et al. (2019). "Language Models are Unsupervised Multitask Learners." <em>OpenAI</em> (GPT-2).
+        </li>
+        <li>OWASP Top 10 for Large Language Model Applications (LLM Top 10), 2023 Edition.</li>
+        <li>Brown, T. B., et al. (2020). "Language Models are Few-Shot Learners." <em>NeurIPS</em> (GPT-3).</li>
       </ol>
-      <p>&copy; 2026 游騰睿. All Rights Reserved. Built with GitHub Pages.</p>
+      <p>&copy; 2026 游騰睿 (Yu Teng-Jui) — 國立臺北教育大學 資訊科學系. 本報告採用 CC BY-NC 4.0 授權。 | Built with ❤️ for GPT Algorithm Final
+        Report.</p>
     </div>
   </footer>
 
+  <a href="#" class="btn-up" aria-label="回到頂部">↑ 返回頂部</a>
+
+  <script>
+    // 平滑滾動 + 動態增加 header offset 避免被固定區塊遮擋 (簡單且確保KATEX渲染)
+    document.querySelectorAll('nav a[href^="#"], .btn-up').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const targetId = this.getAttribute('href');
+        if (targetId === "#" || targetId === "") return;
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          e.preventDefault();
+          const offset = 80;
+          const elementPosition = targetElement.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.scrollY - offset;
+          window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+        }
+      });
+    });
+    // 確保 KaTeX 渲染完成時重新調整（因為公式已由 auto-render 處理，此處不做多餘動作）
+    document.addEventListener("DOMContentLoaded", function () {
+      // 若公式因延遲未完整顯示可手動重新渲染，但 auto-render 足夠
+      if (typeof renderMathInElement !== 'undefined') {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ]
+        });
+      }
+      // 添加一點微動畫效果給卡片 (輕量)
+      const cards = document.querySelectorAll('.card');
+      cards.forEach((card, idx) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(12px)';
+        setTimeout(() => {
+          card.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }, idx * 60);
+      });
+    });
+  </script>
 </body>
 
 </html>
