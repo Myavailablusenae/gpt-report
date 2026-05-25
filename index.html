@@ -4,559 +4,1238 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="GPT 演算法深度解析 - 國立臺北教育大學資訊科學系期末評量報告。探討 Transformer 解碼器架構、自注意力機制與 OWASP LLM 資安實務。">
   <title>GPT 演算法深度解析 | 國北教大資科系 期末評量報告</title>
 
-  <!-- KaTeX 數學渲染 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300;1,9..144,600&display=swap"
+    rel="stylesheet">
+
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
     onload="renderMathInElement(document.body, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });"></script>
 
   <style>
-    * {
+    /* ── CSS 變數與基礎設定 ── */
+    :root {
+      --ink: #1a1612;
+      --ink-mid: #3d3530;
+      --ink-light: #7a6f67;
+      --paper: #f7f4ef;
+      --cream: #ede8e0;
+      --rule: #d6cfc5;
+      --accent: #c0392b;
+      --accent2: #2c5f8a;
+      --highlight: #f0e6c8;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --mono: 'DM Mono', monospace;
+      --serif: 'Fraunces', 'Noto Serif TC', Georgia, serif;
+      --body: 'Noto Serif TC', Georgia, serif;
+    }
+
+    *,
+    *::before,
+    *::after {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-    body {
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', 'Noto Sans', sans-serif;
-      background: #f5f7fb;
-      color: #1e293b;
-      line-height: 1.5;
+    html {
       scroll-behavior: smooth;
     }
 
-    /* 自定義捲軸 */
+    body {
+      font-family: var(--body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.8;
+      font-size: 17px;
+    }
+
     ::-webkit-scrollbar {
-      width: 8px;
+      width: 5px;
     }
 
     ::-webkit-scrollbar-track {
-      background: #e2e8f0;
-      border-radius: 8px;
+      background: var(--cream);
     }
 
     ::-webkit-scrollbar-thumb {
-      background: #94a3b8;
-      border-radius: 8px;
+      background: var(--rule);
+      border-radius: 4px;
     }
 
-    ::-webkit-scrollbar-thumb:hover {
-      background: #5b6e8c;
+    /* ── 導覽列與選單 ── */
+    .site-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 56px;
+      background: var(--ink);
+      border-bottom: 1px solid #333;
     }
 
-    .container {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 0 24px;
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: #888;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
     }
 
-    /* Header 區域 */
-    header {
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      color: white;
-      padding: 3rem 0 2rem;
-      border-bottom: 4px solid #3b82f6;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
     }
 
-    header h1 {
-      font-size: 2.8rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      background: linear-gradient(120deg, #fff, #b9e0ff);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-      margin-bottom: 0.5rem;
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: #aaa;
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
     }
 
-    .subtitle {
-      font-size: 1.1rem;
-      color: #cbd5e6;
+    .nav-links a:hover {
+      color: #fff;
+    }
+
+    .hamburger {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 5px;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+      flex-shrink: 0;
+    }
+
+    .hamburger span {
+      display: block;
+      height: 1.5px;
+      background: #bbb;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    .hamburger span:nth-child(1) {
+      width: 22px;
+    }
+
+    .hamburger span:nth-child(2) {
+      width: 14px;
+    }
+
+    .hamburger span:nth-child(3) {
+      width: 18px;
+    }
+
+    .hamburger:hover span {
+      background: #fff;
+    }
+
+    .hamburger.open span:nth-child(1) {
+      width: 20px;
+      transform: translateY(6.5px) rotate(45deg);
+    }
+
+    .hamburger.open span:nth-child(2) {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+
+    .hamburger.open span:nth-child(3) {
+      width: 20px;
+      transform: translateY(-6.5px) rotate(-45deg);
+    }
+
+    .drawer {
+      position: fixed;
+      top: 56px;
+      right: 0;
+      width: 260px;
+      height: calc(100vh - 56px);
+      background: var(--ink);
+      border-left: 1px solid #333;
+      z-index: 199;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 2.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-label {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 1.5rem;
+    }
+
+    .drawer nav ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .drawer nav ul li {
+      border-bottom: 1px solid #292929;
+    }
+
+    .drawer nav ul li a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 1rem 0;
+      font-family: var(--body);
+      font-size: 0.95rem;
+      color: #ccc;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .drawer nav ul li a:hover {
+      color: #fff;
+    }
+
+    .drawer nav ul li a .d-num {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: #555;
+      width: 20px;
+    }
+
+    .drawer-foot {
+      margin-top: auto;
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      color: #444;
+      line-height: 1.7;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 198;
+      background: rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .overlay.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* ── Hero 區塊 ── */
+    .hero {
+      margin-top: 56px;
+      padding: 6rem 2rem 4rem;
+      max-width: 860px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      display: flex;
+      align-items: center;
+      gap: 12px;
       margin-bottom: 2rem;
-      border-left: 3px solid #3b82f6;
-      padding-left: 1rem;
     }
 
-    nav ul {
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: var(--rule);
+    }
+
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.6rem, 6vw, 4.2rem);
+      font-weight: 700;
+      line-height: 1.18;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+      font-weight: 300;
+    }
+
+    .hero-meta {
       display: flex;
       flex-wrap: wrap;
-      gap: 1.2rem;
-      list-style: none;
-      margin-top: 1.5rem;
-    }
-
-    nav ul li a {
-      color: #e2e8f0;
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.95rem;
-      padding: 0.5rem 0.25rem;
-      transition: 0.2s;
-      border-bottom: 2px solid transparent;
-    }
-
-    nav ul li a:hover {
-      color: white;
-      border-bottom-color: #3b82f6;
-    }
-
-    /* 主內容卡片 */
-    main.container {
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      padding: 1rem 0;
       margin-top: 2rem;
-      margin-bottom: 3rem;
     }
 
-    .card {
-      background: white;
-      border-radius: 1.5rem;
-      padding: 2rem 2rem 2.2rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.05);
-      transition: transform 0.2s ease, box-shadow 0.2s;
-      scroll-margin-top: 90px;
+    .hero-meta-item {
+      flex: 1 1 180px;
+      padding: 0.5rem 1rem 0.5rem 0;
     }
 
-    .card:hover {
-      box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.12);
+    .hero-meta-item:not(:last-child) {
+      border-right: 1px solid var(--rule);
+      margin-right: 1rem;
     }
 
-    h2 {
-      font-size: 1.8rem;
+    .hero-meta-item .label {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .hero-meta-item .value {
+      font-size: 0.88rem;
+      color: var(--ink-mid);
+    }
+
+    /* ── 內容架構 ── */
+    .page-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+    }
+
+    .section {
+      margin-bottom: 5rem;
+      scroll-margin-top: 80px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1.2rem;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .section-num {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--ink-light);
+      letter-spacing: 0.1em;
+    }
+
+    .section h2 {
+      font-family: var(--serif);
+      font-size: clamp(1.5rem, 3vw, 2rem);
       font-weight: 700;
-      margin-bottom: 1.2rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 3px solid #3b82f6;
-      display: inline-block;
       letter-spacing: -0.01em;
-    }
-
-    h3 {
-      font-size: 1.3rem;
-      font-weight: 600;
-      margin: 1.5rem 0 0.8rem 0;
-      color: #0f172a;
+      line-height: 1.25;
     }
 
     p {
+      margin-bottom: 1.3rem;
+      color: var(--ink-mid);
+      font-size: 1rem;
+    }
+
+    /* ── 元件樣式庫 ── */
+    .analysis-box {
+      border: 1px solid #d4b896;
+      background: #fdf6ea;
+      padding: 1.8rem 2rem;
+      margin: 2.5rem 0;
+    }
+
+    .analysis-box h4 {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      font-weight: 700;
       margin-bottom: 1rem;
-      color: #2d3a4b;
     }
 
-    .quick-summary {
-      background: #f1f5f9;
-      border-left: 5px solid #3b82f6;
+    .analysis-box ul {
+      margin-left: 1.2rem;
+      color: var(--ink-mid);
+    }
+
+    .analysis-box li {
+      margin: 0.5rem 0;
+      font-size: 0.95rem;
+    }
+
+    .analysis-box .note {
+      margin-top: 1.2rem;
+      padding-top: 1rem;
+      border-top: 1px dashed #d4b896;
+      font-size: 0.88rem;
+      color: var(--ink-light);
+      font-style: italic;
+    }
+
+    .summary-strip {
+      border-left: 3px solid var(--accent2);
       padding: 1.2rem 1.5rem;
-      border-radius: 1rem;
-      margin: 1.5rem 0;
+      background: #f0f5fb;
+      margin: 2rem 0;
+      font-size: 0.95rem;
     }
 
-    .quick-summary ul {
+    .summary-strip ul {
       margin-left: 1.2rem;
     }
 
-    .quick-summary li {
-      margin: 0.5rem 0;
+    .summary-strip li {
+      margin: 0.4rem 0;
+      color: var(--ink-mid);
     }
 
-    .technical-deep-dive {
-      background: #fef9e3;
-      border-radius: 1rem;
-      padding: 1.2rem 1.5rem;
-      margin: 1.5rem 0;
-      border: 1px solid #ffe2a4;
-    }
-
-    .formula {
-      background: #f8fafc;
-      padding: 1.2rem;
+    .formula-block {
+      background: var(--ink);
+      color: #e8e0d5;
+      padding: 2rem;
       text-align: center;
-      border-radius: 1rem;
-      margin: 1.8rem 0;
-      font-size: 1.1rem;
+      margin: 2.5rem 0;
+      font-size: 1.2rem;
       overflow-x: auto;
-      border: 1px solid #e2edff;
+      border-radius: 8px;
     }
 
-    .insight-box {
-      background: linear-gradient(105deg, #eef2ff 0%, #ffffff 100%);
-      border-radius: 1rem;
-      padding: 1.4rem 1.8rem;
-      margin: 1.8rem 0;
-      border: 1px solid #cbdffc;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    .tech-note {
+      background: var(--cream);
+      border: 1px solid var(--rule);
+      padding: 1.5rem 1.8rem;
+      margin: 2rem 0;
+      font-size: 0.93rem;
+      color: var(--ink-mid);
     }
 
-    .insight-box h3 {
-      margin-top: 0;
-      color: #1e3a8a;
+    /* ── 演化樹元件 (模組化) ── */
+    .evo-viz {
+      margin: 2.5rem 0;
     }
 
-    .visual-container {
-      background: #fafcff;
-      border-radius: 1rem;
-      padding: 1.5rem;
+    .evo-title-wrap {
       text-align: center;
-      border: 1px solid #e0e9f5;
-      margin: 1.5rem 0;
+      margin-bottom: 1.8rem;
     }
 
-    .mask-demo {
-      display: inline-block;
-      background: #ffffff;
-      padding: 0.6rem 1.2rem;
-      border-radius: 1rem;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    .evo-badge {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--ink-light);
+      background: var(--cream);
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
     }
 
-    .mask-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 48px);
-      gap: 6px;
+    .evo-root {
+      display: table;
+      margin: 0 auto 0.5rem;
+      background: var(--ink);
+      color: #f0ece4;
+      padding: 0.6rem 1.8rem;
+      border-radius: 40px;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+    }
+
+    .evo-branches {
+      display: flex;
       justify-content: center;
-      margin: 1rem 0;
+      gap: 80px;
+      margin: 12px 0 8px;
+    }
+
+    .evo-line {
+      height: 2px;
+      background: var(--rule);
+      width: 100px;
+    }
+
+    .evo-cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 0.5rem 0 2rem;
+    }
+
+    .evo-card {
+      flex: 1;
+      min-width: 220px;
+      background: #f9f7f4;
+      border-radius: 12px;
+      border: 1px solid var(--rule);
+      overflow: hidden;
+    }
+
+    .evo-card-head {
+      padding: 0.8rem 1rem;
+      text-align: center;
+      color: white;
+    }
+
+    .evo-card-body {
+      padding: 1rem;
+    }
+
+    .evo-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .evo-tag {
+      background: var(--cream);
+      border-radius: 20px;
+      padding: 2px 8px;
+      font-size: 0.65rem;
+    }
+
+    /* 特定卡片色調 */
+    .evo-enc .evo-card-head {
+      background: var(--accent2);
+    }
+
+    .evo-mix .evo-card-head {
+      background: var(--ink-light);
+    }
+
+    .evo-dec {
+      border: 2px solid var(--accent);
+      background: #fdf8ee;
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(192, 57, 43, 0.15);
+    }
+
+    .evo-dec .evo-card-head {
+      background: var(--accent);
+    }
+
+    .evo-dec .evo-tag {
+      background: var(--highlight);
+    }
+
+    /* ── 時間軸元件 ── */
+    .timeline {
+      border-left: 2px solid var(--accent2);
+      margin: 2.5rem 0 2.5rem 15px;
+      padding-left: 0;
+      /* 拔除原本的 Padding，改由 Flex 控制 */
+    }
+
+    .tl-item {
+      display: flex;
+      /* 使用 Flex 佈局讓年份與內容並排 */
+      align-items: flex-start;
+      position: relative;
+      margin-bottom: 3rem;
+    }
+
+    .tl-badge {
+      flex-shrink: 0;
+      /* 確保年份圖標絕對不會被壓縮變形 */
+      width: 75px;
+      /* 給予圖標固定寬度 */
+      background: var(--accent2);
+      color: white;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: bold;
+      text-align: center;
+      padding: 4px 8px;
+      border-radius: 4px;
+      margin-left: -38.5px;
+      /* 精準將圖標置中壓在左側垂直線上 */
+      margin-right: 24px;
+      /* 與右側文字拉開絕對安全的安全距離 */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    .tl-content {
+      flex: 1;
+      /* 讓內容自動填滿剩餘的右側空間 */
+    }
+
+    .tl-content h3 {
+      font-size: 1.1rem;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+
+    .tl-content p {
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+    }
+
+    .tl-tags span {
+      display: inline-block;
+      background: #e2e8f0;
+      color: #475569;
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin: 4px 4px 0 0;
+    }
+
+    /* ── 遮罩矩陣元件 (模組化) ── */
+    .mask-viz {
+      background: #fafcff;
+      border-radius: 12px;
+      padding: 1.8rem;
+      border: 1px solid #e0e9f5;
+      margin: 1.8rem 0;
+      overflow-x: auto;
+    }
+
+    .mask-grid-wrapper {
+      display: grid;
+      grid-template-columns: 70px repeat(4, 1fr);
+      gap: 4px;
+      min-width: 300px;
+      margin-top: 1.5rem;
     }
 
     .grid-cell {
-      width: 48px;
-      height: 48px;
-      background: #eef2ff;
+      text-align: center;
+      padding: 12px 4px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+    }
+
+    .grid-hdr {
+      background: #e2e8f0;
+      font-weight: 600;
+    }
+
+    .grid-corner {
+      background: #f1f5f9;
+      font-size: 0.65rem;
+      color: #475569;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 600;
-      border-radius: 12px;
-      font-size: 14px;
-      color: #1e293b;
-      transition: 0.1s;
+      text-align: center;
     }
 
-    .masked {
-      background: #cbd5e1;
-      color: #94a3b8;
-      background-image: repeating-linear-gradient(45deg, #aaa 0px, #aaa 2px, transparent 2px, transparent 8px);
+    .grid-active {
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid #86efac;
+      color: var(--success);
     }
 
-    .attn-label {
-      font-size: 0.8rem;
-      margin-top: 0.8rem;
-      color: #475569;
+    .grid-masked {
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+      color: var(--danger);
     }
 
-    .security-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin: 1.2rem 0;
-    }
-
-    .risk-card {
-      background: #fef2f2;
-      border-radius: 1rem;
+    .insight-box {
+      background: #fef3c7;
+      border-left: 4px solid #d97706;
       padding: 1rem 1.2rem;
-      flex: 1 1 200px;
-      border-left: 4px solid #ef4444;
+      margin-top: 1.5rem;
     }
 
-    .risk-card strong {
-      color: #b91c1c;
+    /* ── 資安卡片與反思 ── */
+    .risk-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+      margin: 2rem 0;
     }
 
+    .risk-cell {
+      background: var(--paper);
+      padding: 1.5rem;
+    }
+
+    .risk-tag {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.8rem;
+      font-weight: bold;
+    }
+
+    .pull-quote {
+      font-family: var(--serif);
+      font-size: clamp(1.3rem, 2vw, 1.6rem);
+      font-style: italic;
+      color: var(--ink);
+      border-left: 4px solid var(--accent);
+      padding: 0.5rem 1.5rem;
+      margin: 2.5rem 0;
+    }
+
+    .view-box {
+      background: #edf2f8;
+      border: 1px solid #c4d3e5;
+      padding: 1.8rem;
+      margin: 2rem 0;
+    }
+
+    .view-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--accent2);
+      display: block;
+      margin-bottom: 1rem;
+    }
+
+    /* ── Footer & Misc ── */
     footer {
-      background: #0f172a;
-      color: #cbd5e6;
-      padding: 2rem 0;
-      margin-top: 2rem;
-      border-top: 1px solid #1e293b;
+      background: var(--ink);
+      color: #888;
+      padding: 3rem 2rem;
+      margin-top: 4rem;
+    }
+
+    .footer-inner {
+      max-width: 860px;
+      margin: 0 auto;
     }
 
     footer h3 {
-      color: #f1f5f9;
-      margin-bottom: 1rem;
-      font-size: 1.2rem;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
     }
 
     footer ol {
       margin-left: 1.5rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
+      font-size: 0.85rem;
+      line-height: 1.6;
     }
 
-    footer li {
-      margin: 0.5rem 0;
+    .footer-copy {
+      border-top: 1px solid #2a2a2a;
+      padding-top: 1.5rem;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.05em;
+      color: #444;
     }
 
-    footer p {
-      color: #94a3b8;
-      font-size: 0.9rem;
-    }
-
-    .placeholder {
-      color: #4b5563;
-      font-style: italic;
-      background: #f1f5f9;
-      padding: 1rem;
-      border-radius: 1rem;
-    }
-
-    @media (max-width: 768px) {
-      header h1 {
-        font-size: 2rem;
-      }
-
-      .container {
-        padding: 0 16px;
-      }
-
-      .card {
-        padding: 1.5rem;
-      }
-
-      h2 {
-        font-size: 1.5rem;
-      }
-
-      .mask-grid {
-        grid-template-columns: repeat(4, 36px);
-        gap: 4px;
-      }
-
-      .grid-cell {
-        width: 36px;
-        height: 36px;
-        font-size: 11px;
-      }
-    }
-
-    a {
-      color: #2563eb;
-      text-decoration: none;
-    }
-
-    .btn-up {
+    .btn-top {
       position: fixed;
       bottom: 2rem;
       right: 2rem;
-      background: #1e293b;
-      color: white;
-      padding: 0.6rem 1rem;
-      border-radius: 40px;
-      font-size: 0.9rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      opacity: 0.7;
+      width: 40px;
+      height: 40px;
+      background: var(--ink);
+      border: 1px solid #333;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #888;
+      text-decoration: none;
       transition: 0.2s;
-      z-index: 99;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
     }
 
-    .btn-up:hover {
+    .btn-top.visible {
       opacity: 1;
-      background: #3b82f6;
+      pointer-events: all;
     }
 
-    code {
-      background: #eef2ff;
-      padding: 0.2rem 0.4rem;
-      border-radius: 8px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.9em;
+    .btn-top:hover {
+      background: #333;
+      color: #fff;
+    }
+
+    @media (max-width: 768px) {
+      .evo-branches {
+        display: none;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        padding: 4rem 1.2rem 2rem;
+      }
+
+      .page-wrap {
+        padding: 0 1.2rem 4rem;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <header>
-    <div class="container">
-      <h1>GPT 演算法深度解析</h1>
-      <p class="subtitle">國立臺北教育大學 · 資訊科學系 期末評量報告 | 指導教授：前瞻AI實驗室</p>
-      <nav>
-        <ul>
-          <li><a href="#introduction">📌 1. 架構血統</a></li>
-          <li><a href="#technical">⚙️ 2. 技術核心</a></li>
-          <li><a href="#security">🛡️ 3. 資安與實務</a></li>
-          <li><a href="#reflection">🧠 4. 學習反思</a></li>
-        </ul>
-      </nav>
+  <nav class="site-nav">
+    <span class="nav-logo">NTUE · CS · 2026</span>
+    <ul class="nav-links">
+      <li><a href="#introduction">架構血統</a></li>
+      <li><a href="#technical">技術核心</a></li>
+      <li><a href="#evolution">技術演進</a></li>
+      <li><a href="#security">資安實務</a></li>
+      <li><a href="#reflection">學習反思</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="開啟選單" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="overlay" id="overlay"></div>
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <p class="drawer-label">目錄 / Contents</p>
+    <nav>
+      <ul>
+        <li><a href="#introduction" class="drawer-link"><span class="d-num">01</span>架構血統</a></li>
+        <li><a href="#technical" class="drawer-link"><span class="d-num">02</span>技術核心</a></li>
+        <li><a href="#evolution" class="drawer-link"><span class="d-num">03</span>技術演進</a></li>
+        <li><a href="#security" class="drawer-link"><span class="d-num">04</span>資安實務</a></li>
+        <li><a href="#reflection" class="drawer-link"><span class="d-num">05</span>學習反思</a></li>
+      </ul>
+    </nav>
+    <div class="drawer-foot">
+      GPT 演算法期末評量報告<br>游騰睿<br>國立臺北教育大學 資訊科學系
+    </div>
+  </aside>
+
+  <header class="hero">
+    <p class="hero-eyebrow">期末評量報告</p>
+    <h1>GPT 演算法<br><em>深度解析</em></h1>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><span class="label">課程</span><span class="value">人工智慧概論</span></div>
+      <div class="hero-meta-item"><span class="label">系所</span><span class="value">國立臺北教育大學 · 資訊科學系</span></div>
+      <div class="hero-meta-item"><span class="label">作者</span><span class="value">游騰睿</span></div>
+      <div class="hero-meta-item"><span class="label">年度</span><span class="value">2026</span></div>
     </div>
   </header>
 
-  <main class="container">
+  <main class="page-wrap">
 
-    <!-- 章節 1：架構血統 -->
-    <section id="introduction" class="card">
-      <h2>一、從 Transformer 到 GPT：解碼器架構的崛起</h2>
-      <p>在 2017 年 <em>“Attention Is All You Need”</em> 論文問世後，Transformer 架構分化出了三種不同的演化路徑：以 BERT
-        為代表的編碼器（Encoder-Only）陣營、以 T5 為代表的混合（Encoder-Decoder）陣營，以及本報告的主角——以 <strong>GPT</strong>
-        為首的<strong>純解碼器（Decoder-Only）</strong>陣營。</p>
-      <p>與傳統追求雙向語境理解的模型不同，GPT 採取了更具挑戰性的「自回歸（Autoregressive）」路徑，僅透過預測下一個 Token 的簡單目標，卻在百億級參數的推升下，展現出了令人驚訝的零樣本學習（Zero-shot
-        Learning）與能力湧現。GPT 系列向世界證明了：<strong>足夠大的解碼器 + 足夠多的資料 + 自回歸預訓練</strong>，能夠讓語言模型產生「推理」的雛形。</p>
-
-      <div class="quick-summary">
-        <ul>
-          <li><strong>演算法定義：</strong> 基於 Transformer Decoder 的自回歸語言模型，每次生成一個 token 並以先前輸出為條件。</li>
-          <li><strong>核心解決痛點：</strong> 徹底屏棄傳統 RNN 難以並行訓練與無法有效處理長距離依賴（Long-range Dependency）的問題，同時透過因果遮罩實現合乎邏輯的序列生成。</li>
-          <li><strong>現代實務應用：</strong> 智慧程式碼輔助生成（如 GitHub Copilot）、自動化資安弱點分析報告、自主 AI Agent 推理核心、即時對話代理人。</li>
-        </ul>
-      </div>
-      <p>相較於 BERT 擅長「理解」任務，GPT 架構的優勢在於「創造」與「續寫」。從 GPT-3 的提示學習到 ChatGPT 的 RLHF 對齊，再至 GPT-4 的多模態能力，純解碼器架構已成為生成式 AI 的事實標準。
-      </p>
-    </section>
-
-    <!-- 章節 2：技術核心 + 自注意力數學底層 + 視覺化矩陣 -->
-    <section id="technical" class="card">
-      <h2>二、技術前沿：自注意力機制與數學底層</h2>
-      <p>GPT 的核心能力建立在 <strong>Scaled Dot-Product Attention（縮放點積注意力）</strong> 機制上。模型透過將輸入向量映射至三個獨立的矩陣：$Q$ (Query)、$K$
-        (Key)、$V$ (Value) 進行動態權重計算，其底層數學公式如下：</p>
-
-      <div class="formula">
-        $$Attention(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
+    <section id="introduction" class="section">
+      <div class="section-header">
+        <span class="section-num">01 —</span>
+        <h2>從 Transformer 到 GPT</h2>
       </div>
 
-      <div class="technical-deep-dive">
-        <h3>🔍 關鍵技術查證與修正（對應評量任務 3）</h3>
-        <p>在查證原始文獻時，多數通俗教學常忽略分母中<strong>縮放因子 $\sqrt{d_k}$</strong> 的物理意義。經深入論文查證發現：當特徵維度 $d_k$
-          極大時，點積（Dot-Product）的數值會劇烈增長，導致經由 $\text{softmax}$ 函數計算後的梯度陷入極其平緩的區域。加入 $\sqrt{d_k}$
-          能有效進行方差縮放，防止在反向傳播（Backpropagation）時發生<strong>梯度消失</strong>現象，穩定訓練過程。</p>
-        <p>此外，GPT 作為 Decoder-Only 模型，在進行自注意力計算時，會強制引入一個上三角的<strong>遮罩矩陣（Masking Matrix）</strong>。此機制使模型在預測第 $n$ 個 Token
-          時，其 Attention 權重無法分配給第 $n+1$ 之後的未來資訊，確保了其嚴格的自回歸特性。下圖展示了 4×4 的因果遮罩概念（灰色區塊代表遮蔽位置，模型無法看見未來 token）。</p>
-      </div>
+      <p>2017 年，<em>Attention Is All You Need</em> 論文的問世，讓 Transformer 架構迅速分化出三條演化路徑：以 BERT 為代表的編碼器（Encoder-Only）陣營、以 T5
+        為代表的混合（Encoder-Decoder）陣營，以及本報告的主角——以 <strong>GPT</strong> 為首的<strong>純解碼器（Decoder-Only）</strong>架構。</p>
+      <p>與傳統追求雙向語境理解的模型不同，GPT 採取了「自回歸（Autoregressive）」路徑：僅透過預測下一個 Token 的簡單目標，在百億級參數的推升下，展現出令人驚訝的零樣本學習（Zero-shot
+        Learning）與能力湧現。</p>
 
-      <!-- 簡易視覺化：注意力遮蔽矩陣示意圖 -->
-      <div class="visual-container">
-        <div class="mask-demo">
-          <div style="font-weight: 600; margin-bottom: 8px;">🔒 因果遮罩示意圖 (Causal Mask) — 上三角遮蔽</div>
-          <div class="mask-grid">
-            <div class="grid-cell">✓</div>
-            <div class="grid-cell masked">✗</div>
-            <div class="grid-cell masked">✗</div>
-            <div class="grid-cell masked">✗</div>
-            <div class="grid-cell">✓</div>
-            <div class="grid-cell">✓</div>
-            <div class="grid-cell masked">✗</div>
-            <div class="grid-cell masked">✗</div>
-            <div class="grid-cell">✓</div>
-            <div class="grid-cell">✓</div>
-            <div class="grid-cell">✓</div>
-            <div class="grid-cell masked">✗</div>
-            <div class="grid-cell">✓</div>
-            <div class="grid-cell">✓</div>
-            <div class="grid-cell">✓</div>
-            <div class="grid-cell">✓</div>
+      <div class="evo-viz">
+        <div class="evo-title-wrap">
+          <span class="evo-badge">📐 Transformer 架構演化樹</span>
+        </div>
+        <div class="evo-root">⚛️ Transformer (2017)</div>
+        <div class="evo-branches">
+          <div class="evo-line"></div>
+          <div class="evo-line"></div>
+          <div class="evo-line"></div>
+        </div>
+
+        <div class="evo-cards">
+          <div class="evo-card evo-enc">
+            <div class="evo-card-head"><span
+                style="font-size: 0.65rem; letter-spacing: 0.1em; font-family: monospace;">ENCODER-ONLY</span>
+              <div style="font-size: 1.5rem; font-weight: bold;">BERT</div>
+            </div>
+            <div class="evo-card-body">
+              <div class="evo-tags"><span class="evo-tag">🔍 雙向注意力</span><span class="evo-tag">📖 MLM</span></div>
+              <p style="font-size: 0.85rem;">擅長<strong>「理解」</strong>：分類、實體辨識</p>
+            </div>
           </div>
-          <div class="attn-label">✅ 可看見當前及過去位置 &nbsp;|&nbsp; 🚫 遮蔽未來信息 (token 無法窺探後續)</div>
-          <p style="font-size: 0.8rem; margin-top: 12px;">此設計確保生成時符合時間順序，並實現真正的自回歸預測。</p>
+          <div class="evo-card evo-mix">
+            <div class="evo-card-head"><span
+                style="font-size: 0.65rem; letter-spacing: 0.1em; font-family: monospace;">ENCODER-DECODER</span>
+              <div style="font-size: 1.5rem; font-weight: bold;">T5</div>
+            </div>
+            <div class="evo-card-body">
+              <div class="evo-tags"><span class="evo-tag">🔄 雙向+自回歸</span><span class="evo-tag">🔁 Seq2Seq</span></div>
+              <p style="font-size: 0.85rem;">擅長<strong>「轉換」</strong>：翻譯、摘要</p>
+            </div>
+          </div>
+          <div class="evo-card evo-dec">
+            <div class="evo-card-head"><span
+                style="font-size: 0.65rem; letter-spacing: 0.1em; font-family: monospace;">DECODER-ONLY ★</span>
+              <div style="font-size: 1.5rem; font-weight: bold;">GPT</div>
+            </div>
+            <div class="evo-card-body">
+              <div class="evo-tags"><span class="evo-tag">🎯 自回歸</span><span class="evo-tag">🔒 因果遮罩</span></div>
+              <p style="font-size: 0.85rem;">擅長<strong>「生成」</strong>：對話、推理、程式碼</p>
+              <div style="font-size: 0.75rem; color: #c0392b; margin-top: 10px; font-weight: bold;">⭐ 本報告重點</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="insight-box">
-        <h3>💡 智庫觀點：圖書館索引模擬（給非技術決策者）</h3>
-        <p><strong>給政商與非技術決策者的報告：</strong> 各位可以想像 GPT
-          內部運行著一座無限大的圖書館。當使用者給出指令時，它並非在僵硬地查閱字典，而是同步進行三件事：第一，確認你到底在問什麼（<strong>Query</strong>）；第二，掃描所有架上資料的標籤（<strong>Key</strong>）；第三，根據匹配程度，精準提取最有價值的內容（<strong>Value</strong>）。
-        </p>
-        <p>
-          這意味著大語言模型的強大不在於它「背下」了死板的知識，而在於它極其高效的<strong>資源動態調度能力</strong>。這也是為什麼我們不能將其當作百分之百正確的「知識百科」，而應將其視為一個具備極高產出效率的「機率預測與推理引擎」。同時，<strong>位置編碼</strong>與多頭注意力的協同作用使得
-          GPT 能掌握語序與層次語義。</p>
+      <div class="analysis-box">
+        <h4>現代 LLM 為何幾乎全面倒向解碼器架構？</h4>
+        <p>大語言模型的終極目標是「解決複雜任務」，生成能力是通用人工智慧的關鍵。</p>
+        <ul>
+          <li><strong>規模法則（Scaling Laws）：</strong> 解碼器架構的效能隨參數、算力呈冪律增長，完美契合現代 GPU 並行算力。</li>
+          <li><strong>推理湧現：</strong> In-Context Learning 與思維鏈（CoT）完全奠基於自回歸生成框架。</li>
+        </ul>
       </div>
-
-      <p>多頭注意力（Multi-Head Attention）進一步將 $Q,K,V$ 投影到多個子空間，讓模型能同時關注不同範圍的上下文關係，這也是 GPT 能捕捉複雜語法結構與篇章邏輯的關鍵。</p>
     </section>
 
-    <!-- 章節 3：實務應用與安全性（OWASP Top 10 for LLM） -->
-    <section id="security" class="card">
-      <h2>三、實務應用與安全性（OWASP Top 10 視角）</h2>
-      <p>將 GPT 導入企業軟體開發、資安監控及對話系統時，除了效能增益，也必須正視大型語言模型特有的資安風險。OWASP 基金會於 2023 年發佈了 <strong>LLM Top 10</strong> 風險清單，以下摘錄與
-        GPT 實務最相關的威脅與對策：</p>
-
-      <div class="security-grid">
-        <div class="risk-card"><strong>🔓 提示注入</strong><br>攻擊者透過精心建構的輸入覆蓋原始指令，可能導致模型洩漏系統提示或繞過安全護欄。</div>
-        <div class="risk-card"><strong>📊 訓練資料 poisoning</strong><br>若預訓練或微調資料遭汙染，模型可能輸出後門或偏差內容，需嚴格的資料溯源。</div>
-        <div class="risk-card"><strong>⚖️ 敏感資訊外洩</strong><br>模型可能記憶並重現訓練集中的機敏資料 (PII、API Key)，需搭配差分隱私與輸出過濾。</div>
-        <div class="risk-card"><strong>🎭 幻覺導致錯誤決策</strong><br>生成看似合理但錯誤的資訊，在自動化報告或資安告警場景可能造成嚴重誤判。</div>
+    <section id="technical" class="section">
+      <div class="section-header">
+        <span class="section-num">02 —</span>
+        <h2>技術核心：注意力機制與遮罩</h2>
       </div>
-      <p>實務上整合 GPT 時，可採用內容安全過濾器、最小權限原則、定期紅隊演練，以及將模型輸出與可靠知識庫（RAG）檢索結合以降低幻覺。本學期透過實務案例探討，認知到「AI 並非信任根源，而是可信輔助工具」。</p>
-      <p>應用亮點：利用 GPT 自動生成弱點掃描的解讀摘要、加速資安事件回應劇本撰寫，以及對抗社交工程郵件的分析。但務必搭配人機協作與稽核機制，方能實現安全增益。</p>
+
+      <p>GPT 的核心能力建立在 <strong>Scaled Dot-Product Attention（縮放點積注意力）</strong> 機制上。模型透過將輸入映射至
+        $Q$（Query）、$K$（Key）、$V$（Value）矩陣進行動態權重計算。</p>
+
+      <!-- 改善版：注意力機制五步核心流程 -->
+      <div class="attention-mechanism">
+        <h3 style="font-size: 1.1rem; margin-bottom: 1.2rem;">Scaled Dot-Product Attention 的五步核心</h3>
+
+        <!-- 數學公式置頂 -->
+        <div class="formula-block">
+          $$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
+        </div>
+
+        <!-- 層次化流程：分成兩組 -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem; margin: 2rem 0;">
+
+          <!-- 左欄：核心計算層 -->
+          <div>
+            <p
+              style="font-size: 0.85rem; color: var(--ink-light); font-weight: 600; margin-bottom: 1rem; letter-spacing: 0.08em;">
+              核心計算層</p>
+
+            <div class="flow-item" style="border-left: 3px solid #3b82f6; padding-left: 1rem; margin-bottom: 1.2rem;">
+              <div
+                style="font-family: var(--mono); font-size: 0.75rem; color: #3b82f6; margin-bottom: 0.3rem; font-weight: 600;">
+                步驟 1</div>
+              <h4 style="font-size: 0.95rem; margin-bottom: 0.4rem;">線性投影：得到 Q、K、V</h4>
+              <p style="font-size: 0.85rem; color: var(--ink-mid); line-height: 1.6;">輸入向量經三個獨立權重矩陣變換，產生
+                Query（查詢）、Key（鍵）、Value（值）三個表示。</p>
+            </div>
+
+            <div class="flow-item" style="border-left: 3px solid #06b6d4; padding-left: 1rem; margin-bottom: 1.2rem;">
+              <div
+                style="font-family: var(--mono); font-size: 0.75rem; color: #06b6d4; margin-bottom: 0.3rem; font-weight: 600;">
+                步驟 2</div>
+              <h4 style="font-size: 0.95rem; margin-bottom: 0.4rem;">點積相似度：計算 $QK^T$</h4>
+              <p style="font-size: 0.85rem; color: var(--ink-mid); line-height: 1.6;">Query 與 Key
+                的點積得到「關聯分數矩陣」，數值越大代表語義相關性越強。</p>
+            </div>
+
+            <div class="flow-item" style="border-left: 3px solid #8b5cf6; padding-left: 1rem;">
+              <div
+                style="font-family: var(--mono); font-size: 0.75rem; color: #8b5cf6; margin-bottom: 0.3rem; font-weight: 600;">
+                步驟 3</div>
+              <h4 style="font-size: 0.95rem; margin-bottom: 0.4rem;">梯度穩定：除以 $\sqrt{d_k}$</h4>
+              <p style="font-size: 0.85rem; color: var(--ink-mid); line-height: 1.6;">方差縮放防止高維點積過大，穩定 softmax
+                後的梯度，避免訓練時梯度消失。</p>
+            </div>
+          </div>
+
+          <!-- 右欄：正則化與融合層 -->
+          <div>
+            <p
+              style="font-size: 0.85rem; color: var(--ink-light); font-weight: 600; margin-bottom: 1rem; letter-spacing: 0.08em;">
+              正則化與融合層</p>
+
+            <div class="flow-item" style="border-left: 3px solid #f59e0b; padding-left: 1rem; margin-bottom: 1.2rem;">
+              <div
+                style="font-family: var(--mono); font-size: 0.75rem; color: #f59e0b; margin-bottom: 0.3rem; font-weight: 600;">
+                步驟 4</div>
+              <h4 style="font-size: 0.95rem; margin-bottom: 0.4rem;">機率正則化：$\text{softmax}(\cdot)$</h4>
+              <p style="font-size: 0.85rem; color: var(--ink-mid); line-height: 1.6;">將分數轉換為總和為 1
+                的機率分布（注意力權重），形成「注意力地圖」。</p>
+            </div>
+
+            <div class="flow-item" style="border-left: 3px solid #10b981; padding-left: 1rem; margin-bottom: 1.2rem;">
+              <div
+                style="font-family: var(--mono); font-size: 0.75rem; color: #10b981; margin-bottom: 0.3rem; font-weight: 600;">
+                步驟 5</div>
+              <h4 style="font-size: 0.95rem; margin-bottom: 0.4rem;">加權融合：乘上 V</h4>
+              <p style="font-size: 0.85rem; color: var(--ink-mid); line-height: 1.6;">注意力權重對 Value
+                向量進行加權求和，輸出包含上下文資訊的新向量表示。</p>
+            </div>
+
+            <div
+              style="background: #fef3c7; border-left: 4px solid #d97706; padding: 1rem 1rem 1rem 1rem; border-radius: 4px;">
+              <p style="font-size: 0.85rem; color: #92400e; margin: 0; line-height: 1.6;">
+                <strong>GPT 獨有機制：</strong> 在步驟 2 計算 $QK^T$ 前，加入<strong>因果遮罩（Causal Mask）</strong>，強制未來位置的分數設為
+                $-\infty$，經 softmax 後權重歸零，確保生成時遵循時序。
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 簡潔總結，去掉冗長圖說 -->
+        <div
+          style="margin-top: 1.5rem; padding: 1rem; background: #f0f9ff; border-left: 3px solid #3b82f6; border-radius: 0;">
+          <p style="font-size: 0.9rem; color: #1e3a8a; margin: 0; line-height: 1.7;">
+            <strong>核心洞察：</strong> 注意力機制的精妙在於用「軟選擇」（softmax 權重）取代「硬選擇」（one-hot），讓每個位置都能與所有上文建立加權連接。這種動態、可微分的資訊路由方式，是
+            Transformer 相比 RNN 的根本優勢。
+          </p>
+        </div>
+      </div>
+
+      <div class="tech-note">
+        <p><strong>縮放因子 $\sqrt{d_k}$ 的物理意義：</strong> 當特徵維度 $d_k$ 極大時，加入 $\sqrt{d_k}$ 進行方差縮放，能防止 $\text{softmax}$
+          後的梯度陷入極平緩區域，避免反向傳播時的<strong>梯度消失</strong>。</p>
+      </div>
+
+      <div class="mask-viz">
+        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">📊 因果遮罩（Causal Masking）矩陣示意圖</h3>
+        <p style="font-size: 0.85rem; color: #4b5563;">展示預測「我 ➔ 喜歡 ➔ 吃 ➔ 蘋果」時的內部遮蔽狀態。<br><span
+            style="color: var(--danger);">✗ 區域</span> 代表未來資訊被物理遮蔽。</p>
+
+        <div class="mask-grid-wrapper">
+          <div class="grid-cell grid-corner">Key →<br>Query ↓</div>
+          <div class="grid-cell grid-hdr">我</div>
+          <div class="grid-cell grid-hdr">喜歡</div>
+          <div class="grid-cell grid-hdr">吃</div>
+          <div class="grid-cell grid-hdr">蘋果</div>
+
+          <div class="grid-cell grid-hdr">我</div>
+          <div class="grid-cell grid-active">✓</div>
+          <div class="grid-cell grid-masked">✗</div>
+          <div class="grid-cell grid-masked">✗</div>
+          <div class="grid-cell grid-masked">✗</div>
+
+          <div class="grid-cell grid-hdr">喜歡</div>
+          <div class="grid-cell grid-active">✓</div>
+          <div class="grid-cell grid-active">✓</div>
+          <div class="grid-cell grid-masked">✗</div>
+          <div class="grid-cell grid-masked">✗</div>
+
+          <div class="grid-cell grid-hdr">吃</div>
+          <div class="grid-cell grid-active">✓</div>
+          <div class="grid-cell grid-active">✓</div>
+          <div class="grid-cell grid-active">✓</div>
+          <div class="grid-cell grid-masked">✗</div>
+
+          <div class="grid-cell grid-hdr">蘋果</div>
+          <div class="grid-cell grid-active">✓</div>
+          <div class="grid-cell grid-active">✓</div>
+          <div class="grid-cell grid-active">✓</div>
+          <div class="grid-cell grid-active">✓</div>
+        </div>
+
+      </div>
     </section>
 
-    <!-- 章節 4：學習反思 + 幻覺本質 -->
-    <section id="reflection" class="card">
-      <h2>四、學習反思：統計引擎與幻覺的本質</h2>
-      <p>透過這個學期對原始論文《Attention Is All You Need》與 GPT 系列技術報告的查證與實作，最大的體悟是：<strong>AI 不是真理機器，而是基於海量文本的高階機率預測器</strong>。GPT
-        本質上是在最大化「給定上文時，下一個 token 的條件機率」，因此它所生成的「知識」其實是機率分佈下最合理的組合，而非經過驗證的事實。</p>
-      <p>所謂<strong>「幻覺
-          (Hallucination)」</strong>現象，正是模型在低信心區域或缺乏訓練資料時，選擇了高機率卻錯誤的路徑。這不代表模型「說謊」，而是反映了統計模型在對抗不確定性時的本質缺陷。因此在專業領域（醫療、法律、關鍵基礎設施）採用
-        GPT 時，必須引入外部驗證鏈與檢索增強生成（RAG）。</p>
-      <div class="insight-box" style="background:#eef2ff;">
-        <h3>📌 我的觀點與未來方向</h3>
-        <p>
-          本次報告亦讓我反思：未來開發者不應迷信模型規模盲目擴大，反而應追求<strong>可解釋性注意力</strong>與<strong>輕量化推論架構</strong>。同時，理解「因果遮罩」與「位置編碼」等細節，才能真正掌握
-          GPT 背後的運算邏輯，而非停留在 API 呼叫層次。透過這份期末報告，我深刻理解為何 Transformer 被譽為「改變深度學習格局」的里程碑，也期許自己能投入更具安全意識的生成式 AI 應用開發。</p>
+    <section id="evolution" class="section">
+      <div class="section-header">
+        <span class="section-num">03 —</span>
+        <h2>參數即智慧：GPT 演化史與範式轉移</h2>
       </div>
-      <p>總結來說，GPT 演算法賦予了機器驚人的語言流暢度，但作為新一代資訊人員，我們必須同時具備演算法素養與風險意識，才能在 AI 浪潮中穩健前進。</p>
+      <p>隨著參數與訓練方法的演進，模型經歷了三次核心範式的轉移，這不僅是算力與資料規模的暴力突破，更是人工智慧從「特定任務工具」演進為「通用決策大腦」的實踐：</p>
+
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-badge">2018</div>
+          <div class="tl-content">
+            <h3>基礎驗證期：無監督預訓練的潛力 (GPT-1 / GPT-2)</h3>
+            <p>原始論文 <em>"Language Models are Unsupervised Multitask Learners"</em>
+              證實了單純透過海量文本進行「接龍預測」，模型就能在不修改網絡結構的情況下，具備零樣本學習（Zero-shot）的泛化可能。這階段奠定了「大數據預訓練 ➔ 少量下游微調」的技術路線。</p>
+            <div class="tl-tags"><span>無監督預訓練</span><span>Zero-shot 雛形</span><span>1.5B 參數上限</span></div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-badge">2020</div>
+          <div class="tl-content">
+            <h3>規模湧現期：Scaling Law 與提示工程 (GPT-3)</h3>
+            <p>參數暴力提升至 1,750 億。論文 <em>"Language Models are Few-Shot Learners"</em>
+              揭示了當模型規模跨越臨界點時，會「湧現（Emergence）」出未曾被刻意訓練的推理能力。此時模型不需要修改任何權重，僅透過給予範例（Few-shot）的<strong>上下文學習（In-context
+                Learning）</strong>，即可適應全新任務，進而誕生了「提示工程（Prompt Engineering）」這一全新人機界面。</p>
+            <div class="tl-tags"><span>Scaling Law 實證</span><span>能力湧現</span><span>In-context Learning</span></div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-badge">2022+</div>
+          <div class="tl-content">
+            <h3> 行為對齊期：指令微調與安全對齊 (ChatGPT / GPT-4 系列)</h3>
+            <p>這是模型從「純統計機率接龍」轉化為「可信賴代理人（AI Agent）」的關鍵。透過<strong>有監督微調（SFT）</strong>與<strong>人類回饋強化學習（RLHF）</strong>，將 AI
+              的輸出行為與人類的價值觀安全對齊（Alignment），使其具備強大的思維鏈（Chain-of-Thought, CoT）推理能力，並為後續發展資安防禦或企業決策應用提供了可防護的底座。</p>
+            <div class="tl-tags"><span>RLHF 安全對齊</span><span>思維鏈 (CoT)</span><span>AI Agent 推理大腦</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="security" class="section">
+      <div class="section-header">
+        <span class="section-num">04 —</span>
+        <h2>資安實務（OWASP LLM Top 10）</h2>
+      </div>
+
+      <p>將 GPT 導入企業環境（如 IDE 輔助或網路監控），必須正視大型語言模型特有的風險：</p>
+
+      <div class="risk-grid">
+        <div class="risk-cell">
+          <span class="risk-tag">LLM01: 提示注入</span>
+          <p>惡意輸入覆蓋原始指令，繞過系統安全護欄。</p>
+        </div>
+        <div class="risk-cell">
+          <span class="risk-tag">LLM03: 訓練資料汙染</span>
+          <p>微調資料遭竄改，導致模型輸出隱蔽的惡意後門。</p>
+        </div>
+        <div class="risk-cell">
+          <span class="risk-tag">LLM06: 敏感資訊外洩</span>
+          <p>記憶體重現導致 PII 或開發 API Key 遭提取。</p>
+        </div>
+        <div class="risk-cell">
+          <span class="risk-tag">LLM09: 幻覺誤導</span>
+          <p>生成看似合理卻錯誤的資安告警，引發錯誤決策。</p>
+        </div>
+      </div>
+      <p>實務整合建議採用：內容安全過濾器、最小權限原則，並結合 RAG 架構降低幻覺發生率。</p>
+    </section>
+
+    <section id="reflection" class="section">
+      <div class="section-header">
+        <span class="section-num">05 —</span>
+        <h2>學習反思：幻覺的本質</h2>
+      </div>
+
+      <div class="pull-quote">
+        AI 不是真理機器，而是基於海量文本的高階機率預測器。
+      </div>
+
+      <p>透過本次查證，最深刻的體悟是：GPT 本質上是最大化「給定上文時，下個 token 的條件機率」。它生成的知識是機率分佈的產物，而非經驗證的事實。幻覺現象是統計模型對抗不確定性時的必然結果。</p>
+
+      <div class="view-box">
+        <span class="view-label">未來展望</span>
+        <p>深入理解「因果遮罩」與演算法底層，才能掌握 AI 邏輯，而非淪為單純的 API 呼叫者。期許自己未來能開發出兼具效能與安全對齊（Alignment）的 LLM 應用。</p>
+      </div>
     </section>
 
   </main>
 
   <footer>
-    <div class="container">
-      <h3>📚 參考文獻 (References)</h3>
+    <div class="footer-inner">
+      <h3>參考文獻</h3>
       <ol>
-        <li>Vaswani, A., et al. (2017). "Attention Is All You Need." <em>Advances in Neural Information Processing
-            Systems</em>, 30.</li>
-        <li>Radford, A., et al. (2018). "Improving Language Understanding by Generative Pre-Training." <em>OpenAI
-            Technical Report</em>.</li>
-        <li>Radford, A., et al. (2019). "Language Models are Unsupervised Multitask Learners." <em>OpenAI</em> (GPT-2).
-        </li>
-        <li>OWASP Top 10 for Large Language Model Applications (LLM Top 10), 2023 Edition.</li>
-        <li>Brown, T. B., et al. (2020). "Language Models are Few-Shot Learners." <em>NeurIPS</em> (GPT-3).</li>
+        <li>Vaswani, A., et al. (2017). "Attention Is All You Need." <em>NeurIPS</em>.</li>
+        <li>Radford, A., et al. (2018). "Improving Language Understanding by Generative Pre-Training."</li>
+        <li>Brown, T. B., et al. (2020). "Language Models are Few-Shot Learners." <em>NeurIPS</em>.</li>
+        <li>OWASP Top 10 for LLM Applications, 2023 Edition.</li>
       </ol>
-      <p>&copy; 2026 游騰睿 (Yu Teng-Jui) — 國立臺北教育大學 資訊科學系. 本報告採用 CC BY-NC 4.0 授權。 | Built with ❤️ for GPT Algorithm Final
-        Report.</p>
+      <p class="footer-copy">© 2026 游騰睿 (Yu Teng-Jui) — 國立臺北教育大學 資訊科學系</p>
     </div>
   </footer>
 
-  <a href="#" class="btn-up" aria-label="回到頂部">↑ 返回頂部</a>
+  <a href="#" class="btn-top" id="btnTop">↑</a>
 
   <script>
-    // 平滑滾動 + 動態增加 header offset 避免被固定區塊遮擋 (簡單且確保KATEX渲染)
-    document.querySelectorAll('nav a[href^="#"], .btn-up').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        const targetId = this.getAttribute('href');
-        if (targetId === "#" || targetId === "") return;
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-          e.preventDefault();
-          const offset = 80;
-          const elementPosition = targetElement.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.scrollY - offset;
-          window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+    // Drawer Menu Logic
+    const hamburger = document.getElementById('hamburger');
+    const drawer = document.getElementById('drawer');
+    const overlay = document.getElementById('overlay');
+
+    const toggleMenu = () => {
+      const isOpen = drawer.classList.contains('open');
+      hamburger.classList.toggle('open');
+      drawer.classList.toggle('open');
+      overlay.classList.toggle('visible');
+      document.body.style.overflow = isOpen ? '' : 'hidden';
+    };
+
+    hamburger.addEventListener('click', toggleMenu);
+    overlay.addEventListener('click', toggleMenu);
+
+    document.querySelectorAll('.drawer-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggleMenu();
+        setTimeout(() => {
+          const target = document.querySelector(link.getAttribute('href'));
+          if (target) window.scrollTo({ top: target.offsetTop - 76, behavior: 'smooth' });
+        }, 300);
+      });
+    });
+
+    // Top Nav Smooth Scroll
+    document.querySelectorAll('.nav-links a').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) window.scrollTo({ top: target.offsetTop - 76, behavior: 'smooth' });
+      });
+    });
+
+    // Back to top button
+    const btnTop = document.getElementById('btnTop');
+    window.addEventListener('scroll', () => {
+      btnTop.classList.toggle('visible', window.scrollY > 400);
+    });
+
+    // Fade in animation
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
         }
       });
-    });
-    // 確保 KaTeX 渲染完成時重新調整（因為公式已由 auto-render 處理，此處不做多餘動作）
-    document.addEventListener("DOMContentLoaded", function () {
-      // 若公式因延遲未完整顯示可手動重新渲染，但 auto-render 足夠
-      if (typeof renderMathInElement !== 'undefined') {
-        renderMathInElement(document.body, {
-          delimiters: [
-            { left: '$$', right: '$$', display: true },
-            { left: '$', right: '$', display: false }
-          ]
-        });
-      }
-      // 添加一點微動畫效果給卡片 (輕量)
-      const cards = document.querySelectorAll('.card');
-      cards.forEach((card, idx) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(12px)';
-        setTimeout(() => {
-          card.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
-          card.style.opacity = '1';
-          card.style.transform = 'translateY(0)';
-        }, idx * 60);
-      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.section').forEach(s => {
+      s.style.opacity = '0';
+      s.style.transform = 'translateY(20px)';
+      observer.observe(s);
     });
   </script>
+
 </body>
 
 </html>
