@@ -17,7 +17,19 @@
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
     onload="renderMathInElement(document.body, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });"></script>
-
+  <!-- 👇 在此插入 Mermaid -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#ede8e0',
+        lineColor: '#d6cfc5',
+        fontFamily: 'DM Mono'
+      }
+    });
+  </script>
   <style>
     /* ── CSS 變數與基礎設定 ── */
     :root {
@@ -956,6 +968,82 @@
         padding: 0 1.2rem 4rem;
       }
     }
+
+    /* 卡片 hover 效果 */
+    .evo-card {
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .evo-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .evo-enc:hover {
+      border-color: var(--accent2);
+    }
+
+    .evo-mix:hover {
+      border-color: var(--ink-light);
+    }
+
+    .evo-dec:hover {
+      border-color: var(--accent);
+      transform: translateY(-8px);
+    }
+
+    /* 年份標籤 */
+    .evo-year {
+      font-size: 0.65rem;
+      color: var(--ink-light);
+      text-align: center;
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px dashed var(--rule);
+    }
+
+    /* GPT 卡片上的重點標籤 */
+    .highlight-tag {
+      font-size: 0.7rem;
+      background: var(--accent);
+      color: white;
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 20px;
+      margin-top: 8px;
+      text-align: center;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* 三種模式卡片的 hover 效果 */
+    .mode-card {
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .mode-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+    }
+
+    /* 表格的 hover 效果 */
+    .comparison-table tr:hover {
+      background: var(--cream);
+      transition: background 0.2s;
+    }
+
+    /* 響應式調整 */
+    @media (max-width: 768px) {
+      .three-mode-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tech-note {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
   </style>
 </head>
 
@@ -1017,98 +1105,74 @@
 
       <p>2017 年，<em>Attention Is All You Need</em> 論文的問世，讓 Transformer 架構迅速分化出三條演化路徑：以 BERT 為代表的編碼器（Encoder-Only）陣營、以 T5
         為代表的混合（Encoder-Decoder）陣營，以及本報告的主角——以 <strong>GPT</strong> 為首的<strong>純解碼器（Decoder-Only）</strong>架構。</p>
-      <p>與傳統追求雙向語境理解的模型不同，GPT 採取了「自回歸（Autoregressive）」路徑：僅透過預測下一個 Token 的簡單目標，在百億級參數的推升下，展現出令人驚訝的零樣本學習（Zero-shot
-        Learning）與能力湧現。</p>
 
+      <div class="summary-strip" style="margin: 1rem 0 1.5rem;">
+        <strong>📌 核心概念：</strong> GPT 採取「自回歸（Autoregressive）」路徑——僅透過預測下一個 Token 的簡單目標，在百億級參數的推升下，展現出令人驚訝的零樣本學習（Zero-shot
+        Learning）與能力湧現。
+      </div>
+
+      <!-- 演化樹視覺化（保留原有結構，加上 hover 動畫 class） -->
       <div class="evo-viz">
         <div class="evo-title-wrap">
-          <span class="evo-badge">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M21.3 8.11 15.89 2.7a1 1 0 0 0-1.41 0L3.29 13.89a1 1 0 0 0 0 1.41l5.41 5.41a1 1 0 0 0 1.41 0L21.3 9.52a1 1 0 0 0 0-1.41Z"/><path d="m16 6-3 3"/><path d="m14 8-1.5-1.5"/><path d="m19 11-3 3"/><path d="m17 13-1.5-1.5"/><path d="m12 14-3 3"/><path d="m10 16-1.5-1.5"/></svg>
-            Transformer 架構演化樹
-          </span>
+          <span class="evo-badge">📊 Transformer 架構演化樹</span>
         </div>
-        <div class="evo-root">
-          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12a15.3 15.3 0 0 1 10-4 15.3 15.3 0 0 1 10 4 15.3 15.3 0 0 1-10 4 15.3 15.3 0 0 1-10-4z"/></svg>
-          Transformer (2017)
-        </div>
+        <div class="evo-root">Transformer (2017)</div>
         <div class="evo-branches">
           <div class="evo-line"></div>
           <div class="evo-line"></div>
           <div class="evo-line"></div>
         </div>
-
         <div class="evo-cards">
+          <!-- BERT 卡片，加上年份 -->
           <div class="evo-card evo-enc">
-            <div class="evo-card-head"><span
-                style="font-size: 0.65rem; letter-spacing: 0.1em; font-family: monospace;">ENCODER-ONLY</span>
-              <div style="font-size: 1.5rem; font-weight: bold;">BERT</div>
+            <div class="evo-card-head">ENCODER-ONLY<div style="font-size:1.5rem;">BERT</div>
             </div>
             <div class="evo-card-body">
-              <div class="evo-tags">
-                <span class="evo-tag">
-                  <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                  雙向注意力
-                </span>
-                <span class="evo-tag">
-                  <svg class="icon" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                  MLM
-                </span>
-              </div>
-              <p style="font-size: 0.85rem;">擅長<strong>「理解」</strong>：分類、實體辨識</p>
+              <div class="evo-tags"><span class="evo-tag">🔍 雙向注意力</span><span class="evo-tag">📖 MLM</span></div>
+              <p>擅長<strong>「理解」</strong>：分類、實體辨識</p>
+              <div class="evo-year">📅 2018 · Google</div>
             </div>
           </div>
+          <!-- T5 卡片 -->
           <div class="evo-card evo-mix">
-            <div class="evo-card-head"><span
-                style="font-size: 0.65rem; letter-spacing: 0.1em; font-family: monospace;">ENCODER-DECODER</span>
-              <div style="font-size: 1.5rem; font-weight: bold;">T5</div>
+            <div class="evo-card-head">ENCODER-DECODER<div style="font-size:1.5rem;">T5</div>
             </div>
             <div class="evo-card-body">
-              <div class="evo-tags">
-                <span class="evo-tag">
-                  <svg class="icon" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M16 3h5v5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 21H3v-5"/></svg>
-                  雙向+自回歸
-                </span>
-                <span class="evo-tag">
-                  <svg class="icon" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>
-                  Seq2Seq
-                </span>
-              </div>
-              <p style="font-size: 0.85rem;">擅長<strong>「轉換」</strong>：翻譯、摘要</p>
+              <div class="evo-tags"><span class="evo-tag">🔄 雙向+自回歸</span><span class="evo-tag">📝 Seq2Seq</span></div>
+              <p>擅長<strong>「轉換」</strong>：翻譯、摘要</p>
+              <div class="evo-year">📅 2019 · Google</div>
             </div>
           </div>
+          <!-- GPT 卡片，重點強調 -->
           <div class="evo-card evo-dec">
-            <div class="evo-card-head"><span
-                style="font-size: 0.65rem; letter-spacing: 0.1em; font-family: monospace;">DECODER-ONLY ★</span>
-              <div style="font-size: 1.5rem; font-weight: bold;">GPT</div>
+            <div class="evo-card-head">DECODER-ONLY ★<div style="font-size:1.5rem;">GPT</div>
             </div>
             <div class="evo-card-body">
-              <div class="evo-tags">
-                <span class="evo-tag">
-                  <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-                  自回歸
-                </span>
-                <span class="evo-tag">
-                  <svg class="icon" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                  因果遮罩
-                </span>
-              </div>
-              <p style="font-size: 0.85rem;">擅長<strong>「生成」</strong>：對話、推理、程式碼</p>
-              <div style="font-size: 0.75rem; color: #c0392b; margin-top: 10px; font-weight: bold; display: flex; align-items: center; gap: 4px;">
-                <svg class="icon icon-star" viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="margin: 0; color: #c0392b;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                本報告重點
-              </div>
+              <div class="evo-tags"><span class="evo-tag">🔮 自回歸</span><span class="evo-tag">🚫 因果遮罩</span></div>
+              <p>擅長<strong>「生成」</strong>：對話、推理、程式碼</p>
+              <div class="evo-year">📅 2018 · OpenAI</div>
+              <div class="highlight-tag">⭐ 本報告重點</div>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- 深潛分析區塊：加入更多技術細節 -->
       <div class="analysis-box">
-        <h4>現代 LLM 為何幾乎全面倒向解碼器架構？</h4>
-        <p>大語言模型的終極目標是「解決複雜任務」，生成能力是通用人工智慧的關鍵。</p>
+        <h4>🤔 現代 LLM 為何幾乎全面倒向解碼器架構？</h4>
         <ul>
           <li><strong>規模法則（Scaling Laws）：</strong> 解碼器架構的效能隨參數、算力呈冪律增長，完美契合現代 GPU 並行算力。</li>
           <li><strong>推理湧現：</strong> In-Context Learning 與思維鏈（CoT）完全奠基於自回歸生成框架。</li>
+          <li><strong>⚡ 計算效率：</strong> 解碼器在生成時可快取 $K$、$V$ 矩陣（KV Cache），推論速度遠快於編碼器-解碼器混合架構。</li>
         </ul>
+        <div class="note">
+          💡 湧現案例：GPT-3（175B 參數）首次展現「上下文學習」——只需 2-3 個範例就能完成從未訓練過的任務，而 GPT-2（1.5B）完全無法做到。
+        </div>
+      </div>
+
+      <!-- 批判性反思（加分項） -->
+      <div class="tech-note" style="border-left-color: #d97706;">
+        <strong>📌 批判性反思：</strong> 純解碼器架構擅長生成，但在「理解全文語境再回答」的任務（如閱讀理解、情感分類）上，表現仍不如雙向的 BERT。實務上會依任務混用不同架構。
       </div>
     </section>
 
@@ -1125,10 +1189,21 @@
       <details class="technical-deep-dive attention-mechanism">
         <summary>
           <span class="summary-title">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M21.3 8.11 15.89 2.7a1 1 0 0 0-1.41 0L3.29 13.89a1 1 0 0 0 0 1.41l5.41 5.41a1 1 0 0 0 1.41 0L21.3 9.52a1 1 0 0 0 0-1.41Z"/><path d="m16 6-3 3"/><path d="m14 8-1.5-1.5"/><path d="m19 11-3 3"/><path d="m17 13-1.5-1.5"/><path d="m12 14-3 3"/><path d="m10 16-1.5-1.5"/></svg>
+            <svg class="icon" viewBox="0 0 24 24">
+              <path
+                d="M21.3 8.11 15.89 2.7a1 1 0 0 0-1.41 0L3.29 13.89a1 1 0 0 0 0 1.41l5.41 5.41a1 1 0 0 0 1.41 0L21.3 9.52a1 1 0 0 0 0-1.41Z" />
+              <path d="m16 6-3 3" />
+              <path d="m14 8-1.5-1.5" />
+              <path d="m19 11-3 3" />
+              <path d="m17 13-1.5-1.5" />
+              <path d="m12 14-3 3" />
+              <path d="m10 16-1.5-1.5" />
+            </svg>
             Scaled Dot-Product Attention 的五步核心
           </span>
-          <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+          <svg class="chevron" viewBox="0 0 24 24">
+            <path d="M6 9l6 6 6-6" />
+          </svg>
         </summary>
         <div class="details-content">
           <div class="details-inner">
@@ -1146,7 +1221,8 @@
                   style="font-size: 0.85rem; color: var(--ink-light); font-weight: 600; margin-bottom: 1rem; letter-spacing: 0.08em;">
                   核心計算層</p>
 
-                <div class="flow-item" style="border-left: 3px solid #3b82f6; padding-left: 1rem; margin-bottom: 1.2rem;">
+                <div class="flow-item"
+                  style="border-left: 3px solid #3b82f6; padding-left: 1rem; margin-bottom: 1.2rem;">
                   <div
                     style="font-family: var(--mono); font-size: 0.75rem; color: #3b82f6; margin-bottom: 0.3rem; font-weight: 600;">
                     步驟 1</div>
@@ -1155,7 +1231,8 @@
                     Query（查詢）、Key（鍵）、Value（值）三個表示。</p>
                 </div>
 
-                <div class="flow-item" style="border-left: 3px solid #06b6d4; padding-left: 1rem; margin-bottom: 1.2rem;">
+                <div class="flow-item"
+                  style="border-left: 3px solid #06b6d4; padding-left: 1rem; margin-bottom: 1.2rem;">
                   <div
                     style="font-family: var(--mono); font-size: 0.75rem; color: #06b6d4; margin-bottom: 0.3rem; font-weight: 600;">
                     步驟 2</div>
@@ -1180,7 +1257,8 @@
                   style="font-size: 0.85rem; color: var(--ink-light); font-weight: 600; margin-bottom: 1rem; letter-spacing: 0.08em;">
                   正則化與融合層</p>
 
-                <div class="flow-item" style="border-left: 3px solid #f59e0b; padding-left: 1rem; margin-bottom: 1.2rem;">
+                <div class="flow-item"
+                  style="border-left: 3px solid #f59e0b; padding-left: 1rem; margin-bottom: 1.2rem;">
                   <div
                     style="font-family: var(--mono); font-size: 0.75rem; color: #f59e0b; margin-bottom: 0.3rem; font-weight: 600;">
                     步驟 4</div>
@@ -1189,7 +1267,8 @@
                     的機率分布（注意力權重），形成「注意力地圖」。</p>
                 </div>
 
-                <div class="flow-item" style="border-left: 3px solid #10b981; padding-left: 1rem; margin-bottom: 1.2rem;">
+                <div class="flow-item"
+                  style="border-left: 3px solid #10b981; padding-left: 1rem; margin-bottom: 1.2rem;">
                   <div
                     style="font-family: var(--mono); font-size: 0.75rem; color: #10b981; margin-bottom: 0.3rem; font-weight: 600;">
                     步驟 5</div>
@@ -1201,10 +1280,15 @@
                 <details class="insight-box">
                   <summary>
                     <span class="summary-title">
-                      <svg class="icon" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                      <svg class="icon" viewBox="0 0 24 24">
+                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                      </svg>
                       GPT 獨有機制
                     </span>
-                    <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                    <svg class="chevron" viewBox="0 0 24 24">
+                      <path d="M6 9l6 6 6-6" />
+                    </svg>
                   </summary>
                   <div class="details-content">
                     <div class="details-inner">
@@ -1238,10 +1322,16 @@
       <details class="technical-deep-dive mask-viz">
         <summary>
           <span class="summary-title">
-            <svg class="icon" viewBox="0 0 24 24"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>
+            <svg class="icon" viewBox="0 0 24 24">
+              <line x1="18" x2="18" y1="20" y2="10" />
+              <line x1="12" x2="12" y1="20" y2="4" />
+              <line x1="6" x2="6" y1="20" y2="14" />
+            </svg>
             因果遮罩（Causal Masking）矩陣示意圖
           </span>
-          <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+          <svg class="chevron" viewBox="0 0 24 24">
+            <path d="M6 9l6 6 6-6" />
+          </svg>
         </summary>
         <div class="details-content">
           <div class="details-inner">
@@ -1289,38 +1379,285 @@
         <span class="section-num">03 —</span>
         <h2>參數即智慧：GPT 演化史與範式轉移</h2>
       </div>
-      <p>隨著參數與訓練方法的演進，模型經歷了三次核心範式的轉移，這不僅是算力與資料規模的暴力突破，更是人工智慧從「特定任務工具」演進為「通用決策大腦」的實踐：</p>
+      <p>
+        隨著參數與訓練方法的演進，模型經歷了五次核心範式的轉移，
+        這不僅是算力與資料規模的暴力突破，更是人工智慧從
+        「特定任務工具」演進為「自主行動代理人（Autonomous Agent）」的實踐：
+      </p>
 
       <div class="timeline">
+
+        <!-- ✅ 原版節點 1：保留 -->
         <div class="tl-item">
           <div class="tl-badge">2018</div>
           <div class="tl-content">
             <h3>基礎驗證期：無監督預訓練的潛力 (GPT-1 / GPT-2)</h3>
-            <p>原始論文 <em>"Language Models are Unsupervised Multitask Learners"</em>
-              證實了單純透過海量文本進行「接龍預測」，模型就能在不修改網絡結構的情況下，具備零樣本學習（Zero-shot）的泛化可能。這階段奠定了「大數據預訓練 ➔ 少量下游微調」的技術路線。</p>
-            <div class="tl-tags"><span>無監督預訓練</span><span>Zero-shot 雛形</span><span>1.5B 參數上限</span></div>
+            <p>
+              原始論文 <em>"Language Models are Unsupervised Multitask Learners"</em>
+              證實了單純透過海量文本進行「接龍預測」，模型就能在不修改網絡結構的
+              情況下，具備零樣本學習（Zero-shot）的泛化可能。
+              這階段奠定了「大數據預訓練 ➔ 少量下游微調」的技術路線。
+            </p>
+            <div class="tl-tags">
+              <span>無監督預訓練</span>
+              <span>Zero-shot 雛形</span>
+              <span>1.5B 參數上限</span>
+            </div>
           </div>
         </div>
 
+        <!-- ✅ 原版節點 2：保留 -->
         <div class="tl-item">
           <div class="tl-badge">2020</div>
           <div class="tl-content">
             <h3>規模湧現期：Scaling Law 與提示工程 (GPT-3)</h3>
-            <p>參數暴力提升至 1,750 億。論文 <em>"Language Models are Few-Shot Learners"</em>
-              揭示了當模型規模跨越臨界點時，會「湧現（Emergence）」出未曾被刻意訓練的推理能力。此時模型不需要修改任何權重，僅透過給予範例（Few-shot）的<strong>上下文學習（In-context
-                Learning）</strong>，即可適應全新任務，進而誕生了「提示工程（Prompt Engineering）」這一全新人機界面。</p>
-            <div class="tl-tags"><span>Scaling Law 實證</span><span>能力湧現</span><span>In-context Learning</span></div>
+            <p>
+              參數暴力提升至 1,750 億。論文 <em>"Language Models are Few-Shot Learners"</em>
+              揭示了當模型規模跨越臨界點時，會「湧現（Emergence）」出未曾被刻意訓練的
+              推理能力。此時模型不需要修改任何權重，僅透過給予範例（Few-shot）的
+              <strong>上下文學習（In-context Learning）</strong>，即可適應全新任務，
+              進而誕生了「提示工程（Prompt Engineering）」這一全新人機界面。
+            </p>
+            <div class="tl-tags">
+              <span>Scaling Law 實證</span>
+              <span>能力湧現</span>
+              <span>In-context Learning</span>
+            </div>
           </div>
         </div>
 
+        <!-- ✅ 原版節點 3：保留但縮小範圍至 2022-2023 -->
         <div class="tl-item">
-          <div class="tl-badge">2022+</div>
+          <div class="tl-badge">2022</div>
           <div class="tl-content">
-            <h3> 行為對齊期：指令微調與安全對齊 (ChatGPT / GPT-4 系列)</h3>
-            <p>這是模型從「純統計機率接龍」轉化為「可信賴代理人（AI Agent）」的關鍵。透過<strong>有監督微調（SFT）</strong>與<strong>人類回饋強化學習（RLHF）</strong>，將 AI
-              的輸出行為與人類的價值觀安全對齊（Alignment），使其具備強大的思維鏈（Chain-of-Thought, CoT）推理能力，並為後續發展資安防禦或企業決策應用提供了可防護的底座。</p>
-            <div class="tl-tags"><span>RLHF 安全對齊</span><span>思維鏈 (CoT)</span><span>AI Agent 推理大腦</span></div>
+            <h3>行為對齊期：指令微調與安全對齊 (ChatGPT / GPT-4)</h3>
+            <p>
+              這是模型從「純統計機率接龍」轉化為「可信賴助理」的關鍵。
+              透過<strong>有監督微調（SFT）</strong>與
+              <strong>人類回饋強化學習（RLHF）</strong>，將 AI 的輸出行為與
+              人類的價值觀安全對齊（Alignment），使其具備強大的
+              思維鏈（Chain-of-Thought, CoT）推理能力，並為後續發展資安防禦
+              或企業決策應用提供了可防護的底座。
+            </p>
+            <div class="tl-tags">
+              <span>RLHF 安全對齊</span>
+              <span>思維鏈 (CoT)</span>
+              <span>ChatGPT 破億用戶</span>
+            </div>
           </div>
+        </div>
+
+        <!-- 🆕 新增節點 4 -->
+        <div class="tl-item">
+          <div class="tl-badge">2024</div>
+          <div class="tl-content">
+            <h3>多模態融合期：感知擴展與推理模型誕生 (GPT-4o / o1)</h3>
+            <p>
+              GPT-4o（omni）整合文字、圖像、音訊與影片為單一模型，
+              真正實現跨感知通道的即時理解。同年底，o1 的問世代表
+              另一條新的技術路線正式登場：模型在回答前會先進行
+              <strong>內部推理步驟（Extended Thinking）</strong>，
+              以逐步推演取代直覺生成，在數學、程式、複雜邏輯上
+              大幅超越傳統 GPT 系列。
+            </p>
+            <div class="tl-tags">
+              <span>多模態融合（Omni）</span>
+              <span>推理前思考</span>
+              <span>o-series 誕生</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 🆕 新增節點 5 -->
+        <div class="tl-item">
+          <div class="tl-badge">2025</div>
+          <div class="tl-content">
+            <h3>自主工具使用期：GPT × o-series 大融合 (o3 / o4-mini / GPT-5)</h3>
+            <p>
+              o3 在針對一般智能設計的 ARC-AGI 基準測試中首次超越人類平均，
+              並開創了「<strong>主動工具調用（Agentic Tool Use）</strong>」——
+              推理模型能自主決定何時使用網路搜尋、程式執行、圖像分析等工具。
+              GPT-5（2025 年 8 月）正式合併兩條路線：快速通用的 GPT 系列
+              與深思熟慮的 o 系列統一為單一架構，成為兼具快速對話與
+              深度推理的 AI Agent 推理大腦。
+            </p>
+            <div class="tl-tags">
+              <span>o3 突破 ARC-AGI</span>
+              <span>GPT × o-series 統一架構</span>
+              <span>原生 Agentic 能力</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 🆕 新增節點 6 -->
+        <div class="tl-item">
+          <div class="tl-badge">2026</div>
+          <div class="tl-content">
+            <h3>自主行動期：電腦操作與快速迭代 (GPT-5.x)</h3>
+            <p>
+              GPT-5.4 帶著<strong>原生電腦使用能力（Computer Use）</strong>問世，
+              模型從「螢幕中的對話框」正式演變為「能操作軟體的 Agent」。
+              OpenAI 進入每月迭代週期（GPT-5.1 → 5.2 → 5.3 → 5.4 → 5.5），
+              幻覺比前代減少六倍，並能在橫跨法律、工程、物流、銷售等
+              40 種職業的任務中，與領域專家並駕齊驅甚至超越。
+            </p>
+            <div class="tl-tags">
+              <span>Computer Use</span>
+              <span>月度快速迭代</span>
+              <span>Agent 正式商業化</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 新增：應用層章節 -->
+    <section id="application" class="section">
+      <div class="section-header">
+        <span class="section-num">03.5 —</span>
+        <h2>應用層：GPT 落地場景與整合模式</h2>
+      </div>
+
+      <p>GPT 不僅是文本生成工具，其真正的價值在於透過適當的整合架構，解決特定領域的資訊處理瓶頸。以下為三種具備資安與開發實務價值的整合場景：</p>
+
+      <!-- 新增：模式對比總覽表格 -->
+      <div class="comparison-table" style="margin: 2rem 0; overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; background: var(--paper); border: 1px solid var(--rule);">
+          <thead>
+            <tr>
+              <th style="padding: 12px; background: var(--cream); border-bottom: 1px solid var(--rule);">模式</th>
+              <th style="padding: 12px; background: var(--cream); border-bottom: 1px solid var(--rule);">核心能力</th>
+              <th style="padding: 12px; background: var(--cream); border-bottom: 1px solid var(--rule);">典型應用</th>
+              <th style="padding: 12px; background: var(--cream); border-bottom: 1px solid var(--rule);">資安風險</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding: 10px; border-bottom: 1px solid var(--rule);"><strong>🔗 RAG</strong></td>
+              <td style="padding: 10px; border-bottom: 1px solid var(--rule);">知識庫問答</td>
+              <td style="padding: 10px; border-bottom: 1px solid var(--rule);">客服機器人、情資分析</td>
+              <td style="padding: 10px; border-bottom: 1px solid var(--rule);">檢索內容汙染</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border-bottom: 1px solid var(--rule);"><strong>🤖 Agent</strong></td>
+              <td style="padding: 10px; border-bottom: 1px solid var(--rule);">自主決策+工具調用</td>
+              <td style="padding: 10px; border-bottom: 1px solid var(--rule);">自動修補漏洞、自動交易</td>
+              <td style="padding: 10px; border-bottom: 1px solid var(--rule);">權限濫用、錯誤操作</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px;"><strong>✍️ Copilot</strong></td>
+              <td style="padding: 10px;">即時輔助建議</td>
+              <td style="padding: 10px;">程式碼補全、指令生成</td>
+              <td style="padding: 10px;">建議注入、隱私洩漏</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 三種模式的視覺化卡片（加入圖片/圖示） -->
+      <div class="three-mode-grid"
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.8rem; margin: 2rem 0;">
+
+        <!-- 模式 1：RAG + 架構圖 -->
+        <div class="mode-card"
+          style="background: var(--paper); border: 1px solid var(--rule); border-radius: 16px; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;">
+          <div
+            style="background: linear-gradient(135deg, #2c5f8a, #1a3a52); padding: 1rem; text-align: center; color: white;">
+            <span style="font-size: 2rem;">🔗</span>
+            <h3 style="margin: 0.5rem 0 0; font-size: 1.2rem;">RAG 知識增強</h3>
+          </div>
+          <div style="padding: 1.2rem;">
+            <!-- 示意圖：可以用 emoji 或 Unicode 繪製，也可以換成真實圖片 -->
+            <div
+              style="background: #f0f4f8; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; text-align: center; font-family: monospace; font-size: 0.75rem;">
+              📄 用戶問題 → 🔍 向量檢索 → 📚 知識庫 → 🤖 GPT → ✨ 回答
+            </div>
+            <p style="font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>資安威脅情資分析</strong></p>
+            <p style="font-size: 0.85rem; color: var(--ink-mid);">SOC 每日上千條告警，透過 RAG 讓 GPT 比對 CVE 資料庫，自動產出風險評估報告。</p>
+            <div style="margin-top: 1rem; font-size: 0.75rem; color: var(--accent2);">🔧 技術棧：ChromaDB / PGVector +
+              Embedding</div>
+          </div>
+        </div>
+
+        <!-- 模式 2：Agent + 流程圖 -->
+        <div class="mode-card"
+          style="background: var(--paper); border: 1px solid var(--rule); border-radius: 16px; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;">
+          <div
+            style="background: linear-gradient(135deg, #c0392b, #8b2a1f); padding: 1rem; text-align: center; color: white;">
+            <span style="font-size: 2rem;">🤖</span>
+            <h3 style="margin: 0.5rem 0 0; font-size: 1.2rem;">Agent 代理模式</h3>
+          </div>
+          <div style="padding: 1.2rem;">
+            <div
+              style="background: #f0f4f8; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; text-align: center; font-family: monospace; font-size: 0.75rem;">
+              🔍 偵測漏洞 → 🧠 決策分析 → 🔧 呼叫工具 → 📤 發送 PR → ✅ 審核
+            </div>
+            <p style="font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>自動化 Code Review</strong></p>
+            <p style="font-size: 0.85rem; color: var(--ink-mid);">CI/CD 流水線中偵測 SQL Injection，Agent 自動定位並發送修補 PR。</p>
+            <div style="margin-top: 1rem; font-size: 0.75rem; color: var(--accent2);">🔧 技術棧：Function Calling +
+              LangChain + GitHub API</div>
+          </div>
+        </div>
+
+        <!-- 模式 3：Copilot + 示意圖 -->
+        <div class="mode-card"
+          style="background: var(--paper); border: 1px solid var(--rule); border-radius: 16px; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;">
+          <div
+            style="background: linear-gradient(135deg, #d4b896, #a07e56); padding: 1rem; text-align: center; color: white;">
+            <span style="font-size: 2rem;">✍️</span>
+            <h3 style="margin: 0.5rem 0 0; font-size: 1.2rem;">Copilot 輔助模式</h3>
+          </div>
+          <div style="padding: 1.2rem;">
+            <div
+              style="background: #f0f4f8; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; text-align: center; font-family: monospace; font-size: 0.75rem;">
+              ⌨️ 使用者輸入 → 💡 AI 即時建議 → ✅ 人類決策 → 🚀 執行
+            </div>
+            <p style="font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>Linux 核心配置輔助</strong></p>
+            <p style="font-size: 0.85rem; color: var(--ink-mid);">終端機中即時產生 iptables 規則，管理員審視後決定是否採用。</p>
+            <div style="margin-top: 1rem; font-size: 0.75rem; color: var(--accent2);">🔧 技術棧：終端機插件 + 本地 LLM + 權限管控</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 技術棧區塊（保留原有但加上視覺化） -->
+      <div class="summary-strip" style="background: #fdf6ea; border-left: 3px solid #d4b896; margin: 2rem 0;">
+        <h4 style="font-family: var(--serif); font-size: 1.1rem; margin-bottom: 0.75rem;">🔧 實務整合技術棧 (Tech Stack)</h4>
+
+        <!-- 把原本的 ul 改成更視覺化的方式 -->
+        <div style="display: flex; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 1rem;">
+          <span style="background: #e8e0d5; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">🛡️ 輸入防護層</span>
+          <span style="background: #e8e0d5; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">📚 檢索層
+            (ChromaDB/PGVector)</span>
+          <span style="background: #e8e0d5; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">🧠 推論核心
+            (GPT-4o/Llama 3)</span>
+          <span style="background: #e8e0d5; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">🚧 輸出護欄
+            (Guardrails)</span>
+          <span style="background: #e8e0d5; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">📊 可觀測性
+            (LangSmith/Langfuse)</span>
+        </div>
+
+        <ul style="margin-left: 1.2rem;">
+          <li><strong>輸入防護層</strong>：利用 Regex 與輕量分類模型先行攔截 Prompt Injection。</li>
+          <li><strong>檢索層</strong>：使用 <em>ChromaDB</em> 或 <em>PGVector</em> 進行語義檢索，建立企業級 RAG 管道。</li>
+          <li><strong>推論核心</strong>：混合使用 GPT-4o (複雜推理) 與開源的 Llama 3 (特定任務、成本效益高)。</li>
+          <li><strong>輸出護欄</strong>：設定 <em>Guardrails</em> 偵測模型是否輸出未經授權的代碼或敏感 PII。</li>
+          <li><strong>可觀測性</strong>：引入 <em>LangSmith</em> 或 <em>Langfuse</em> 追蹤 Agent 的推理鏈 (CoT)，便於除錯與微調。</li>
+        </ul>
+      </div>
+
+      <!-- 趨勢洞察 + 視覺化圖表 -->
+      <div class="tech-note"
+        style="margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center;">
+        <div style="flex: 2;">
+          <p><strong>💡 趨勢洞察：</strong> 我們正在進入「 Agentic Workflow (代理工作流)」時代。過去應用僅是將 LLM 視為「輸入與輸出」的終端，現在我們透過 Function
+            Calling 與工具串接，賦予模型「決策權」，這使得 AI 系統的複雜度與風險同樣呈現非線性增長。對於開發者而言，<strong>「防禦性架構設計」</strong>比模型本身的選用更重要。</p>
+        </div>
+        <div style="flex: 1; text-align: center; background: var(--cream); border-radius: 12px; padding: 1rem;">
+          <div style="font-size: 2rem;">📈</div>
+          <div style="font-size: 0.7rem; font-family: monospace;">Agent 市場 CAGR 預測</div>
+          <div style="font-size: 1.2rem; font-weight: bold;">+45.8%</div>
+          <div style="font-size: 0.6rem; color: var(--ink-light);">(2024-2030)</div>
         </div>
       </div>
     </section>
@@ -1388,7 +1725,8 @@
   </footer>
 
   <a href="#" class="btn-top" id="btnTop" aria-label="回到頂部">
-    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"
+      stroke-linecap="round" stroke-linejoin="round">
       <line x1="12" y1="19" x2="12" y2="5"></line>
       <polyline points="5 12 12 5 19 12"></polyline>
     </svg>
@@ -1470,10 +1808,10 @@
     document.querySelectorAll('details.technical-deep-dive, details.insight-box').forEach(details => {
       const summary = details.querySelector('summary');
       const content = details.querySelector('.details-content');
-      
+
       summary.addEventListener('click', (e) => {
         e.preventDefault();
-        
+
         if (details.classList.contains('collapsing') || details.classList.contains('expanding')) {
           return;
         }
@@ -1482,11 +1820,11 @@
           // Close animation
           details.classList.add('collapsing');
           content.style.height = `${content.offsetHeight}px`;
-          
+
           // Force reflow
           content.offsetHeight;
           content.style.height = '0px';
-          
+
           const onTransitionEnd = (event) => {
             if (event.propertyName === 'height') {
               details.removeAttribute('open');
@@ -1501,12 +1839,12 @@
           details.classList.add('expanding');
           details.setAttribute('open', '');
           const targetHeight = content.scrollHeight;
-          
+
           content.style.height = '0px';
           // Force reflow
           content.offsetHeight;
           content.style.height = `${targetHeight}px`;
-          
+
           const onTransitionEnd = (event) => {
             if (event.propertyName === 'height') {
               details.classList.remove('expanding');
