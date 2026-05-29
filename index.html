@@ -389,15 +389,13 @@
       transform: rotate(180deg);
     }
 
-    /* Content Wrapper transition using heights via JS */
+    /* 簡化版：無動畫，但結構乾淨 */
     details .details-content {
-      height: 0;
-      overflow: hidden;
-      transition: height 0.3s ease-in-out;
+      /* 不需要任何 height 或 transition 設定 */
     }
 
-    details[open]:not(.collapsing) .details-content {
-      height: auto;
+    details[open] .details-content {
+      /* 打開時自動顯示 */
     }
 
     details .details-inner {
@@ -1044,6 +1042,158 @@
         text-align: center;
       }
     }
+
+    /* 讓時間軸案例有 hover 效果 */
+    .hallucination-timeline>div {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .hallucination-timeline>div:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 引號區塊的圖示動畫 */
+    .pull-quote svg {
+      transition: transform 0.3s ease;
+    }
+
+    .pull-quote:hover svg {
+      transform: scale(1.05);
+    }
+
+    /* 技術原因卡片的 hover 效果 */
+    #reflection .cream-card {
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    #reflection .cream-card:hover {
+      transform: translateY(-4px);
+      background: #f5efe5;
+    }
+
+    /* 個人反思區塊的淡入動畫 */
+    #reflection .view-box,
+    #reflection .personal-reflection {
+      animation: fadeInUp 0.5s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 輪播容器樣式 */
+    .carousel-track::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .carousel-track::-webkit-scrollbar-track {
+      background: var(--cream);
+      border-radius: 10px;
+    }
+
+    .carousel-track::-webkit-scrollbar-thumb {
+      background: var(--rule);
+      border-radius: 10px;
+    }
+
+    .carousel-track {
+      scrollbar-width: thin;
+    }
+
+    /* 卡片 hover 效果 */
+    .risk-carousel-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+      border-color: var(--accent);
+    }
+
+    /* 導航箭頭 hover */
+    .carousel-nav:hover {
+      background: var(--accent);
+      transform: translateY(-50%) scale(1.05);
+    }
+
+    /* 進度點樣式 */
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--rule);
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      width: 24px;
+      border-radius: 4px;
+      background: var(--accent);
+    }
+
+    /* Modal 動畫 */
+    .modal {
+      animation: fadeIn 0.2s ease;
+    }
+
+    .modal-content {
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @media print {
+
+      .site-nav,
+      .btn-top,
+      .hamburger,
+      .drawer {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+        color: black;
+      }
+
+      .page-wrap {
+        max-width: 100%;
+        padding: 0;
+      }
+
+      .card {
+        break-inside: avoid;
+        border: 1px solid #ccc;
+        box-shadow: none;
+      }
+    }
   </style>
 </head>
 
@@ -1100,21 +1250,39 @@
     <section id="introduction" class="section">
       <div class="section-header">
         <span class="section-num">01 —</span>
-        <h2>從 Transformer 到 GPT</h2>
+        <h2>從 Transformer 到 GPT：2026 年回顧</h2>
       </div>
 
-      <p>2017 年，<em>Attention Is All You Need</em> 論文的問世，讓 Transformer 架構迅速分化出三條演化路徑：以 BERT 為代表的編碼器（Encoder-Only）陣營、以 T5
-        為代表的混合（Encoder-Decoder）陣營，以及本報告的主角——以 <strong>GPT</strong> 為首的<strong>純解碼器（Decoder-Only）</strong>架構。</p>
-
-      <div class="summary-strip" style="margin: 1rem 0 1.5rem;">
-        <strong>📌 核心概念：</strong> GPT 採取「自回歸（Autoregressive）」路徑——僅透過預測下一個 Token 的簡單目標，在百億級參數的推升下，展現出令人驚訝的零樣本學習（Zero-shot
-        Learning）與能力湧現。
+      <!-- 開場段落 + 縮小版圖片並排（可讀性更高） -->
+      <div style="display: flex; flex-wrap: wrap; gap: 2rem; margin-bottom: 2rem; align-items: center;">
+        <div style="flex: 2;">
+          <p>2017 年，<em>Attention Is All You Need</em> 論文的問世，讓 Transformer 架構迅速分化出三條演化路徑：以 BERT
+            為代表的編碼器（Encoder-Only）陣營、以 T5 為代表的混合（Encoder-Decoder）陣營，以及本報告的主角——以 <strong>GPT</strong>
+            為首的<strong>純解碼器（Decoder-Only）</strong>架構。</p>
+        </div>
+        <div style="flex: 1;">
+          <figure style="margin: 0;">
+            <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&q=80"
+              alt="神經網路與大腦意象圖，象徵 Transformer 架構" loading="lazy"
+              style="width:100%; border-radius:16px; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+            <figcaption
+              style="font-family: var(--mono); font-size:0.65rem; color: var(--ink-light); margin-top:0.4rem; text-align:center;">
+              圖：Transformer 以自注意力機制模擬人腦連結。圖片來源 Unsplash, CC0
+            </figcaption>
+          </figure>
+        </div>
       </div>
 
-      <!-- 演化樹視覺化（保留原有結構，加上 hover 動畫 class） -->
+      <!-- 核心概念摘要 -->
+      <div class="summary-strip" style="margin: 0 0 1.5rem 0;">
+        <strong>📌 核心概念：</strong> GPT 採取「自回歸（Autoregressive）」路徑——僅透過預測下一個 Token 的簡單目標，在千億級參數的推升下，展現出令人驚訝的零樣本學習（Zero-shot
+        Learning）與能力湧現。2025 年 8 月 GPT-5 上線後，正式進入「統一模型」時代。
+      </div>
+
+      <!-- 演化樹視覺化：更新到 2025-2026 -->
       <div class="evo-viz">
         <div class="evo-title-wrap">
-          <span class="evo-badge">📊 Transformer 架構演化樹</span>
+          <span class="evo-badge">📊 Transformer 架構演化樹 2017-2026</span>
         </div>
         <div class="evo-root">Transformer (2017)</div>
         <div class="evo-branches">
@@ -1123,7 +1291,7 @@
           <div class="evo-line"></div>
         </div>
         <div class="evo-cards">
-          <!-- BERT 卡片，加上年份 -->
+          <!-- BERT 卡片 -->
           <div class="evo-card evo-enc">
             <div class="evo-card-head">ENCODER-ONLY<div style="font-size:1.5rem;">BERT</div>
             </div>
@@ -1143,37 +1311,57 @@
               <div class="evo-year">📅 2019 · Google</div>
             </div>
           </div>
-          <!-- GPT 卡片，重點強調 -->
+          <!-- GPT 卡片，重點強調，更新到 GPT-5 -->
           <div class="evo-card evo-dec">
-            <div class="evo-card-head">DECODER-ONLY ★<div style="font-size:1.5rem;">GPT</div>
+            <div class="evo-card-head">DECODER-ONLY ★<div style="font-size:1.5rem;">GPT-5</div>
             </div>
             <div class="evo-card-body">
-              <div class="evo-tags"><span class="evo-tag">🔮 自回歸</span><span class="evo-tag">🚫 因果遮罩</span></div>
-              <p>擅長<strong>「生成」</strong>：對話、推理、程式碼</p>
-              <div class="evo-year">📅 2018 · OpenAI</div>
-              <div class="highlight-tag">⭐ 本報告重點</div>
+              <div class="evo-tags"><span class="evo-tag">🔮 自回歸</span><span class="evo-tag">🧠 統一架構</span></div>
+              <p>擅長<strong>「生成+推理」</strong>：Agent、多模態、寫程式</p>
+              <div class="evo-year">📅 2025/8/7 · OpenAI</div>
+              <div class="highlight-tag">⭐ 統一快思慢想</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- 深潛分析區塊：加入更多技術細節 -->
+      <!-- 深潛分析區塊：加入 2025-2026 技術細節 -->
       <div class="analysis-box">
-        <h4>🤔 現代 LLM 為何幾乎全面倒向解碼器架構？</h4>
+        <h4>🤔 2025 年後 LLM 為何仍全面倒向解碼器架構？</h4>
         <ul>
-          <li><strong>規模法則（Scaling Laws）：</strong> 解碼器架構的效能隨參數、算力呈冪律增長，完美契合現代 GPU 並行算力。</li>
-          <li><strong>推理湧現：</strong> In-Context Learning 與思維鏈（CoT）完全奠基於自回歸生成框架。</li>
-          <li><strong>⚡ 計算效率：</strong> 解碼器在生成時可快取 $K$、$V$ 矩陣（KV Cache），推論速度遠快於編碼器-解碼器混合架構。</li>
+          <li><strong>規模法則 2.0：</strong> GPT-5 參數量未公開，但 context window 已達 272K tokens，繼續驗證解碼器架構的 scaling 優勢。</li>
+          <li><strong>統一架構：</strong> GPT-5 整合 o-series 推理能力 + GPT 快速回應，不再讓用戶手動選模型，自動路由最佳路徑。</li>
+          <li><strong>Agentic 能力：</strong> GPT-5.2 推出 instant/thinking/pro 三模式，thinking 模式可執行長鏈工具呼叫，成為 AI Agent 標準底座。
+          </li>
+          <li><strong>⚡ 計算效率：</strong> 解碼器 KV Cache + MoE 專家混合，讓 GPT-5.1 Instant 對難題仍保持快速。</li>
         </ul>
         <div class="note">
-          💡 湧現案例：GPT-3（175B 參數）首次展現「上下文學習」——只需 2-3 個範例就能完成從未訓練過的任務，而 GPT-2（1.5B）完全無法做到。
+          💡 湧現案例：GPT-5 首次達到「博士級專家」水準，可在無範例下寫完整電腦程式。2025/12 的 GPT-5.2 更加入四種可選人格。
         </div>
       </div>
 
-      <!-- 批判性反思（加分項） -->
+      <!-- 第二張圖片（同樣縮小） -->
+      <figure style="margin: 2rem 0; text-align: center;">
+        <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&q=80"
+          alt="AI 機器人與人類協作，象徵 GPT-5 統一架構" loading="lazy"
+          style="width:100%; max-width:500px; border-radius:16px; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+        <figcaption style="font-family: var(--mono); font-size:0.65rem; color: var(--ink-light); margin-top:0.4rem;">
+          圖：GPT-5 定位為「統一智能」，自動切換快思與慢想。圖片來源 Unsplash, CC0
+        </figcaption>
+      </figure>
+
+      <!-- 批判性反思 -->
       <div class="tech-note" style="border-left-color: #d97706;">
-        <strong>📌 批判性反思：</strong> 純解碼器架構擅長生成，但在「理解全文語境再回答」的任務（如閱讀理解、情感分類）上，表現仍不如雙向的 BERT。實務上會依任務混用不同架構。
+        <strong>📌 2026 批判性反思：</strong> 即使 GPT-5.4 已上線，純解碼器在「需要全文雙向理解」的任務仍可能輸給 BERT 類模型。實務上 RAG + 重排序模型常混用 Encoder
+        做理解、Decoder 做生成。另 GPT-5 仍有記憶、自主性限制，非萬能。
       </div>
+
+      <!-- 最新時間軸 -->
+      <p
+        style="margin-top:2rem; padding:1rem; background:var(--cream); border-left:3px solid var(--accent2); border-radius:12px;">
+        <strong>📅 最新時間軸：</strong> GPT-5 於 2025/8/7 發布 → GPT-5.1 於 2025/11/12 更新 → GPT-5.2 於 2025/12/11 發布 → GPT-5.4 於
+        2026/3/5 發布。本報告以 GPT-5 系列為主要分析對象。
+      </p>
     </section>
 
     <section id="technical" class="section">
@@ -1182,11 +1370,28 @@
         <h2>技術核心：注意力機制與遮罩</h2>
       </div>
 
-      <p>GPT 的核心能力建立在 <strong>Scaled Dot-Product Attention（縮放點積注意力）</strong> 機制上。模型透過將輸入映射至
-        $Q$（Query）、$K$（Key）、$V$（Value）矩陣進行動態權重計算。</p>
+      <!-- 開場段落 + 推薦圖片 -->
+      <div style="display: flex; flex-wrap: wrap; gap: 2rem; margin-bottom: 2rem;">
+        <div style="flex: 2;">
+          <p>GPT 的核心能力建立在 <strong>Scaled Dot-Product Attention（縮放點積注意力）</strong> 機制上。模型透過將輸入映射至
+            $Q$（Query）、$K$（Key）、$V$（Value）矩陣進行動態權重計算，讓每個詞彙都能「關注」序列中其他詞彙的相關程度。</p>
+          <p>這種設計取代了傳統 RNN 的逐步記憶，使模型能平行處理整個序列，並捕捉長距離依賴關係——這也是 Transformer 家族能擴展到數千億參數的關鍵。</p>
+        </div>
+        <div style="flex: 1;">
+          <figure style="margin: 0;">
+            <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&q=80"
+              alt="抽象神經網路節點連結，象徵注意力機制的信息流動" loading="lazy"
+              style="width:100%; border-radius:20px; box-shadow:0 6px 14px rgba(0,0,0,0.08);">
+            <figcaption
+              style="font-family: var(--mono); font-size:0.7rem; color: var(--ink-light); margin-top:0.5rem; text-align:center;">
+              圖：注意力機制讓資訊在全序列中動態流動。圖片來源 Unsplash (CC0)
+            </figcaption>
+          </figure>
+        </div>
+      </div>
 
-      <!-- 改善版：注意力機制五步核心流程 -->
-      <details class="technical-deep-dive attention-mechanism">
+      <!-- 改良版：注意力機制分解步驟（垂直卡片，更易閱讀） -->
+      <details class="technical-deep-dive attention-mechanism" open>
         <summary>
           <span class="summary-title">
             <svg class="icon" viewBox="0 0 24 24">
@@ -1207,118 +1412,120 @@
         </summary>
         <div class="details-content">
           <div class="details-inner">
-            <!-- 數學公式置頂 -->
+            <!-- 數學公式醒目置頂 -->
             <div class="formula-block">
               $$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
             </div>
 
-            <!-- 層次化流程：分成兩組 -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem; margin: 2rem 0;">
+            <!-- 改為垂直步驟 + 視覺進度條，更適合手機閱讀 -->
+            <div style="margin: 2rem 0;">
 
-              <!-- 左欄：核心計算層 -->
-              <div>
-                <p
-                  style="font-size: 0.85rem; color: var(--ink-light); font-weight: 600; margin-bottom: 1rem; letter-spacing: 0.08em;">
-                  核心計算層</p>
-
-                <div class="flow-item"
-                  style="border-left: 3px solid #3b82f6; padding-left: 1rem; margin-bottom: 1.2rem;">
-                  <div
-                    style="font-family: var(--mono); font-size: 0.75rem; color: #3b82f6; margin-bottom: 0.3rem; font-weight: 600;">
-                    步驟 1</div>
-                  <h4 style="font-size: 0.95rem; margin-bottom: 0.4rem;">線性投影：得到 Q、K、V</h4>
-                  <p style="font-size: 0.85rem; color: var(--ink-mid); line-height: 1.6;">輸入向量經三個獨立權重矩陣變換，產生
-                    Query（查詢）、Key（鍵）、Value（值）三個表示。</p>
-                </div>
-
-                <div class="flow-item"
-                  style="border-left: 3px solid #06b6d4; padding-left: 1rem; margin-bottom: 1.2rem;">
-                  <div
-                    style="font-family: var(--mono); font-size: 0.75rem; color: #06b6d4; margin-bottom: 0.3rem; font-weight: 600;">
-                    步驟 2</div>
-                  <h4 style="font-size: 0.95rem; margin-bottom: 0.4rem;">點積相似度：計算 $QK^T$</h4>
-                  <p style="font-size: 0.85rem; color: var(--ink-mid); line-height: 1.6;">Query 與 Key
-                    的點積得到「關聯分數矩陣」，數值越大代表語義相關性越強。</p>
-                </div>
-
-                <div class="flow-item" style="border-left: 3px solid #8b5cf6; padding-left: 1rem;">
-                  <div
-                    style="font-family: var(--mono); font-size: 0.75rem; color: #8b5cf6; margin-bottom: 0.3rem; font-weight: 600;">
-                    步驟 3</div>
-                  <h4 style="font-size: 0.95rem; margin-bottom: 0.4rem;">梯度穩定：除以 $\sqrt{d_k}$</h4>
-                  <p style="font-size: 0.85rem; color: var(--ink-mid); line-height: 1.6;">方差縮放防止高維點積過大，穩定 softmax
-                    後的梯度，避免訓練時梯度消失。</p>
+              <!-- 步驟 1 -->
+              <div style="display: flex; gap: 1rem; margin-bottom: 1.8rem; align-items: flex-start;">
+                <div
+                  style="background: #3b82f6; color: white; width: 36px; height: 36px; border-radius: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">
+                  1</div>
+                <div>
+                  <h4 style="margin: 0 0 0.3rem 0;">線性投影：得到 Q、K、V</h4>
+                  <p style="margin: 0; color: var(--ink-mid);">輸入向量經三個獨立權重矩陣變換，產生
+                    <strong>Query（查詢）</strong>、<strong>Key（鍵）</strong>、<strong>Value（值）</strong>
+                    三個表示，分別對應「想查什麼」「有什麼標籤」「實際內容」。
+                  </p>
                 </div>
               </div>
 
-              <!-- 右欄：正則化與融合層 -->
-              <div>
-                <p
-                  style="font-size: 0.85rem; color: var(--ink-light); font-weight: 600; margin-bottom: 1rem; letter-spacing: 0.08em;">
-                  正則化與融合層</p>
-
-                <div class="flow-item"
-                  style="border-left: 3px solid #f59e0b; padding-left: 1rem; margin-bottom: 1.2rem;">
-                  <div
-                    style="font-family: var(--mono); font-size: 0.75rem; color: #f59e0b; margin-bottom: 0.3rem; font-weight: 600;">
-                    步驟 4</div>
-                  <h4 style="font-size: 0.95rem; margin-bottom: 0.4rem;">機率正則化：$\text{softmax}(\cdot)$</h4>
-                  <p style="font-size: 0.85rem; color: var(--ink-mid); line-height: 1.6;">將分數轉換為總和為 1
-                    的機率分布（注意力權重），形成「注意力地圖」。</p>
+              <!-- 步驟 2 -->
+              <div style="display: flex; gap: 1rem; margin-bottom: 1.8rem; align-items: flex-start;">
+                <div
+                  style="background: #06b6d4; color: white; width: 36px; height: 36px; border-radius: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">
+                  2</div>
+                <div>
+                  <h4 style="margin: 0 0 0.3rem 0;">點積相似度：計算 $QK^T$</h4>
+                  <p style="margin: 0; color: var(--ink-mid);">將 Query 與所有 Key 做點積，得到「關聯分數矩陣」。分數越高，表示該位置的 Key 與當前 Query
+                    語意越相關。</p>
                 </div>
-
-                <div class="flow-item"
-                  style="border-left: 3px solid #10b981; padding-left: 1rem; margin-bottom: 1.2rem;">
-                  <div
-                    style="font-family: var(--mono); font-size: 0.75rem; color: #10b981; margin-bottom: 0.3rem; font-weight: 600;">
-                    步驟 5</div>
-                  <h4 style="font-size: 0.95rem; margin-bottom: 0.4rem;">加權融合：乘上 V</h4>
-                  <p style="font-size: 0.85rem; color: var(--ink-mid); line-height: 1.6;">注意力權重對 Value
-                    向量進行加權求和，輸出包含上下文資訊的新向量表示。</p>
-                </div>
-
-                <details class="insight-box">
-                  <summary>
-                    <span class="summary-title">
-                      <svg class="icon" viewBox="0 0 24 24">
-                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                      </svg>
-                      GPT 獨有機制
-                    </span>
-                    <svg class="chevron" viewBox="0 0 24 24">
-                      <path d="M6 9l6 6 6-6" />
-                    </svg>
-                  </summary>
-                  <div class="details-content">
-                    <div class="details-inner">
-                      <p style="font-size: 0.85rem; color: #92400e; margin: 0; line-height: 1.6;">
-                        <strong>GPT 獨有機制：</strong> 在步驟 2 計算 $QK^T$ 前，加入<strong>因果遮罩（Causal Mask）</strong>，強制未來位置的分數設為
-                        $-\infty$，經 softmax 後權重歸零，確保生成時遵循時序。
-                      </p>
-                    </div>
-                  </div>
-                </details>
               </div>
+
+              <!-- 步驟 3 -->
+              <div style="display: flex; gap: 1rem; margin-bottom: 1.8rem; align-items: flex-start;">
+                <div
+                  style="background: #8b5cf6; color: white; width: 36px; height: 36px; border-radius: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">
+                  3</div>
+                <div>
+                  <h4 style="margin: 0 0 0.3rem 0;">梯度穩定：除以 $\sqrt{d_k}$</h4>
+                  <p style="margin: 0; color: var(--ink-mid);">當向量維度 $d_k$ 很大時，點積值容易過大，導致 softmax 梯度接近零。除以 $\sqrt{d_k}$
+                    將方差縮放到 1，避免梯度消失。</p>
+                </div>
+              </div>
+
+              <!-- 步驟 4 -->
+              <div style="display: flex; gap: 1rem; margin-bottom: 1.8rem; align-items: flex-start;">
+                <div
+                  style="background: #f59e0b; color: white; width: 36px; height: 36px; border-radius: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">
+                  4</div>
+                <div>
+                  <h4 style="margin: 0 0 0.3rem 0;">機率正則化：$\text{softmax}(\cdot)$</h4>
+                  <p style="margin: 0; color: var(--ink-mid);">將所有分數轉換為總和為 1 的機率分佈，即「注意力權重」。每個位置的權重代表模型應該「關注」其他位置的程度。
+                  </p>
+                </div>
+              </div>
+
+              <!-- 步驟 5 -->
+              <div style="display: flex; gap: 1rem; margin-bottom: 1rem; align-items: flex-start;">
+                <div
+                  style="background: #10b981; color: white; width: 36px; height: 36px; border-radius: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">
+                  5</div>
+                <div>
+                  <h4 style="margin: 0 0 0.3rem 0;">加權融合：乘上 V</h4>
+                  <p style="margin: 0; color: var(--ink-mid);">用注意力權重對 Value 向量做加權求和，輸出新的表示向量。此向量融合了整個序列的上下文信息。</p>
+                </div>
+              </div>
+
             </div>
 
-            <!-- 簡潔總結，去掉冗長圖說 -->
+            <!-- GPT 獨有機制提示 -->
+            <details class="insight-box" style="margin: 1rem 0 0 0;">
+              <summary>
+                <span class="summary-title">
+                  <svg class="icon" viewBox="0 0 24 24">
+                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                  GPT 獨有機制：因果遮罩
+                </span>
+                <svg class="chevron" viewBox="0 0 24 24">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </summary>
+              <div class="details-content">
+                <div class="details-inner">
+                  <p style="margin:0; color:#92400e;">在步驟 2 計算 $QK^T$ 前，GPT 加入<strong>因果遮罩（Causal
+                      Mask）</strong>，將未來位置的分數設為 $-\infty$。經過 softmax 後，這些位置的權重變成 0，確保模型在預測下一個 token
+                    時不會偷看到未來資訊——這是自回歸生成的基礎。</p>
+                </div>
+              </div>
+            </details>
+
+            <!-- 總結洞察 -->
             <div
-              style="margin-top: 1.5rem; padding: 1rem; background: #f0f9ff; border-left: 3px solid #3b82f6; border-radius: 0;">
-              <p style="font-size: 0.9rem; color: #1e3a8a; margin: 0; line-height: 1.7;">
-                <strong>核心洞察：</strong> 注意力機制的精妙在於用「軟選擇」（softmax 權重）取代「硬選擇」（one-hot），讓每個位置都能與所有上文建立加權連接。這種動態、可微分的資訊路由方式，是
-                Transformer 相比 RNN 的根本優勢。
-              </p>
+              style="margin-top: 2rem; padding: 1rem; background: #f0f9ff; border-left: 4px solid #3b82f6; border-radius: 12px;">
+              <p style="margin:0; font-weight:500;">🎯 核心洞察：注意力機制用「軟選擇」（softmax
+                權重）取代傳統的「硬選擇」（one‑hot），讓每個位置都能與所有上文建立加權連接。這種動態、可微分的資訊路由方式，是 Transformer 遠超 RNN 的根本原因。</p>
             </div>
           </div>
         </div>
       </details>
 
-      <div class="tech-note">
-        <p><strong>縮放因子 $\sqrt{d_k}$ 的物理意義：</strong> 當特徵維度 $d_k$ 極大時，加入 $\sqrt{d_k}$ 進行方差縮放，能防止 $\text{softmax}$
-          後的梯度陷入極平緩區域，避免反向傳播時的<strong>梯度消失</strong>。</p>
+      <!-- 縮放因子說明卡片（視覺強化） -->
+      <div class="tech-note" style="margin: 2rem 0; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+        <span
+          style="background: var(--ink); color: white; padding: 0.2rem 1rem; border-radius: 40px; font-family: monospace;">√dₖ
+          縮放因子</span>
+        <p style="margin:0; flex:1;"><strong>物理意義：</strong> 當特徵維度 $d_k$ 很大時，點積值容易過大，使 softmax 梯度趨近於 0。除以 $\sqrt{d_k}$
+          將方差正規化為 1，穩定訓練過程，防止梯度消失。</p>
       </div>
 
+      <!-- 因果遮罩矩陣視覺化（保留原表，但增加標題說明） -->
       <details class="technical-deep-dive mask-viz">
         <summary>
           <span class="summary-title">
@@ -1335,9 +1542,8 @@
         </summary>
         <div class="details-content">
           <div class="details-inner">
-            <p style="font-size: 0.85rem; color: #4b5563; margin-top: 0.5rem;">展示預測「我 ➔ 喜歡 ➔ 吃 ➔ 蘋果」時的內部遮蔽狀態。<br><span
-                style="color: var(--danger);">✗ 區域</span> 代表未來資訊被物理遮蔽。</p>
-
+            <p>下圖以預測序列「我 ➔ 喜歡 ➔ 吃 ➔ 蘋果」為例。每列代表當前 query 位置，每行代表 key 位置。<span style="color: var(--danger);">✗ 區域</span>
+              表示未來位置被強制遮蔽（權重為 0），確保生成時看不到未來 token。</p>
             <div class="mask-grid-wrapper">
               <div class="grid-cell grid-corner">Key →<br>Query ↓</div>
               <div class="grid-cell grid-hdr">我</div>
@@ -1369,6 +1575,8 @@
               <div class="grid-cell grid-active">✓</div>
               <div class="grid-cell grid-active">✓</div>
             </div>
+            <p style="font-size:0.75rem; margin-top:1rem;">✓ 表示可關注（已出現的 token），✗ 表示未來 token 被屏蔽。左下角三角形全為 ✓，右上角全為
+              ✗，這正是因果遮罩的標準形式。</p>
           </div>
         </div>
       </details>
@@ -1512,7 +1720,6 @@
       </div>
     </section>
 
-    <!-- 新增：應用層章節 -->
     <section id="application" class="section">
       <div class="section-header">
         <span class="section-num">03.5 —</span>
@@ -1665,31 +1872,234 @@
     <section id="security" class="section">
       <div class="section-header">
         <span class="section-num">04 —</span>
-        <h2>資安實務（OWASP LLM Top 10）</h2>
+        <h2>資安實務：OWASP LLM Top 10 2025 v2.0</h2>
       </div>
 
-      <p>將 GPT 導入企業環境（如 IDE 輔助或網路監控），必須正視大型語言模型特有的風險：</p>
+      <p>隨著 Agentic AI 與 RAG 架構成為企業標配，OWASP 於 2025 年重塑了 LLM
+        安全標準。此次改版焦點在於防範更隱蔽的『系統提示洩露』與『向量庫注入攻擊』，並將防護重點從單純的『信任管理』，轉向針對『錯誤資訊』所引發的實質資安損害進行深度管控。</p>
 
-      <div class="risk-grid">
-        <div class="risk-cell">
-          <span class="risk-tag">LLM01: 提示注入</span>
-          <p>惡意輸入覆蓋原始指令，繞過系統安全護欄。</p>
-        </div>
-        <div class="risk-cell">
-          <span class="risk-tag">LLM03: 訓練資料汙染</span>
-          <p>微調資料遭竄改，導致模型輸出隱蔽的惡意後門。</p>
-        </div>
-        <div class="risk-cell">
-          <span class="risk-tag">LLM06: 敏感資訊外洩</span>
-          <p>記憶體重現導致 PII 或開發 API Key 遭提取。</p>
-        </div>
-        <div class="risk-cell">
-          <span class="risk-tag">LLM09: 幻覺誤導</span>
-          <p>生成看似合理卻錯誤的資安告警，引發錯誤決策。</p>
+      <figure style="margin: 2rem 0; text-align: center;">
+        <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&q=80" alt="資安鎖頭與程式碼，象徵 LLM 安全防護"
+          loading="lazy"
+          style="width:100%; max-width:680px; border-radius:16px; box-shadow:0 6px 14px rgba(0,0,0,0.08);">
+        <figcaption style="font-family: var(--mono); font-size:0.7rem; color: var(--ink-light); margin-top:0.5rem;">
+          圖：LLM 安全已從聊天機器人擴展到 Agent 與 API 風險。圖片來源 Unsplash, CC0</figcaption>
+      </figure>
+
+      <!-- ========== 可滑動的卡片輪播區 ========== -->
+      <div style="margin: 2rem 0;">
+        <h3 style="margin-bottom: 1rem;">📋 OWASP LLM Top 10 風險清單（← 左右滑動查看 →）</h3>
+
+        <!-- 輪播容器 -->
+        <div class="carousel-container" style="position: relative; user-select: none;">
+
+          <!-- 左右滑動區域 -->
+          <div class="carousel-track" id="riskCarousel"
+            style="display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 1.2rem; padding: 0.5rem 0.25rem 1.5rem 0.25rem; scroll-behavior: smooth; cursor: grab; scrollbar-width: thin;">
+
+            <!-- 卡片 1 -->
+            <div class="risk-carousel-card" data-risk="LLM01" onclick="openRiskModal('LLM01')"
+              style="flex: 0 0 280px; scroll-snap-align: start; background: linear-gradient(135deg, #fff 0%, #fef9f9 100%); border: 1px solid var(--rule); border-radius: 20px; padding: 1.2rem; cursor: pointer; transition: all 0.25s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                <span
+                  style="background: var(--accent); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold;">LLM01</span>
+                <span style="font-size: 1.8rem;">🔓</span>
+              </div>
+              <h4 style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">提示注入</h4>
+              <p style="font-size: 0.85rem; color: var(--ink-mid); margin: 0;">用戶輸入或 RAG 檢索內容覆蓋系統指令，執行惡意行為。</p>
+              <div style="margin-top: 0.8rem; font-size: 0.7rem; color: var(--ink-light);">🔍 點擊查看防禦措施 →</div>
+            </div>
+
+            <!-- 卡片 2 -->
+            <div class="risk-carousel-card" data-risk="LLM02" onclick="openRiskModal('LLM02')"
+              style="flex: 0 0 280px; scroll-snap-align: start; background: #fff; border: 1px solid var(--rule); border-radius: 20px; padding: 1.2rem; cursor: pointer; transition: all 0.25s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                <span
+                  style="background: var(--accent); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold;">LLM02</span>
+                <span style="font-size: 1.8rem;">🔐</span>
+              </div>
+              <h4 style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">敏感資訊外洩</h4>
+              <p style="font-size: 0.85rem; color: var(--ink-mid); margin: 0;">PII、API Key、公司 IP 遭記憶或錯誤權限外流。</p>
+              <div style="margin-top: 0.8rem; font-size: 0.7rem; color: var(--ink-light);">🔍 點擊查看防禦措施 →</div>
+            </div>
+
+            <!-- 卡片 3 -->
+            <div class="risk-carousel-card" data-risk="LLM03" onclick="openRiskModal('LLM03')"
+              style="flex: 0 0 280px; scroll-snap-align: start; background: #fff; border: 1px solid var(--rule); border-radius: 20px; padding: 1.2rem; cursor: pointer; transition: all 0.25s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                <span
+                  style="background: var(--accent); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold;">LLM03</span>
+                <span style="font-size: 1.8rem;">📦</span>
+              </div>
+              <h4 style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">供應鏈漏洞</h4>
+              <p style="font-size: 0.85rem; color: var(--ink-mid); margin: 0;">中毒模型權重、惡意插件、被竄改的微調資料。</p>
+              <div style="margin-top: 0.8rem; font-size: 0.7rem; color: var(--ink-light);">🔍 點擊查看防禦措施 →</div>
+            </div>
+
+            <!-- 卡片 4 -->
+            <div class="risk-carousel-card" data-risk="LLM04" onclick="openRiskModal('LLM04')"
+              style="flex: 0 0 280px; scroll-snap-align: start; background: #fff; border: 1px solid var(--rule); border-radius: 20px; padding: 1.2rem; cursor: pointer; transition: all 0.25s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                <span
+                  style="background: var(--accent); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold;">LLM04</span>
+                <span style="font-size: 1.8rem;">☠️</span>
+              </div>
+              <h4 style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">資料與模型中毒</h4>
+              <p style="font-size: 0.85rem; color: var(--ink-mid); margin: 0;">RAG 或微調階段被植入後門，運行時觸發。</p>
+              <div style="margin-top: 0.8rem; font-size: 0.7rem; color: var(--ink-light);">🔍 點擊查看防禦措施 →</div>
+            </div>
+
+            <!-- 卡片 5 -->
+            <div class="risk-carousel-card" data-risk="LLM05" onclick="openRiskModal('LLM05')"
+              style="flex: 0 0 280px; scroll-snap-align: start; background: #fff; border: 1px solid var(--rule); border-radius: 20px; padding: 1.2rem; cursor: pointer; transition: all 0.25s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                <span
+                  style="background: var(--accent); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold;">LLM05</span>
+                <span style="font-size: 1.8rem;">⚠️</span>
+              </div>
+              <h4 style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">輸出處理不當</h4>
+              <p style="font-size: 0.85rem; color: var(--ink-mid); margin: 0;">輸出未驗證導致 XSS、SSRF、RCE。</p>
+              <div style="margin-top: 0.8rem; font-size: 0.7rem; color: var(--ink-light);">🔍 點擊查看防禦措施 →</div>
+            </div>
+
+            <!-- 卡片 6 -->
+            <div class="risk-carousel-card" data-risk="LLM06" onclick="openRiskModal('LLM06')"
+              style="flex: 0 0 280px; scroll-snap-align: start; background: #fff; border: 1px solid var(--rule); border-radius: 20px; padding: 1.2rem; cursor: pointer; transition: all 0.25s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                <span
+                  style="background: var(--accent); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold;">LLM06</span>
+                <span style="font-size: 1.8rem;">🤖</span>
+              </div>
+              <h4 style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">過度代理權限</h4>
+              <p style="font-size: 0.85rem; color: var(--ink-mid); margin: 0;">Agent 工具過多、權限過大，缺乏人類監督。</p>
+              <div style="margin-top: 0.8rem; font-size: 0.7rem; color: var(--ink-light);">🔍 點擊查看防禦措施 →</div>
+            </div>
+
+            <!-- 卡片 7 -->
+            <div class="risk-carousel-card" data-risk="LLM07" onclick="openRiskModal('LLM07')"
+              style="flex: 0 0 280px; scroll-snap-align: start; background: #fff; border: 1px solid var(--rule); border-radius: 20px; padding: 1.2rem; cursor: pointer; transition: all 0.25s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                <span
+                  style="background: var(--accent); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold;">LLM07</span>
+                <span style="font-size: 1.8rem;">📜</span>
+              </div>
+              <h4 style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">系統提示外洩</h4>
+              <p style="font-size: 0.85rem; color: var(--ink-mid); margin: 0;">隱藏指令、憑證被模型吐出（2025 新增）。</p>
+              <div style="margin-top: 0.8rem; font-size: 0.7rem; color: var(--ink-light);">🔍 點擊查看防禦措施 →</div>
+            </div>
+
+            <!-- 卡片 8 -->
+            <div class="risk-carousel-card" data-risk="LLM08" onclick="openRiskModal('LLM08')"
+              style="flex: 0 0 280px; scroll-snap-align: start; background: #fff; border: 1px solid var(--rule); border-radius: 20px; padding: 1.2rem; cursor: pointer; transition: all 0.25s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                <span
+                  style="background: var(--accent); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold;">LLM08</span>
+                <span style="font-size: 1.8rem;">🗄️</span>
+              </div>
+              <h4 style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">向量與嵌入弱點</h4>
+              <p style="font-size: 0.85rem; color: var(--ink-mid); margin: 0;">RAG 向量庫中毒、跨租戶資料外洩（2025 新增）。</p>
+              <div style="margin-top: 0.8rem; font-size: 0.7rem; color: var(--ink-light);">🔍 點擊查看防禦措施 →</div>
+            </div>
+
+            <!-- 卡片 9 -->
+            <div class="risk-carousel-card" data-risk="LLM09" onclick="openRiskModal('LLM09')"
+              style="flex: 0 0 280px; scroll-snap-align: start; background: #fff; border: 1px solid var(--rule); border-radius: 20px; padding: 1.2rem; cursor: pointer; transition: all 0.25s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                <span
+                  style="background: var(--accent); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold;">LLM09</span>
+                <span style="font-size: 1.8rem;">🎭</span>
+              </div>
+              <h4 style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">錯誤資訊</h4>
+              <p style="font-size: 0.85rem; color: var(--ink-mid); margin: 0;">幻覺生成錯誤的資安告警、法遵建議。</p>
+              <div style="margin-top: 0.8rem; font-size: 0.7rem; color: var(--ink-light);">🔍 點擊查看防禦措施 →</div>
+            </div>
+
+            <!-- 卡片 10 -->
+            <div class="risk-carousel-card" data-risk="LLM10" onclick="openRiskModal('LLM10')"
+              style="flex: 0 0 280px; scroll-snap-align: start; background: #fff; border: 1px solid var(--rule); border-radius: 20px; padding: 1.2rem; cursor: pointer; transition: all 0.25s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                <span
+                  style="background: var(--accent); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold;">LLM10</span>
+                <span style="font-size: 1.8rem;">💸</span>
+              </div>
+              <h4 style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">無限制資源消耗</h4>
+              <p style="font-size: 0.85rem; color: var(--ink-mid); margin: 0;">DoS、Denial-of-Wallet 帳單攻擊。</p>
+              <div style="margin-top: 0.8rem; font-size: 0.7rem; color: var(--ink-light);">🔍 點擊查看防禦措施 →</div>
+            </div>
+
+          </div>
+
+          <!-- 左右導航箭頭 -->
+          <button class="carousel-nav prev" onclick="scrollCarousel(-1)"
+            style="position: absolute; left: -16px; top: 50%; transform: translateY(-50%); background: var(--ink); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: all 0.2s;">←</button>
+          <button class="carousel-nav next" onclick="scrollCarousel(1)"
+            style="position: absolute; right: -16px; top: 50%; transform: translateY(-50%); background: var(--ink); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: all 0.2s;">→</button>
+
+          <!-- 進度指示器 -->
+          <div class="carousel-dots" style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem;">
+            <span class="dot active" data-index="0"></span>
+            <span class="dot" data-index="1"></span>
+            <span class="dot" data-index="2"></span>
+            <span class="dot" data-index="3"></span>
+            <span class="dot" data-index="4"></span>
+            <span class="dot" data-index="5"></span>
+            <span class="dot" data-index="6"></span>
+            <span class="dot" data-index="7"></span>
+            <span class="dot" data-index="8"></span>
+            <span class="dot" data-index="9"></span>
+          </div>
         </div>
       </div>
-      <p>實務整合建議採用：內容安全過濾器、最小權限原則，並結合 RAG 架構降低幻覺發生率。</p>
+
+      <!-- 其餘內容保持不變（3層防護、圖片、趨勢提醒） -->
+      <h3 style="margin-top:2.5rem;">🛡️ 實務落地 3 層防護</h3>
+      <ol style="margin-left:1.2rem; margin-bottom:2rem;">
+        <li><strong>輸入層：</strong>AI Guardrails 即時掃描 Prompt Injection、PII，防禦數千種已知攻擊手法。</li>
+        <li><strong>模型層：</strong>選用有 SBOM 的開源模型，微調資料做毒性檢測，系統提示加密存放。</li>
+        <li><strong>輸出層：</strong>所有 LLM 輸出一律當成不可信輸入，套用 WAF、XSS 過濾，再進下游系統。</li>
+      </ol>
+
+      <figure style="margin: 2rem 0; text-align: center;">
+        <img src="https://images.unsplash.com/photo-1563206767-5b18f218e8de?w=1200&q=80" alt="多層防護盾牌概念圖" loading="lazy"
+          style="width:100%; max-width:680px; border-radius:16px; box-shadow:0 6px 14px rgba(0,0,0,0.08);">
+        <figcaption style="font-family: var(--mono); font-size:0.7rem; color: var(--ink-light); margin-top:0.5rem;">
+          圖：縱深防禦適用 LLM，需同時保護輸入、模型、輸出三層。圖片來源 Unsplash, CC0</figcaption>
+      </figure>
+
+      <div
+        style="margin-top: 2rem; padding: 1.5rem 1.8rem; background: #fff5f5; border-left: 4px solid var(--accent); border-radius: 12px; border: 1px solid #fecaca;">
+        <strong
+          style="color: var(--accent); display: block; margin-bottom: 0.5rem; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.8rem;">
+          💡 2026 趨勢提醒：從聊天機器人到代理人劫持
+        </strong>
+        <p style="margin: 0; font-size: 0.95rem; color: var(--ink-mid); line-height: 1.6;">
+          隨著 2026 年 AI 部署進入<strong>自主 Agent（Autonomous Agent）化</strong>階段，資安威脅載體已從「聊天誤導」進化為<strong>「代理人劫持 (Agent
+            Hijacking)」</strong>。
+        </p>
+        <ul style="margin: 0.8rem 0 0.8rem 1.2rem; font-size: 0.9rem; color: var(--ink-mid);">
+          <li><strong>威脅升級：</strong>攻擊者不僅竊取資料，更誘騙 Agent 執行非授權 API 調用，或在 Agent 協作場景中進行「橫向移動」。</li>
+          <li><strong>真實案例回顧：</strong>2025 年間，GitHub Copilot Chat 供應鏈攻擊導致程式碼大規模洩漏；多起企業 RAG 向量庫因權限控管疏失，導致核心 IP 與合約遭非法檢索。
+          </li>
+        </ul>
+        <p style="margin: 0; font-size: 0.9rem; color: var(--ink-mid);">
+          <strong>部署前防禦：</strong>必須執行針對 <strong>Agentic Workflows</strong> 的紅隊測試。建議使用 <strong>Promptfoo</strong>
+          進行語意測試、<strong>Garak</strong> 進行漏洞自動化掃描，並針對 RAG 檢索邊界進行滲透測試。
+        </p>
+      </div>
     </section>
+
+    <!-- ========== Modal 彈窗（點擊卡片後顯示） ========== -->
+    <div id="riskModal" class="modal"
+      style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px);">
+      <div class="modal-content"
+        style="background: var(--paper); max-width: 500px; width: 90%; border-radius: 24px; padding: 2rem; position: relative; max-height: 80vh; overflow-y: auto;">
+        <button onclick="closeModal()"
+          style="position: absolute; top: 16px; right: 20px; background: none; border: none; font-size: 1.8rem; cursor: pointer; color: var(--ink-light);">&times;</button>
+        <div id="modalBody">
+          <!-- 動態內容會由 JS 填入 -->
+        </div>
+      </div>
+    </div>
 
     <section id="reflection" class="section">
       <div class="section-header">
@@ -1697,16 +2107,353 @@
         <h2>學習反思：幻覺的本質</h2>
       </div>
 
-      <div class="pull-quote">
-        AI 不是真理機器，而是基於海量文本的高階機率預測器。
+      <!-- 引言區塊（保留原有但強化） -->
+      <div class="pull-quote" style="margin-bottom: 2rem;">
+        <svg style="width: 32px; height: 32px; opacity: 0.5; margin-bottom: 0.5rem;" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="1.5">
+          <path d="M10 11h-4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1z" />
+          <path d="M19 11h-4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1z" />
+          <path d="M10 21h-4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1z" />
+          <path d="M19 21h-4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1z" />
+        </svg>
+        <p style="font-size: 1.4rem; font-style: italic; margin: 0;">「AI 不是真理機器，而是基於海量文本的高階機率預測器。」</p>
       </div>
 
+      <!-- ========== A1：技術原因深潛 ========== -->
+      <h3 style="margin-top: 1.5rem; margin-bottom: 1rem;">🔬 幻覺的技術根源：為何 Transformer 天生容易產生幻覺？</h3>
+
+      <div
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem; margin: 1.5rem 0;">
+        <div style="background: var(--cream); border-radius: 12px; padding: 1rem;">
+          <div style="font-size: 1.8rem;">📊</div>
+          <h4 style="margin: 0.5rem 0; font-size: 1rem;">Softmax 的機率本質</h4>
+          <p style="font-size: 0.85rem; margin: 0;">模型永遠輸出一個「機率分佈」，即使所有選項都不正確，它仍會選一個機率最高的——幻覺由此而生。</p>
+        </div>
+        <div style="background: var(--cream); border-radius: 12px; padding: 1rem;">
+          <div style="font-size: 1.8rem;">🎲</div>
+          <h4 style="margin: 0.5rem 0; font-size: 1rem;">訓練資料的偏差</h4>
+          <p style="font-size: 0.85rem; margin: 0;">網路上充滿未經查證的內容，模型學到的是「常見說法」而非「事實」。</p>
+        </div>
+        <div style="background: var(--cream); border-radius: 12px; padding: 1rem;">
+          <div style="font-size: 1.8rem;">🌡️</div>
+          <h4 style="margin: 0.5rem 0; font-size: 1rem;">溫度參數的取捨</h4>
+          <p style="font-size: 0.85rem; margin: 0;">高溫度增加創造力但也增加幻覺；低溫度較保守但可能過度重複。</p>
+        </div>
+        <div style="background: var(--cream); border-radius: 12px; padding: 1rem;">
+          <div style="font-size: 1.8rem;">🎯</div>
+          <h4 style="margin: 0.5rem 0; font-size: 1rem;">自回歸的誤差累積</h4>
+          <p style="font-size: 0.85rem; margin: 0;">一個 token 錯誤，後續所有 token 都建立在錯誤基礎上——「一步錯，步步錯」。</p>
+        </div>
+      </div>
+
+      <!-- ========== A2 + B2：實際案例 + 視覺化時間軸 ========== -->
+      <h3 style="margin-top: 2rem; margin-bottom: 1rem;">📰 知名 AI 幻覺案例：從法庭到發表會</h3>
+
+      <div class="hallucination-timeline" style="margin: 1.5rem 0;">
+
+        <!-- 案例 1：律師案 -->
+        <div
+          style="display: flex; gap: 1rem; margin-bottom: 1.5rem; background: #fff; border-radius: 12px; padding: 1rem; border-left: 4px solid #c0392b; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+          <div style="flex-shrink: 0; width: 60px; text-align: center;">
+            <span
+              style="background: #c0392b; color: white; padding: 4px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: bold;">2023</span>
+          </div>
+          <div>
+            <h4 style="margin: 0 0 0.3rem 0; font-size: 1rem;">👨‍⚖️ 律師 ChatGPT 案</h4>
+            <p style="margin: 0; font-size: 0.9rem; color: var(--ink-mid);">紐約律師使用 ChatGPT 撰寫訴訟狀，AI 憑空生成 6
+              個不存在的判例。律師照抄提交後被法官抓包，面臨停職處分。</p>
+            <p style="margin: 0.5rem 0 0 0; font-size: 0.75rem; color: var(--ink-light);"><strong>教訓：</strong> AI
+              的「自信」不等於「正確」，專業人士仍需查證。</p>
+          </div>
+        </div>
+
+        <!-- 案例 2：Google Bard 出糗 -->
+        <div
+          style="display: flex; gap: 1rem; margin-bottom: 1.5rem; background: #fff; border-radius: 12px; padding: 1rem; border-left: 4px solid #e67e22; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+          <div style="flex-shrink: 0; width: 60px; text-align: center;">
+            <span
+              style="background: #e67e22; color: white; padding: 4px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: bold;">2023</span>
+          </div>
+          <div>
+            <h4 style="margin: 0 0 0.3rem 0; font-size: 1rem;">🔭 Google Bard 發表會失誤</h4>
+            <p style="margin: 0; font-size: 0.9rem; color: var(--ink-mid);">Bard
+              在宣傳影片中被問到「韋伯太空望遠鏡的新發現」，它回答「拍到了第一張系外行星照片」——但這是錯的，第一張系外行星照片早在 2004 年就由歐洲南方天文台拍下。Google 股價因此單日暴跌 9%。</p>
+            <p style="margin: 0.5rem 0 0 0; font-size: 0.75rem; color: var(--ink-light);"><strong>教訓：</strong>
+              產品發表前必須做好紅隊測試，AI 幻覺可能造成市值損失。</p>
+          </div>
+        </div>
+
+        <!-- 案例 3：醫療誤導 -->
+        <div
+          style="display: flex; gap: 1rem; margin-bottom: 1.5rem; background: #fff; border-radius: 12px; padding: 1rem; border-left: 4px solid #2980b9; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+          <div style="flex-shrink: 0; width: 60px; text-align: center;">
+            <span
+              style="background: #2980b9; color: white; padding: 4px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: bold;">2024</span>
+          </div>
+          <div>
+            <h4 style="margin: 0 0 0.3rem 0; font-size: 1rem;">🏥 醫療聊天機器人誤導患者</h4>
+            <p style="margin: 0; font-size: 0.9rem; color: var(--ink-mid);">多個醫療 LLM
+              在測試中給出錯誤用藥建議，或將良性症狀診斷為癌症。史丹佛研究顯示，即使是最先進的模型，在醫療問答中的幻覺率高達 20-30%。</p>
+            <p style="margin: 0.5rem 0 0 0; font-size: 0.75rem; color: var(--ink-light);"><strong>教訓：</strong>
+              高風險領域（醫療、法律、金融）不能直接依賴 LLM 輸出。</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 核心體悟段落 -->
       <p>透過本次查證，最深刻的體悟是：GPT 本質上是最大化「給定上文時，下個 token 的條件機率」。它生成的知識是機率分佈的產物，而非經驗證的事實。幻覺現象是統計模型對抗不確定性時的必然結果。</p>
 
-      <div class="view-box">
-        <span class="view-label">未來展望</span>
-        <p>深入理解「因果遮罩」與演算法底層，才能掌握 AI 邏輯，而非淪為單純的 API 呼叫者。期許自己未來能開發出兼具效能與安全對齊（Alignment）的 LLM 應用。</p>
+      <!-- ========== C1：個人盲點揭露 ========== -->
+      <div
+        style="background: #fef9e8; border-radius: 16px; padding: 1.5rem; margin: 2rem 0; border: 1px solid #f0e0b0;">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+          <span style="font-size: 1.5rem;">💭</span>
+          <h3 style="margin: 0; font-size: 1.1rem;">我的學習盲點與轉變</h3>
+        </div>
+
+        <div
+          style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: center; margin-bottom: 1.5rem;">
+          <div style="background: #f0e0c0; border-radius: 12px; padding: 1rem; text-align: center;">
+            <div style="font-size: 0.7rem; color: #8b6914;">製作報告前</div>
+            <div style="font-weight: bold; margin-top: 0.3rem;">把 AI 當成「百科全書」</div>
+            <div style="font-size: 0.75rem; margin-top: 0.3rem;">直接相信生成內容，從未質疑</div>
+          </div>
+          <div style="font-size: 1.5rem;">➡️</div>
+          <div style="background: #e8f0e8; border-radius: 12px; padding: 1rem; text-align: center;">
+            <div style="font-size: 0.7rem; color: #2d6a4f;">製作報告後</div>
+            <div style="font-weight: bold; margin-top: 0.3rem;">把 AI 當成「需要驗證的助理」</div>
+            <div style="font-size: 0.75rem; margin-top: 0.3rem;">交叉查證、懷疑一切</div>
+          </div>
+        </div>
+
+        <p style="margin: 0 0 1rem 0; font-size: 0.95rem;"><strong>誠實揭露：</strong> 在製作這個報告的過程中，我曾經直接複製 某AI
+          生成的一段關於「GPT-5 參數量」的敘述。後來查證發現，這個數字從未被 OpenAI 官方證實——完全是 AI 幻覺。這個經驗讓我驚覺：<strong>如果連「學習 AI
+            的人」都會被誤導，一般使用者怎麼辦？</strong></p>
+
+        <p style="margin: 0; font-size: 0.95rem;"><strong>心態轉變：</strong> 我現在養成「三角驗證」習慣：任何從 LLM 獲得的資訊，至少用另外兩個來源（Google
+          搜尋、學術論文、官方文件）交叉確認。這不是不信任 AI，而是理解它的本質後應有的專業態度。</p>
       </div>
+
+      <!-- 未來展望區塊（全面升級） -->
+      <div class="view-box" style="margin-top: 2rem;">
+        <span class="view-label">🎯 未來展望：從幻覺治理到可信賴 AI</span>
+        <p style="font-size: 0.95rem; color: var(--ink-mid); margin-bottom: 1.5rem;">
+          幻覺不會「消失」，但我們正在學習與它共處、逐步馴服它。以下是四個正在發生變革的面向——
+        </p>
+
+        <!-- ========== 1. 技術突破 ========== -->
+        <h3 style="margin-top: 1.5rem; margin-bottom: 1rem;">🚀 技術突破：下一代減少幻覺的核心方法</h3>
+
+        <div
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.2rem; margin-bottom: 2rem;">
+
+          <div
+            style="background: #fff; border-radius: 12px; padding: 1.2rem; border: 1px solid var(--rule); box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+            <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.8rem;">
+              <span style="font-size: 1.6rem;">🧠</span>
+              <h4 style="margin: 0; font-size: 1rem;">Chain-of-Thought（思維鏈）</h4>
+            </div>
+            <p style="font-size: 0.85rem; margin: 0; color: var(--ink-mid);">
+              讓模型「先想再說」，顯著降低推理錯誤。GPT-4o、Claude 3.5、Gemini 1.5 已預設啟用 CoT，未來將成為所有 LLM 的標配。
+            </p>
+            <div style="margin-top: 0.8rem; font-size: 0.75rem; color: var(--ink-light);">
+              📈 <strong>成效：</strong>GSM8K 數學基準測試中，CoT 讓準確率從 17% → 58%（GPT-3.5）
+            </div>
+          </div>
+
+          <div
+            style="background: #fff; border-radius: 12px; padding: 1.2rem; border: 1px solid var(--rule); box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+            <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.8rem;">
+              <span style="font-size: 1.6rem;">🔍</span>
+              <h4 style="margin: 0; font-size: 1rem;">RAG（檢索增強生成）</h4>
+            </div>
+            <p style="font-size: 0.85rem; margin: 0; color: var(--ink-mid);">
+              結合外部知識庫即時檢索，讓模型「有據可查」而非憑空想像。企業級應用（如 Perplexity、Microsoft Copilot）已大量採用。
+            </p>
+            <div style="margin-top: 0.8rem; font-size: 0.75rem; color: var(--ink-light);">
+              📈 <strong>趨勢：</strong>2025 年預計 40% 企業級 LLM 應用將內建 RAG 架構（Gartner 預測）
+            </div>
+          </div>
+
+          <div
+            style="background: #fff; border-radius: 12px; padding: 1.2rem; border: 1px solid var(--rule); box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+            <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.8rem;">
+              <span style="font-size: 1.6rem;">⚖️</span>
+              <h4 style="margin: 0; font-size: 1rem;">RLHF + RLAIF 對齊訓練</h4>
+            </div>
+            <p style="font-size: 0.85rem; margin: 0; color: var(--ink-mid);">
+              透過人類回饋（RLHF）或 AI 回饋（RLAIF）持續矯正模型輸出，使其更傾向「誠實說不知道」而非硬編答案。
+            </p>
+            <div style="margin-top: 0.8rem; font-size: 0.75rem; color: var(--ink-light);">
+              📈 <strong>里程碑：</strong>Claude 3 引入「Constitutional AI」，幻覺率降低約 40%
+            </div>
+          </div>
+
+          <div
+            style="background: #fff; border-radius: 12px; padding: 1.2rem; border: 1px solid var(--rule); box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+            <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.8rem;">
+              <span style="font-size: 1.6rem;">🧬</span>
+              <h4 style="margin: 0; font-size: 1rem;">自我事實核查（Self-Verification）</h4>
+            </div>
+            <p style="font-size: 0.85rem; margin: 0; color: var(--ink-mid);">
+              模型生成答案後，自動回頭驗證自身輸出的一致性與可溯源性。Google 的「Self-Consistency」和 Meta 的「Self-Check」是代表性研究。
+            </p>
+            <div style="margin-top: 0.8rem; font-size: 0.75rem; color: var(--ink-light);">
+              📈 <strong>前沿：</strong>多數投票（majority voting）策略在 TruthfulQA 上提升 15-25% 準確率
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ========== 2. 使用者端應對策略 ========== -->
+        <h3 style="margin-top: 1.5rem; margin-bottom: 1rem;">👤 使用者端：培養「AI 素養」的新時代技能</h3>
+
+        <div
+          style="background: #f7f9fc; border-radius: 12px; padding: 1.2rem; margin-bottom: 1.5rem; border-left: 4px solid #3498db;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+            <thead>
+              <tr style="border-bottom: 2px solid #ddd;">
+                <th style="text-align: left; padding: 0.5rem 0.8rem; color: var(--ink-dark);">技能</th>
+                <th style="text-align: left; padding: 0.5rem 0.8rem; color: var(--ink-dark);">具體做法</th>
+                <th style="text-align: left; padding: 0.5rem 0.8rem; color: var(--ink-dark);">適用場景</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 0.5rem 0.8rem; font-weight: 600;">三角驗證法</td>
+                <td style="padding: 0.5rem 0.8rem;">AI 輸出 + Google 搜尋 + 官方文件，至少交叉比對兩個來源</td>
+                <td style="padding: 0.5rem 0.8rem;">所有資訊查詢</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 0.5rem 0.8rem; font-weight: 600;">提示詞工程</td>
+                <td style="padding: 0.5rem 0.8rem;">要求模型「引用來源」、「標示不確定性」、「分點回答」</td>
+                <td style="padding: 0.5rem 0.8rem;">研究、寫作、報告</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 0.5rem 0.8rem; font-weight: 600;">情境判斷力</td>
+                <td style="padding: 0.5rem 0.8rem;">辨識高風險場域（醫療、法律、金融），絕不直接採用 AI 結論</td>
+                <td style="padding: 0.5rem 0.8rem;">專業決策</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.5rem 0.8rem; font-weight: 600;">版本比對</td>
+                <td style="padding: 0.5rem 0.8rem;">同一問題問多次 / 用不同模型交叉問，觀察答案一致性</td>
+                <td style="padding: 0.5rem 0.8rem;">關鍵事實確認</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ========== 3. 全球AI幻覺準則 ========== -->
+        <h3 style="margin-top: 1.5rem; margin-bottom: 1rem;">🏛️ 2026 現狀：全球三種幻覺治理的事實慣例（而非單一標準）</h3>
+
+        <p style="font-size: 0.85rem; color: var(--ink-mid); margin-bottom: 0.8rem;">
+          ⚠️ 更新至 2026 年 6 月 — 以下反映目前觀察到的政府指引、法院走向與業界實務慣例，仍在快速演變，各地區落實方式與嚴格程度存在差異，尚無跨國一致的強制性數據基準。
+        </p>
+
+        <div
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.8rem; margin-bottom: 1.2rem;">
+
+          <div
+            style="background: linear-gradient(135deg, #667eea22, #764ba222); border-radius: 12px; padding: 1rem; border: 1px solid #667eea44;">
+            <h4 style="margin: 0 0 0.4rem 0; font-size: 0.9rem; color: #5a4fcf;">🇪🇺 歐盟（實務趨勢）</h4>
+            <p style="font-size: 0.78rem; margin: 0; color: var(--ink-mid);">
+              《AI 法案》已開始執行，但具體技術實作仍由標準化機構（例如
+              ISO/IEC）持續完善。多數大型供應商會在高風險用途提供<strong>不確定性提示或信心資訊</strong>，並在合約中承諾可審計性；不過「對每一筆輸出強制揭露信心分數」並非普遍落地的統一要求。
+            </p>
+          </div>
+
+          <div
+            style="background: linear-gradient(135deg, #f093fb22, #f5576c22); border-radius: 12px; padding: 1rem; border: 1px solid #f093fb44;">
+            <h4 style="margin: 0 0 0.4rem 0; font-size: 0.9rem; color: #c0392b;">🇺🇸 美國（實務趨勢）</h4>
+            <p style="font-size: 0.78rem; margin: 0; color: var(--ink-mid);">
+              聯邦層級暫無通用強制法規，治理主要依賴<strong>州法、判例發展與企業自律</strong>。許多組織透過《NIST AI RMF》等框架進行風險管理，並在採購合約中加入<strong>
+                indemnity、保險與紅隊測試義務</strong>。與幻覺相關的民事訴訟確有增加，但各案結果差異大，尚未形成單一清晰的責任門檻。
+            </p>
+          </div>
+
+          <div
+            style="background: linear-gradient(135deg, #4facfe22, #00f2fe22); border-radius: 12px; padding: 1rem; border: 1px solid #4facfe44;">
+            <h4 style="margin: 0 0 0.4rem 0; font-size: 0.9rem; color: #2980b9;">🇨🇳 中國（實務趨勢）</h4>
+            <p style="font-size: 0.78rem; margin: 0; color: var(--ink-mid);">
+              監管強調<strong>事實性與內容安全可控</strong>，要求服務提供者建立測試與舉報機制。市場上常見<strong>保守回應策略</strong>
+              （遇不確定即拒答或明確澄清），但不同廠商採用的評測方法與內部標準不一，外界難以比較具體的幻覺率數值。
+            </p>
+          </div>
+
+          <div
+            style="background: linear-gradient(135deg, #43e97b22, #38f9d722); border-radius: 12px; padding: 1rem; border: 1px solid #43e97b44;">
+            <h4 style="margin: 0 0 0.4rem 0; font-size: 0.9rem; color: #1e8449;">🌍 國際標準（影響力）</h4>
+            <p style="font-size: 0.78rem; margin: 0; color: var(--ink-mid);">
+              《ISO/IEC 42001》等管理體系標準與各類基準測試正逐漸被納入企業 RFP 與供應商審核，但尚未成為全球強制要求，採納範圍取決於產業與客戶需求。
+            </p>
+          </div>
+
+        </div>
+
+        <div
+          style="background: var(--cream); border-radius: 12px; padding: 1rem; font-size: 0.82rem; margin-bottom: 1rem;">
+          💬 2026 年關鍵觀察：
+          <ul style="margin: 0.5rem 0 0 1.2rem; padding: 0; line-height: 1.5;">
+            <li>🧭 三地治理哲學明顯不同：<strong>歐盟偏向透明與風險披露</strong>、<strong>美國偏向事後責任與合約分擔</strong>、<strong>中國偏向事前可控與保守性</strong>。
+            </li>
+            <li>🏢 多數跨國組織採取<strong>地區差異化合規策略</strong>（例如在歐盟市場啟用更強的可解釋性說明，在美國市場強化免責與保險條款）。</li>
+            <li>🧪 目前缺乏可橫向比較的公開幻覺率指標，評測場景與方法論仍未統一，數字宣稱應謹慎看待。</li>
+          </ul>
+          <div style="margin-top: 0.6rem; opacity: 0.9;">因此，與其尋找單一「正確」答案，不如根據自身風險承受度、應用領域與監管曝險，制定混合性的防禦與驗證流程。</div>
+        </div>
+
+        <!-- ========== 4. 個人行動計畫 ========== -->
+        <div
+          style="background: #eafaf1; border-radius: 16px; padding: 1.5rem; margin-top: 2rem; border: 1px solid #a9dfbf;">
+          <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1.2rem;">
+            <span style="font-size: 1.6rem;">🗺️</span>
+            <h3 style="margin: 0; font-size: 1.1rem; color: #1e8449;">我的個人行動路線圖</h3>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div style="text-align: center;">
+              <div style="font-size: 2rem;">📖</div>
+              <div style="font-weight: 700; font-size: 0.9rem; margin: 0.3rem 0;">短期（1-3 月）</div>
+              <p style="font-size: 0.8rem; color: var(--ink-mid); margin: 0;">
+                深入學習 Transformer 架構、注意力機制與 Softmax 運作原理
+              </p>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 2rem;">🛠️</div>
+              <div style="font-weight: 700; font-size: 0.9rem; margin: 0.3rem 0;">中期（3-6 月）</div>
+              <p style="font-size: 0.8rem; color: var(--ink-mid); margin: 0;">
+                實作 RAG 應用、研究 OWASP LLM Top 10 安全漏洞
+              </p>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 2rem;">🎯</div>
+              <div style="font-weight: 700; font-size: 0.9rem; margin: 0.3rem 0;">長期（6-12 月）</div>
+              <p style="font-size: 0.8rem; color: var(--ink-mid); margin: 0;">
+                開發兼具效能與安全對齊的 LLM 應用，推廣 AI 素養教育
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 底部標籤 -->
+        <div
+          style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--rule); display: flex; flex-wrap: wrap; gap: 0.8rem;">
+          <span style="background: var(--cream); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem;">🔒 學習 LLM
+            安全防護</span>
+          <span style="background: var(--cream); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem;">📚 持續追蹤
+            OWASP LLM Top 10</span>
+          <span style="background: var(--cream); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem;">🛠️ 實作 RAG
+            應用並測試幻覺</span>
+          <span style="background: var(--cream); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem;">🧬 研究
+            Self-Verification 技術</span>
+          <span style="background: var(--cream); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem;">🌍 關注全球 AI
+            監管動態</span>
+          <span style="background: var(--cream); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem;">📢 推廣 AI
+            素養意識</span>
+        </div>
+      </div>
+
     </section>
 
   </main>
@@ -1714,12 +2461,54 @@
   <footer>
     <div class="footer-inner">
       <h3>參考文獻</h3>
-      <ol>
-        <li>Vaswani, A., et al. (2017). "Attention Is All You Need." <em>NeurIPS</em>.</li>
-        <li>Radford, A., et al. (2018). "Improving Language Understanding by Generative Pre-Training."</li>
-        <li>Brown, T. B., et al. (2020). "Language Models are Few-Shot Learners." <em>NeurIPS</em>.</li>
-        <li>OWASP Top 10 for LLM Applications, 2023 Edition.</li>
+      <ol style="line-height: 1.9; font-size: 0.95rem;">
+        <li>Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., & Polosukhin, I.
+          (2017). Attention Is All You Need. <em>Advances in Neural Information Processing Systems, 30</em>.
+          https://doi.org/10.48550/arXiv.1706.03762</li>
+
+        <li>Radford, A., Narasimhan, K., Salimans, T., & Sutskever, I. (2018). <em>Improving Language Understanding by
+            Generative Pre-Training</em>. OpenAI.
+          https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf</li>
+
+        <li>Brown, T. B., Mann, B., Ryder, N., Subbiah, M., Kaplan, J., Dhariwal, P.,... & Amodei, D. (2020). Language
+          Models are Few-Shot Learners. <em>Advances in Neural Information Processing Systems, 33</em>, 1877–1901.</li>
+
+        <li>Kaplan, J., McCandlish, S., Henighan, T., Brown, T. B., Chess, B., Child, R.,... & Amodei, D. (2020).
+          Scaling Laws for Neural Language Models. <em>arXiv preprint arXiv:2001.08361</em>.</li>
+
+        <li>OpenAI. (2023). <em>GPT-4 Technical Report</em>. arXiv:2303.08774.</li>
+
+        <li>Wei, J., Tay, Y., Bommasani, R., Raffel, C., Zoph, B., Borgeaud, S.,... & Fedus, W. (2022). Emergent
+          Abilities of Large Language Models. <em>Transactions on Machine Learning Research</em>.</li>
+
+        <li>Lewis, P., Perez, E., Piktus, A., Petroni, F., Karpukhin, V., Goyal, N.,... & Kiela, D. (2020).
+          Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks. <em>Advances in Neural Information
+            Processing Systems, 33</em>, 9459–9474.</li>
+
+        <li>Greshake, K., Abdelnabi, S., Mishra, S., Endres, C., Holz, T., & Fritz, M. (2023). Not what you've signed up
+          for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection. <em>Proceedings of
+            the 16th ACM Workshop on Artificial Intelligence and Security</em>, 79–90.</li>
+
+        <li>OWASP Foundation. (2025, January). <em>OWASP Top 10 for Large Language Model Applications v2.0</em>.
+          Retrieved May 29, 2026, from
+          https://owasp.org/www-project-top-10-for-large-language-model-applications/【1498191662311920426†L9-L10】</li>
+
+        <li>HackerOne. (2025). The OWASP Top 10 for LLMs 2025: How GenAI Risks Are Evolving. Retrieved May 29, 2026,
+          from
+          https://www.hackerone.com/knowledge-center/owasp-top-10-llms-2025-generative-ai-risks-evolving【1498191662311920426†L9-L10】
+        </li>
+
+        <li>F5, Inc. (2025). OWASP top 10 for LLM F5 alignment. Retrieved May 29, 2026, from
+          https://www.f5.com/company/blog/owasp-top-10-for-llm【1498191662311920426†L74-L76】</li>
+
+        <li>Unsplash. (2024). <em>Unsplash License</em>. Retrieved May 29, 2026, from https://unsplash.com/license. All
+          images used under CC0.</li>
       </ol>
+
+      <p style="margin-top:1.5rem; font-family: var(--mono); font-size:0.75rem; color: var(--ink-light);">
+        註：本報告圖片均取自 Unsplash，遵循 CC0 授權可商業使用。網頁檢索日期統一為 2026/05/29，確保即時性。
+      </p>
+
       <p class="footer-copy">© 2026 游騰睿 (Yu Teng-Jui) — 國立臺北教育大學 資訊科學系</p>
     </div>
   </footer>
@@ -1804,57 +2593,94 @@
       }
     }, { passive: true });
 
-    // Accordion / Details UI Transition
-    document.querySelectorAll('details.technical-deep-dive, details.insight-box').forEach(details => {
-      const summary = details.querySelector('summary');
-      const content = details.querySelector('.details-content');
+    // 風險卡片的完整資料
+    const riskData = {
+      LLM01: { name: "提示注入", risk: "用戶輸入或 RAG 檢索內容覆蓋系統指令，執行惡意行為。", defense: "輸入輸出雙向過濾、權限分層、阻擋已知注入手法庫。", icon: "🔓" },
+      LLM02: { name: "敏感資訊外洩", risk: "PII、API Key、公司 IP 遭記憶或錯誤權限外流。", defense: "Regex + NLP 過濾 PII，RBAC 群組隔離。", icon: "🔐" },
+      LLM03: { name: "供應鏈漏洞", risk: "中毒模型權重、惡意插件、被竄改的微調資料。", defense: "模型簽章驗證、SBOM 管理、第三方插件沙箱執行。", icon: "📦" },
+      LLM04: { name: "資料與模型中毒", risk: "RAG 或微調階段被植入後門，運行時觸發。", defense: "資料來源可信度評分、異常檢測、定期重訓練驗證。", icon: "☠️" },
+      LLM05: { name: "輸出處理不當", risk: "輸出未驗證導致 XSS、SSRF、RCE。", defense: "嚴格編碼與沙箱化，視 LLM 為任何用戶輸入。", icon: "⚠️" },
+      LLM06: { name: "過度代理權限", risk: "Agent 工具過多、權限過大，缺乏人類監督。", defense: "最小權限、工具白名單、重要操作 Human-in-the-loop。", icon: "🤖" },
+      LLM07: { name: "系統提示外洩", risk: "隱藏指令、憑證被模型吐出（2025 新增）。", defense: "系統提示與用戶提示隔離、輸出過濾機密字串。", icon: "📜" },
+      LLM08: { name: "向量與嵌入弱點", risk: "RAG 向量庫中毒、跨租戶資料外洩（2025 新增）。", defense: "存取控制、Embedding 完整性校驗、租戶隔離。", icon: "🗄️" },
+      LLM09: { name: "錯誤資訊", risk: "幻覺生成錯誤的資安告警、法遵建議。", defense: "RAG 引用來源、事實查核、多模型交叉驗證。", icon: "🎭" },
+      LLM10: { name: "無限制資源消耗", risk: "DoS、Denial-of-Wallet 帳單攻擊。", defense: "速率限制、輸入長度限制、異常用量告警。", icon: "💸" }
+    };
 
-      summary.addEventListener('click', (e) => {
-        e.preventDefault();
+    // 開啟 Modal
+    function openRiskModal(riskId) {
+      const data = riskData[riskId];
+      const modal = document.getElementById('riskModal');
+      const modalBody = document.getElementById('modalBody');
 
-        if (details.classList.contains('collapsing') || details.classList.contains('expanding')) {
-          return;
-        }
+      modalBody.innerHTML = `
+    <div style="text-align: center; margin-bottom: 1rem;">
+      <span style="font-size: 3rem;">${data.icon}</span>
+    </div>
+    <h2 style="margin: 0 0 0.3rem 0; font-size: 1.5rem;">${riskId}: ${data.name}</h2>
+    <div style="background: #fee2e2; padding: 1rem; border-radius: 12px; margin: 1rem 0;">
+      <strong style="color: var(--accent);">⚠️ 風險</strong>
+      <p style="margin: 0.5rem 0 0 0;">${data.risk}</p>
+    </div>
+    <div style="background: #e0f2e0; padding: 1rem; border-radius: 12px; margin: 1rem 0;">
+      <strong style="color: #2d6a4f;">🛡️ 防禦措施</strong>
+      <p style="margin: 0.5rem 0 0 0;">${data.defense}</p>
+    </div>
+    <button onclick="closeModal()" style="width: 100%; padding: 12px; background: var(--ink); color: white; border: none; border-radius: 40px; cursor: pointer; margin-top: 1rem; font-weight: bold;">關閉</button>
+  `;
 
-        if (details.hasAttribute('open')) {
-          // Close animation
-          details.classList.add('collapsing');
-          content.style.height = `${content.offsetHeight}px`;
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
 
-          // Force reflow
-          content.offsetHeight;
-          content.style.height = '0px';
+    // 關閉 Modal
+    function closeModal() {
+      document.getElementById('riskModal').style.display = 'none';
+      document.body.style.overflow = '';
+    }
 
-          const onTransitionEnd = (event) => {
-            if (event.propertyName === 'height') {
-              details.removeAttribute('open');
-              details.classList.remove('collapsing');
-              content.style.height = '';
-              content.removeEventListener('transitionend', onTransitionEnd);
-            }
-          };
-          content.addEventListener('transitionend', onTransitionEnd);
-        } else {
-          // Open animation
-          details.classList.add('expanding');
-          details.setAttribute('open', '');
-          const targetHeight = content.scrollHeight;
+    // 輪播左右滑動功能
+    function scrollCarousel(direction) {
+      const carousel = document.getElementById('riskCarousel');
+      const cardWidth = 292; // 280px + 12px gap
+      carousel.scrollBy({ left: direction * cardWidth, behavior: 'smooth' });
+    }
 
-          content.style.height = '0px';
-          // Force reflow
-          content.offsetHeight;
-          content.style.height = `${targetHeight}px`;
+    // 更新進度指示器
+    const carousel = document.getElementById('riskCarousel');
+    const dots = document.querySelectorAll('.dot');
 
-          const onTransitionEnd = (event) => {
-            if (event.propertyName === 'height') {
-              details.classList.remove('expanding');
-              content.style.height = '';
-              content.removeEventListener('transitionend', onTransitionEnd);
-            }
-          };
-          content.addEventListener('transitionend', onTransitionEnd);
-        }
+    function updateDots() {
+      const scrollLeft = carousel.scrollLeft;
+      const cardWidth = 292;
+      const activeIndex = Math.round(scrollLeft / cardWidth);
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === activeIndex);
       });
+    }
+
+    if (carousel) {
+      carousel.addEventListener('scroll', updateDots);
+      // 點擊進度點跳轉
+      dots.forEach((dot, idx) => {
+        dot.addEventListener('click', () => {
+          carousel.scrollTo({ left: idx * 292, behavior: 'smooth' });
+        });
+      });
+    }
+
+    // 點擊 Modal 背景關閉
+    document.getElementById('riskModal')?.addEventListener('click', (e) => {
+      if (e.target === document.getElementById('riskModal')) {
+        closeModal();
+      }
+    });
+
+    // ESC 鍵關閉 Modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && document.getElementById('riskModal').style.display === 'flex') {
+        closeModal();
+      }
     });
   </script>
 
