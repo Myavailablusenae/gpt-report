@@ -389,14 +389,7 @@
       transform: rotate(180deg);
     }
 
-    /* 簡化版：無動畫，但結構乾淨 */
-    details .details-content {
-      /* 不需要任何 height 或 transition 設定 */
-    }
 
-    details[open] .details-content {
-      /* 打開時自動顯示 */
-    }
 
     details .details-inner {
       padding: 0 1.5rem 1.5rem;
@@ -1298,8 +1291,8 @@
         <li><a href="#evolution" class="drawer-link"><span class="d-num">03</span>技術演進</a></li>
         <li><a href="#security" class="drawer-link"><span class="d-num">04</span>資安實務</a></li>
         <li><a href="#reflection" class="drawer-link"><span class="d-num">05</span>學習反思</a></li>
-        <li><a href="#ai-learning" class="drawer-link"><span class="d-num">06</span>AI學習紀錄</a></li>
-        <li><a href="#verification" class="drawer-link"><span class="d-num">07</span>查證與修正</a></li>
+        <li><a href="#ai-learning" class="drawer-link"><span class="d-num">附錄一</span>AI學習紀錄</a></li>
+        <li><a href="#verification" class="drawer-link"><span class="d-num">附錄二</span>查證與修正</a></li>
       </ul>
     </nav>
     <div class="drawer-foot">
@@ -1311,7 +1304,7 @@
     <p class="hero-eyebrow">期末評量報告</p>
     <h1>GPT 演算法<br><em>深度解析</em></h1>
     <div class="hero-meta">
-      <div class="hero-meta-item"><span class="label">課程</span><span class="value">人工智慧概論</span></div>
+      <div class="hero-meta-item"><span class="label">課程</span><span class="value">人工智慧導論</span></div>
       <div class="hero-meta-item"><span class="label">系所</span><span class="value">國立臺北教育大學 · 資訊科學系</span></div>
       <div class="hero-meta-item"><span class="label">作者</span><span class="value">游騰睿 111316035</span></div>
       <div class="hero-meta-item"><span class="label">年度</span><span class="value">2026</span></div>
@@ -1348,11 +1341,19 @@
 
       <!-- 核心概念摘要 -->
       <div class="summary-strip" style="margin: 0 0 1.5rem 0;">
-        <strong>📌 核心概念：</strong> GPT 採取「自回歸（Autoregressive）」路徑——僅透過預測下一個 Token 的簡單目標，在千億級參數的推升下，展現出令人驚訝的零樣本學習（Zero-shot
-        Learning）與能力湧現。2025 年 8 月 GPT-5 上線後，正式進入「統一模型」時代。
+        <strong>📌 核心概念：</strong>
+        GPT 走的是「自回歸」路線，也就是一個字、一個詞地往下猜。表面上很簡單，但只要模型夠大、訓練夠多，它就能學會理解語言、生成內容，甚至在沒見過的情況下也能做出合理回應。2025 年 8 月 7 日 GPT-5
+        上線後，這條路徑進一步朝「整合式系統」發展：同一系統能依情境快速回應，或在需要時進行更深入的推理 [1]。到了 2026 年 4 月 23 日，GPT-5.5
+        則更強調把複雜目標一路推進到完成，包含規劃、使用工具、檢查工作，以及在多工具之間持續執行任務 [2]。
       </div>
 
-      <!-- 演化樹視覺化：更新到 2025-2026 -->
+      <div class="source-note" style="font-size: 0.9rem; color: #666; line-height: 1.6; margin-top: -0.75rem;">
+        <strong>資料來源：</strong><br>
+        [1] OpenAI, <em>Introducing GPT-5</em>, 2025-08-07。<br>
+        [2] OpenAI, <em>Introducing GPT-5.5</em>, 2026-04-23（2026-04-24 補充 API 更新）。
+      </div>
+
+      <!-- 演化樹視覺化：更新到 2026 -->
       <div class="evo-viz">
         <div class="evo-title-wrap">
           <span class="evo-badge">📊 Transformer 架構演化樹 2017-2026</span>
@@ -1364,35 +1365,44 @@
           <div class="evo-line"></div>
         </div>
         <div class="evo-cards">
-          <!-- BERT 卡片 -->
+
+          <!-- BERT → ModernBERT 卡片 -->
           <div class="evo-card evo-enc">
-            <div class="evo-card-head">ENCODER-ONLY<div style="font-size:1.5rem;">BERT</div>
+            <div class="evo-card-head">ENCODER-ONLY<div style="font-size:1.5rem;">ModernBERT</div>
             </div>
             <div class="evo-card-body">
-              <div class="evo-tags"><span class="evo-tag">🔍 雙向注意力</span><span class="evo-tag">📖 MLM</span></div>
-              <p>擅長<strong>「理解」</strong>：分類、實體辨識</p>
-              <div class="evo-year">📅 2018 · Google</div>
+              <div class="evo-tags"><span class="evo-tag">🔍 雙向注意力</span><span class="evo-tag">📖 MLM</span><span
+                  class="evo-tag">📏 8K 長文</span></div>
+              <p>擅長<strong>「理解」</strong>：分類、檢索、實體辨識</p>
+              <p class="evo-intro">BERT 的現代化接班人：保留雙向理解優勢，速度快 2–4 倍、可吃 8192 token 長文，至今仍是分類／檢索任務的最佳骨幹。</p>
+              <div class="evo-year">📅 2024/12 · Answer.AI & LightOn（BERT 原版 2018 · Google）</div>
             </div>
           </div>
-          <!-- T5 卡片 -->
+
+          <!-- T5 → T5Gemma 2 卡片 -->
           <div class="evo-card evo-mix">
-            <div class="evo-card-head">ENCODER-DECODER<div style="font-size:1.5rem;">T5</div>
+            <div class="evo-card-head">ENCODER-DECODER<div style="font-size:1.5rem;">T5Gemma 2</div>
             </div>
             <div class="evo-card-body">
-              <div class="evo-tags"><span class="evo-tag">🔄 雙向+自回歸</span><span class="evo-tag">📝 Seq2Seq</span></div>
-              <p>擅長<strong>「轉換」</strong>：翻譯、摘要</p>
-              <div class="evo-year">📅 2019 · Google</div>
+              <div class="evo-tags"><span class="evo-tag">🔄 雙向+自回歸</span><span class="evo-tag">🖼️ 多模態</span><span
+                  class="evo-tag">📏 128K</span></div>
+              <p>擅長<strong>「轉換」</strong>：翻譯、摘要、QA</p>
+              <p class="evo-intro">T5 流派最新世代：基於 Gemma 3 改造，首度支援多模態與 128K 長上下文，由 Encoder 讀懂全文、Decoder 負責生成。</p>
+              <div class="evo-year">📅 2025/12 · Google（T5 原版 2019 · Google）</div>
             </div>
           </div>
-          <!-- GPT 卡片，重點強調，更新到 GPT-5 -->
+
+          <!-- GPT 卡片，重點強調，更新到 GPT-5.5 -->
           <div class="evo-card evo-dec">
-            <div class="evo-card-head">DECODER-ONLY ★<div style="font-size:1.5rem;">GPT-5</div>
+            <div class="evo-card-head">DECODER-ONLY ★<div style="font-size:1.5rem;">GPT-5.5</div>
             </div>
             <div class="evo-card-body">
-              <div class="evo-tags"><span class="evo-tag">🔮 自回歸</span><span class="evo-tag">🧠 統一架構</span></div>
+              <div class="evo-tags"><span class="evo-tag">🔮 自回歸</span><span class="evo-tag">🧠 統一架構</span><span
+                  class="evo-tag">🤖 Agent</span></div>
               <p>擅長<strong>「生成+推理」</strong>：Agent、多模態、寫程式</p>
-              <div class="evo-year">📅 2025/8/7 · OpenAI</div>
-              <div class="highlight-tag">⭐ 統一快思慢想</div>
+              <p class="evo-intro">當前生成式主流旗艦：把推理、多模態與工具執行統一於單一系統，更能自主規劃並把長鏈任務一路做到完成。</p>
+              <div class="evo-year">📅 2026/4/23 · OpenAI（GPT-5 於 2025/8/7）</div>
+              <div class="highlight-tag">⭐ 自主智能體</div>
             </div>
           </div>
         </div>
@@ -1426,16 +1436,11 @@
 
       <!-- 批判性反思 -->
       <div class="tech-note" style="border-left-color: #d97706;">
-        <strong>📌 2026 批判性反思：</strong> 即使 GPT-5.4 已上線，純解碼器在「需要全文雙向理解」的任務仍可能輸給 BERT 類模型。實務上 RAG + 重排序模型常混用 Encoder
-        做理解、Decoder 做生成。另 GPT-5 仍有記憶、自主性限制，非萬能。
+        <strong>📌批判性反思：</strong> 即使 <strong>GPT-5.5（2026 年 4 月上線）</strong> 在長鏈任務與自主智能體（Agent）表現卓越，純解碼器（Decoder）
+        在「需要全文深度雙向對齊」的檢索與重排序任務上，運算效率與精準度仍難以完全取代現代的 BERT 衍生模型（Encoder）。實務上，目前企業級 RAG 架構的主流
+        依然是「用 Encoder 處理高密度語意檢索與重排序，用 GPT-5.5 負責高階推理與生成」的雙劍合璧。此外，儘管 GPT-5.5 大幅突破了過往的自主性瓶頸，
+        但在極長週期的任務中仍會面臨誤差累積（幻覺連鎖效應）與高昂 Token 成本的限制，並非毫無死角的萬能解藥。
       </div>
-
-      <!-- 最新時間軸 -->
-      <p
-        style="margin-top:2rem; padding:1rem; background:var(--cream); border-left:3px solid var(--accent2); border-radius:12px;">
-        <strong>📅 最新時間軸：</strong> GPT-5 於 2025/8/7 發布 → GPT-5.1 於 2025/11/12 更新 → GPT-5.2 於 2025/12/11 發布 → GPT-5.4 於
-        2026/3/5 發布。本報告以 GPT-5 系列為主要分析對象。
-      </p>
     </section>
 
     <section id="technical" class="section">
@@ -1465,6 +1470,7 @@
       </div>
 
       <!-- 改良版：注意力機制分解步驟（垂直卡片，更易閱讀） -->
+      <!-- 報告風格：Scaled Dot-Product Attention 機制解析 -->
       <details class="technical-deep-dive attention-mechanism" open>
         <summary>
           <span class="summary-title">
@@ -1478,91 +1484,138 @@
               <path d="m12 14-3 3" />
               <path d="m10 16-1.5-1.5" />
             </svg>
-            Scaled Dot-Product Attention 的五步核心
+            注意力機制（Self-Attention）運作原理解析
           </span>
           <svg class="chevron" viewBox="0 0 24 24">
             <path d="M6 9l6 6 6-6" />
           </svg>
         </summary>
+
         <div class="details-content">
           <div class="details-inner">
+
+            <p style="margin: 0 0 1rem 0; color: var(--ink-mid); line-height: 1.7;">
+              Transformer 之所以能取代過去的 RNN 與 LSTM，關鍵在於其核心的
+              <strong>自注意力機制（Self-Attention）</strong>。
+              其設計目的在於：讓序列中的每一個 token，都能依據語意相關性動態地參考序列中其他位置的資訊，
+              進而建立全局的上下文依賴關係。以下將依據原始論文
+              <em>Attention Is All You Need</em>（Vaswani et al., 2017）所提出的
+              Scaled Dot-Product Attention，拆解其五個運算步驟。
+            </p>
+
             <div class="formula-block">
               $$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
             </div>
 
+            <p style="margin: 0.75rem 0 1.5rem 0; color: var(--ink-mid); font-size: 0.9rem; line-height: 1.6;">
+              式中 $Q$、$K$、$V$ 分別代表 Query、Key、Value 三組矩陣，$d_k$ 為 Key 向量的維度。
+              下文將逐項說明各運算元在機制中所扮演的角色。
+            </p>
+
             <div style="margin: 2rem 0;">
 
+              <!-- Step 1 -->
               <div style="display: flex; gap: 1rem; margin-bottom: 1.8rem; align-items: flex-start;">
                 <div
                   style="background: #3b82f6; color: white; width: 36px; height: 36px; border-radius: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">
                   1</div>
                 <div>
-                  <h4 style="margin: 0 0 0.3rem 0;">線性投影：得到 Q、K、V</h4>
-                  <p style="margin: 0; color: var(--ink-mid);">輸入向量經三個獨立權重矩陣變換，產生
-                    齊全的 <strong>Query（查詢）</strong>、<strong>Key（鍵）</strong>、<strong>Value（值）</strong>
-                    三個表示。<br>
-                    <span style="color: var(--accent2); font-size: 0.9rem; display: block; margin-top: 0.2rem;">💡
-                      <strong>大白話：</strong>如同「上網購物」，<b>Query</b> 是你在搜尋框打的關鍵字（如：防水外套）；<b>Key</b>
-                      是架上所有商品的分類標籤；<b>Value</b> 則是每件商品的實際內容。</span>
+                  <h4 style="margin: 0 0 0.3rem 0;">線性投影：生成 Query、Key、Value</h4>
+                  <p style="margin: 0; color: var(--ink-mid); line-height: 1.65;">
+                    每個輸入向量分別通過三個可訓練的權重矩陣 $W^Q$、$W^K$、$W^V$ 進行線性變換，
+                    產生三組向量：<strong>Query</strong>（代表當前 token 的查詢需求）、
+                    <strong>Key</strong>（代表各 token 可供匹配的特徵）、
+                    <strong>Value</strong>（代表各 token 實際承載的語意內容）。
+                    <br>
+                    <span style="color: var(--accent2); font-size: 0.9rem; display: block; margin-top: 0.3rem;">
+                      ▸ <strong>舉例：</strong>
+                      在處理「小明把書放進書包，因為它很重」這句話時，
+                      模型需判斷代名詞「它」的指涉對象，
+                      此時「它」會以其 Query 向量向前文各 token 發出查詢。
+                    </span>
                   </p>
                 </div>
               </div>
 
+              <!-- Step 2 -->
               <div style="display: flex; gap: 1rem; margin-bottom: 1.8rem; align-items: flex-start;">
                 <div
                   style="background: #06b6d4; color: white; width: 36px; height: 36px; border-radius: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">
                   2</div>
                 <div>
-                  <h4 style="margin: 0 0 0.3rem 0;">點積相似度：計算 $QK^T$</h4>
-                  <p style="margin: 0; color: var(--ink-mid);">將 Query 與所有 Key 做點積，得到「關聯分數矩陣」。分數越高，表示該位置的 Key 與當前 Query
-                    語意越相關。<br>
-                    <span style="color: var(--accent2); font-size: 0.9rem; display: block; margin-top: 0.2rem;">💡
-                      <strong>大白話：</strong>系統拿你的「關鍵字 ($Q$)」去和所有「商品標籤
-                      ($K$)」做快速比對。如果標籤寫著「防風、防水」，比對分數就會飆高；如果寫著「短袖襯衫」，分數就會極低。</span>
+                  <h4 style="margin: 0 0 0.3rem 0;">點積運算：計算相關性分數 $QK^T$</h4>
+                  <p style="margin: 0; color: var(--ink-mid); line-height: 1.65;">
+                    將 Query 與所有 Key 進行點積運算，得到一個相關性分數矩陣。
+                    由於點積可量化兩向量在語意空間中的相似程度，分數越高即代表兩個 token 的關聯性越強。
+                    <br>
+                    <span style="color: var(--accent2); font-size: 0.9rem; display: block; margin-top: 0.3rem;">
+                      ▸ <strong>舉例：</strong>
+                      延續前例，「它」的 Query 與「書」、「書包」的 Key 進行比對後，
+                      會分別得到不同的相關性分數，作為後續權重分配的依據。
+                    </span>
                   </p>
                 </div>
               </div>
 
+              <!-- Step 3 -->
               <div style="display: flex; gap: 1rem; margin-bottom: 1.8rem; align-items: flex-start;">
                 <div
                   style="background: #8b5cf6; color: white; width: 36px; height: 36px; border-radius: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">
                   3</div>
                 <div>
-                  <h4 style="margin: 0 0 0.3rem 0;">梯度穩定：除以 $\sqrt{d_k}$</h4>
-                  <p style="margin: 0; color: var(--ink-mid);">當向量維度 $d_k$ 很大時，點積值容易過大，導致 softmax 梯度接近零。除以 $\sqrt{d_k}$
-                    將方差縮放到 1，避免梯度消失。<br>
-                    <span style="color: var(--accent2); font-size: 0.9rem; display: block; margin-top: 0.2rem;">💡
-                      <strong>大白話：</strong>當商品特徵太過複雜時，得分差距會被無限放大（例如第一名得10000分，第二名得1分），這會使後續計算當機。除以 $\sqrt{d_k}$
-                      就像「把分數平準化縮小」，讓優等生和次等生的差距合理化，穩定訓練過程。</span>
+                  <h4 style="margin: 0 0 0.3rem 0;">縮放：除以 $\sqrt{d_k}$ 以穩定梯度</h4>
+                  <p style="margin: 0; color: var(--ink-mid); line-height: 1.65;">
+                    當維度 $d_k$ 較大時，點積結果的數值容易隨之膨脹，使 softmax 函數進入飽和區，
+                    導致梯度趨近於零而難以訓練。論文因此引入縮放因子 $\frac{1}{\sqrt{d_k}}$，
+                    將分數的變異數控制在合理範圍，以維持訓練的數值穩定性。
+                    <br>
+                    <span style="color: var(--accent2); font-size: 0.9rem; display: block; margin-top: 0.3rem;">
+                      ▸ <strong>補充：</strong>
+                      此步驟為純數學上的正規化處理，目的在於避免梯度消失，
+                      對機制的語意判斷邏輯本身並無影響。
+                    </span>
                   </p>
                 </div>
               </div>
 
+              <!-- Step 4 -->
               <div style="display: flex; gap: 1rem; margin-bottom: 1.8rem; align-items: flex-start;">
                 <div
                   style="background: #f59e0b; color: white; width: 36px; height: 36px; border-radius: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">
                   4</div>
                 <div>
-                  <h4 style="margin: 0 0 0.3rem 0;">機率正則化：$\text{softmax}(\cdot)$</h4>
-                  <p style="margin: 0; color: var(--ink-mid);">將所有分數轉換為總和為 1
-                    的機率分佈，即「注意力權重」。每個位置的權重代表模型應該「關注」其他位置的程度。<br>
-                    <span style="color: var(--accent2); font-size: 0.9rem; display: block; margin-top: 0.2rem;">💡
-                      <strong>大白話：</strong>把前面比對出來的分數轉換成「百分比（權重）」。例如：A商品契合度 70%、B商品 25%、C商品 5%，這就是一張明確告訴 AI
-                      該把目光聚焦在哪裡的「注意力地圖」。</span>
+                  <h4 style="margin: 0 0 0.3rem 0;">Softmax 正規化：轉換為注意力權重</h4>
+                  <p style="margin: 0; color: var(--ink-mid); line-height: 1.65;">
+                    將縮放後的分數送入 softmax 函數，轉換為總和為 1 的機率分佈，即所謂的
+                    <strong>注意力權重（Attention Weights）</strong>。
+                    此分佈明確量化了當前 token 對序列中各位置的關注程度。
+                    <br>
+                    <span style="color: var(--accent2); font-size: 0.9rem; display: block; margin-top: 0.3rem;">
+                      ▸ <strong>舉例：</strong>
+                      假設正規化後得到「書」0.70、「書包」0.20、「小明」0.10 的權重分佈，
+                      即表示模型在解讀「它」時，主要將注意力集中於「書」。
+                    </span>
                   </p>
                 </div>
               </div>
 
+              <!-- Step 5 -->
               <div style="display: flex; gap: 1rem; margin-bottom: 1rem; align-items: flex-start;">
                 <div
                   style="background: #10b981; color: white; width: 36px; height: 36px; border-radius: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">
                   5</div>
                 <div>
-                  <h4 style="margin: 0 0 0.3rem 0;">加權融合：乘上 V</h4>
-                  <p style="margin: 0; color: var(--ink-mid);">用注意力權重對 Value 向量做加權求和，輸出新的表示向量。此向量融合了整個序列的上下文信息。<br>
-                    <span style="color: var(--accent2); font-size: 0.9rem; display: block; margin-top: 0.2rem;">💡
-                      <strong>大白話：</strong>最後，AI 依照這個百分比去打包實際內容 ($V$)。它會帶走 70% 的 A 商品細節、25% 的 B
-                      商品細節，打包出來的最終結果，就是一個完美融合上文精華、最具備脈絡語境的智慧向量。</span>
+                  <h4 style="margin: 0 0 0.3rem 0;">加權求和：輸出融合上下文的表示向量</h4>
+                  <p style="margin: 0; color: var(--ink-mid); line-height: 1.65;">
+                    最後以注意力權重對所有 Value 向量進行加權求和，輸出一個新的表示向量。
+                    該向量同時整合了當前 token 自身的語意，以及其與整個序列上下文的關聯資訊，
+                    成為下一層運算的輸入。
+                    <br>
+                    <span style="color: var(--accent2); font-size: 0.9rem; display: block; margin-top: 0.3rem;">
+                      ▸ <strong>小結：</strong>
+                      經此流程，每個 token 的表示皆由「靜態詞義」升級為「具上下文感知的動態語意」，
+                      這正是模型能正確判斷指代、語氣與隱含語意的基礎。
+                    </span>
                   </p>
                 </div>
               </div>
@@ -1576,7 +1629,7 @@
                     <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
                     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                   </svg>
-                  GPT 獨有機制：因果遮罩
+                  延伸討論：Decoder-only 架構的因果遮罩
                 </span>
                 <svg class="chevron" viewBox="0 0 24 24">
                   <path d="M6 9l6 6 6-6" />
@@ -1584,12 +1637,18 @@
               </summary>
               <div class="details-content">
                 <div class="details-inner">
-                  <p style="margin:0; color:#92400e;">在步驟 2 計算 $QK^T$ 前，GPT 加入<strong>因果遮罩（Causal
-                      Mask）</strong>，將未來位置的分數設為 $-\infty$。經過 softmax 後，這些位置的權重變成 0，確保模型在預測下一個 token
-                    時不會偷看到未來資訊——這是自回歸生成的基礎。<br>
-                    <span style="color: #b45309; font-size: 0.88rem; display: block; margin-top: 0.3rem;">💡
-                      <strong>大白話：</strong>這就像是「防偷看眼罩」。既然購物網站是依序推薦下一個字，我們就必須硬性規定系統在看第 2 個字時，把第 3、4
-                      個字的標籤分數直接扣到變負無窮大（物理斷聯），逼 AI 只能根據「已經發生」的歷史線索來預測未來。</span>
+                  <p style="margin:0; color:#92400e; line-height: 1.7;">
+                    值得補充的是，GPT 屬於 <strong>Decoder-only</strong> 的自回歸（Autoregressive）架構，
+                    其生成方式為逐一預測下一個 token。為確保模型在預測時不會參考到尚未生成的未來資訊，
+                    GPT 會在步驟 2 計算 $QK^T$ 後加入<strong>因果遮罩（Causal Mask）</strong>，
+                    將所有未來位置的分數設為 $-\infty$；經 softmax 後其權重歸零，
+                    形成嚴格的單向資訊流。此設計即為自回歸生成得以成立的前提。
+                    <br>
+                    <span style="color: #b45309; font-size: 0.88rem; display: block; margin-top: 0.4rem;">
+                      ▸ <strong>舉例：</strong>
+                      在預測「我今天心情很 ___」的下一字時，模型僅能存取「我今天心情很」這段已知序列，
+                      無法預先得知答案為「開心」或「低落」，必須完全依據前文進行機率推估。
+                    </span>
                   </p>
                 </div>
               </div>
@@ -1597,9 +1656,15 @@
 
             <div
               style="margin-top: 2rem; padding: 1rem; background: #f0f9ff; border-left: 4px solid #3b82f6; border-radius: 12px;">
-              <p style="margin:0; font-weight:500;">🎯 核心洞察：注意力機制用「軟選擇」（softmax
-                權重）取代傳統的「硬選擇」（one‑hot），讓每個位置都能與所有上文建立加權連接。這種動態、可微分的資訊路由方式，是 Transformer 遠超 RNN 的根本原因。</p>
+              <p style="margin:0; font-weight:500; line-height: 1.7;">
+                🎯 <strong>結論：</strong>
+                注意力機制以可微分的「軟性加權」取代傳統的硬性選擇，
+                使每個 token 都能與序列中所有位置建立動態的加權連結。
+                此種具備平行運算能力且可捕捉長距離依賴的資訊路由方式，
+                正是 Transformer 在效能與表達能力上全面超越 RNN 架構的根本原因。
+              </p>
             </div>
+
           </div>
         </div>
       </details>
@@ -1683,289 +1748,431 @@
 
       <div class="timeline">
 
-        <!-- ✅ 原版節點 1：保留 -->
+        <!-- ✅ 節點 1：修正兩篇論文混淆的問題 -->
         <div class="tl-item">
-          <div class="tl-badge">2018</div>
+          <div class="tl-badge">2018–2019</div>
           <div class="tl-content">
-            <h3>基礎驗證期：無監督預訓練的潛力 (GPT-1 / GPT-2)</h3>
+            <h3>基礎驗證期：生成式預訓練的潛力 (GPT-1 / GPT-2)</h3>
             <p>
-              原始論文 <em>"Language Models are Unsupervised Multitask Learners"</em>
-              證實了單純透過海量文本進行「接龍預測」，模型就能在不修改網絡結構的
-              情況下，具備零樣本學習（Zero-shot）的泛化可能。
-              這階段奠定了「大數據預訓練 ➔ 少量下游微調」的技術路線。
+              <strong>GPT-1</strong> (2018) 的論文 <em>"Improving Language Understanding by Generative Pre-Training"</em>
+              首次證實了先做「無監督預訓練」再做「下游有監督微調」的潛力。隔年 <strong>GPT-2</strong> (2019) 的論文 <em>"Language Models are Unsupervised
+                Multitask Learners"</em> 進一步將參數推升至 15 億，並展示模型在不修改網路結構下具備 <strong>零樣本學習（Zero-shot）</strong>
+              的泛化能力，奠定了大語言模型的基礎路線。
             </p>
             <div class="tl-tags">
-              <span>無監督預訓練</span>
-              <span>Zero-shot 雛形</span>
+              <span>預訓練 + 微調（GPT-1）</span>
+              <span>Zero-shot 雛形（GPT-2）</span>
               <span>1.5B 參數上限</span>
             </div>
           </div>
         </div>
 
-        <!-- ✅ 原版節點 2：保留 -->
+        <!-- ✅ 節點 2：修正 Scaling Law 與湧現的定義 -->
         <div class="tl-item">
           <div class="tl-badge">2020</div>
           <div class="tl-content">
-            <h3>規模湧現期：Scaling Law 與提示工程 (GPT-3)</h3>
+            <h3>規模躍升期：175B 參數與 In-context Learning (GPT-3)</h3>
             <p>
-              參數暴力提升至 1,750 億。論文 <em>"Language Models are Few-Shot Learners"</em>
-              揭示了當模型規模跨越臨界點時，會「湧現（Emergence）」出未曾被刻意訓練的
-              推理能力。此時模型不需要修改任何權重，僅透過給予範例（Few-shot）的
-              <strong>上下文學習（In-context Learning）</strong>，即可適應全新任務，
-              進而誕生了「提示工程（Prompt Engineering）」這一全新人機界面。
+              參數暴力提升至 <strong>1,750 億</strong>。論文 <em>"Language Models are Few-Shot Learners"</em>
+              揭示了模型不需要更新任何權重，僅透過在提示中給予少量範例（Few-shot），就能適應全新任務——即所謂的<strong>上下文學習（In-context
+                Learning）</strong>，進而催生了「提示工程（Prompt Engineering）」這一全新人機界面。
+            </p>
+            <p style="font-size:0.88rem; color:#666; margin-top:0.5rem; line-height:1.5;">
+              ⚠️ 註：「Scaling Laws」為 OpenAI 同年另一篇獨立論文；而「能力湧現（Emergence）」一詞的系統性論述是至 2022 年才被廣泛提出，且學界對此現象是否為評估指標導致仍有爭論。
             </p>
             <div class="tl-tags">
-              <span>Scaling Law 實證</span>
-              <span>能力湧現</span>
+              <span>175B 參數</span>
               <span>In-context Learning</span>
+              <span>Prompt Engineering 誕生</span>
             </div>
           </div>
         </div>
 
-        <!-- ✅ 原版節點 3：保留但縮小範圍至 2022-2023 -->
+        <!-- ✅ 節點 3：更新年份跨度，修正 RLHF 與 CoT 的因果關係 -->
         <div class="tl-item">
-          <div class="tl-badge">2022</div>
+          <div class="tl-badge">2022–2023</div>
           <div class="tl-content">
             <h3>行為對齊期：指令微調與安全對齊 (ChatGPT / GPT-4)</h3>
             <p>
-              這是模型從「純統計機率接龍」轉化為「可信賴助理」的關鍵。
-              透過<strong>有監督微調（SFT）</strong>與
-              <strong>人類回饋強化學習（RLHF）</strong>，將 AI 的輸出行為與
-              人類的價值觀安全對齊（Alignment），使其具備強大的
-              思維鏈（Chain-of-Thought, CoT）推理能力，並為後續發展資安防禦
-              或企業決策應用提供了可防護的底座。
+              <strong>ChatGPT</strong> (2022年底) 與 <strong>GPT-4</strong> (2023)
+              是模型從「純統計接龍」轉化為「可信賴助理」的關鍵。透過<strong>有監督微調（SFT）</strong>與<strong>人類回饋強化學習（RLHF）</strong>，AI
+              的輸出行為被與人類價值觀進行<strong>安全對齊（Alignment）</strong>，使其更聽從指令、更安全。
+            </p>
+            <p style="font-size:0.88rem; color:#666; margin-top:0.5rem; line-height:1.5;">
+              ⚠️ 註：GPT-4 搭配「思維鏈 (CoT)」展現出的強大推理能力，其智力根基主要仍來自預訓練階段；RLHF 負責的是可操控性與安全邊界，而非直接賦予推理力。
             </p>
             <div class="tl-tags">
               <span>RLHF 安全對齊</span>
-              <span>思維鏈 (CoT)</span>
+              <span>思維鏈 (CoT) 提示</span>
               <span>ChatGPT 破億用戶</span>
             </div>
           </div>
         </div>
 
-        <!-- 🆕 新增節點 4 -->
+        <!-- ✅ 節點 4：修正 o1 官方說法 -->
         <div class="tl-item">
           <div class="tl-badge">2024</div>
           <div class="tl-content">
             <h3>多模態融合期：感知擴展與推理模型誕生 (GPT-4o / o1)</h3>
             <p>
-              GPT-4o（omni）整合文字、圖像、音訊與影片為單一模型，
-              真正實現跨感知通道的即時理解。同年底，o1 的問世代表
-              另一條新的技術路線正式登場：模型在回答前會先進行
-              <strong>內部推理步驟（Extended Thinking）</strong>，
-              以逐步推演取代直覺生成，在數學、程式、複雜邏輯上
-              大幅超越傳統 GPT 系列。
+              <strong>GPT-4o（omni）</strong>整合文字、圖像、音訊與影片為單一模型，真正實現跨感知通道的即時理解。同年底，<strong>o1</strong>
+              的問世代表另一條新技術路線正式登場：模型在回答前會<strong>「花更多時間思考」</strong>，以逐步內部推演取代直覺生成，在數學、程式與複雜邏輯上大幅超越傳統 GPT 系列。
             </p>
             <div class="tl-tags">
               <span>多模態融合（Omni）</span>
-              <span>推理前思考</span>
-              <span>o-series 誕生</span>
+              <span>推理前思考 (o-series)</span>
+              <span>兩條路線分流</span>
             </div>
           </div>
         </div>
 
-        <!-- 🆕 新增節點 5 -->
+        <!-- ✅ 節點 5：修正 o3 的數據精準度與 GPT-5 的定位 -->
         <div class="tl-item">
           <div class="tl-badge">2025</div>
           <div class="tl-content">
-            <h3>自主工具使用期：GPT × o-series 大融合 (o3 / o4-mini / GPT-5)</h3>
+            <h3>自主工具使用期：GPT × o-series 大融合 (o3 / GPT-5)</h3>
             <p>
-              o3 在針對一般智能設計的 ARC-AGI 基準測試中首次超越人類平均，
-              並開創了「<strong>主動工具調用（Agentic Tool Use）</strong>」——
-              推理模型能自主決定何時使用網路搜尋、程式執行、圖像分析等工具。
-              GPT-5（2025 年 8 月）正式合併兩條路線：快速通用的 GPT 系列
-              與深思熟慮的 o 系列統一為單一架構，成為兼具快速對話與
-              深度推理的 AI Agent 推理大腦。
+              <strong>o3</strong> 將主動工具調用（Agentic Tool Use）推進到成熟階段，並在指標性的 ARC-AGI-1 測試中取得突破性的 <strong>87.5%</strong>
+              高分。同年 8 月的 <strong>GPT-5</strong> 則正式合併兩條路線：將快速通用的 GPT 與深思熟慮的 o 系列統整為「單一整合系統」，在一項涵蓋 40
+              多種職業的內部評估中，約有半數案例能與領域專家匹敵或超越。
             </p>
             <div class="tl-tags">
-              <span>o3 突破 ARC-AGI</span>
+              <span>o3 突破 ARC-AGI-1</span>
               <span>GPT × o-series 統一架構</span>
               <span>原生 Agentic 能力</span>
             </div>
           </div>
         </div>
 
-        <!-- 🆕 新增節點 6 -->
+        <!-- ✅ 節點 6：更新 2026 最新進度，區分 GPT-5.4 與 GPT-5.5 -->
+        <!-- 節點 6：自主行動期 -->
         <div class="tl-item">
           <div class="tl-badge">2026</div>
           <div class="tl-content">
-            <h3>自主行動期：電腦操作與快速迭代 (GPT-5.x)</h3>
+            <h3>自主行動期：Computer Use → 全新基礎模型 (GPT-5.4 / GPT-5.5)</h3>
             <p>
-              GPT-5.4 帶著<strong>原生電腦使用能力（Computer Use）</strong>問世，
-              模型從「螢幕中的對話框」正式演變為「能操作軟體的 Agent」。
-              OpenAI 進入每月迭代週期（GPT-5.1 → 5.2 → 5.3 → 5.4 → 5.5），
-              幻覺比前代減少六倍，並能在橫跨法律、工程、物流、銷售等
-              40 種職業的任務中，與領域專家並駕齊驅甚至超越。
+              OpenAI 進入每月快速迭代期。2026 年 3 月的 <strong>GPT-5.4</strong> 帶著<strong>原生電腦使用能力（Computer Use）</strong>問世。
+              緊接著 2026 年 4 月，全新預訓練基礎模型 <strong>GPT-5.5 (Spud)</strong> 發布，官方定位其為能「自行規劃、使用工具、檢查工作並持續推進長鏈任務」
+              的自主智能體。值得注意：GPT-5（thinking 模式）在 LongFact / FActScore 等開放式事實性基準上，幻覺率約比 OpenAI o3 少 6 倍
+              （OpenAI GPT-5 發布公告，2025/8/7）。
             </p>
             <div class="tl-tags">
-              <span>Computer Use</span>
-              <span>月度快速迭代</span>
+              <span>Computer Use (GPT-5.4)</span>
+              <span>全新預訓練基礎 (GPT-5.5)</span>
               <span>Agent 正式商業化</span>
             </div>
           </div>
         </div>
 
       </div>
+
+      <!-- 📚 新增：資料來源佐證，增加信賴感 -->
+      <div class="source-note"
+        style="margin-top: 2rem; padding: 1rem; background-color: #f9fafb; border-radius: 8px; border-left: 4px solid #94a3b8; font-size: 0.85rem; color: #475569; line-height: 1.6;">
+        <strong>📚 技術史實來源註記：</strong><br>
+        1. <strong>GPT-1/2/3：</strong> 參見 Radford et al. (2018), Radford et al. (2019), Brown et al. (2020) 原論文。<br>
+        2. <strong>o3 與 ARC-AGI：</strong> 分數依據 ARC Prize 官方 2024/12 發布之 Semi-private set (High compute) 結果。<br>
+        3. <strong>GPT-5 (2025/8)：</strong> 依據 OpenAI 官方描述為 "unified system"，能依情境選擇快速回應或深入推理。<br>
+        4. <strong>GPT-5.4 & GPT-5.5 (2026)：</strong> 依據 2026 年 3~4 月官方發布，GPT-5.4 首搭主線原生電腦操作，GPT-5.5 為代號 "Spud" 之全新預訓練
+        Agentic 模型。
+      </div>
     </section>
 
     <section id="application" class="section">
       <div class="section-header">
         <span class="section-num">03.5 —</span>
-        <h2>應用層：GPT 落地場景與整合模式</h2>
+        <h2>GPT 落地場景：從日常使用到企業整合</h2>
       </div>
 
-      <p>GPT 不僅是文本生成工具，其真正的價值在於透過適當的整合架構，解決特定領域的資訊處理瓶頸。以下為三種具備資安與開發實務價值的整合場景：</p>
+      <p>
+        GPT 不只是「聊天機器人」——它的真正價值在於嵌入各種工作流程後，
+        能替代那些<strong>「重複、耗時、需要大量閱讀與判斷」</strong>的人力環節。
+        不論是家庭主婦想知道今晚煮什麼、工程師想自動化程式審查，還是企業需要分析上千份客訴，
+        GPT 都能以三種不同的「整合模式」切入：
+      </p>
 
-      <!-- 新增：模式對比總覽表格 -->
-      <div class="comparison-table" style="margin: 2rem 0; overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse; background: var(--paper); border: 1px solid var(--rule);">
+      <!-- 三種模式：先用日常比喻破冰 -->
+      <div class="summary-strip" style="background: #f0f4f8; border-left: 3px solid #2c5f8a; margin: 1.5rem 0 0.5rem;">
+        <strong>🗺️ 三種模式一句話記法：</strong>
+        <ul style="margin: 0.75rem 0 0 1.2rem; line-height: 2;">
+          <li><strong>RAG（知識增強）</strong>── 像是幫 GPT「配了一個專屬圖書館」，它回答時會先去查自己查不到的資料再開口。</li>
+          <li><strong>Agent（代理模式）</strong>── 像是「派了一個實習生去辦事」，你給目標，它自己想步驟、用工具、做完回報。</li>
+          <li><strong>Copilot（輔助模式）</strong>── 像是「身邊坐了一個隨時提建議的顧問」，但最後你拍板。</li>
+        </ul>
+      </div>
+
+      <!-- 模式對比總覽表格 -->
+      <div class="comparison-table" style="margin: 1.5rem 0 2rem; overflow-x: auto;">
+        <table
+          style="width: 100%; border-collapse: collapse; background: var(--paper); border: 1px solid var(--rule); font-size: 0.9rem;">
           <thead>
             <tr>
-              <th style="padding: 12px; background: var(--cream); border-bottom: 1px solid var(--rule);">模式</th>
-              <th style="padding: 12px; background: var(--cream); border-bottom: 1px solid var(--rule);">核心能力</th>
-              <th style="padding: 12px; background: var(--cream); border-bottom: 1px solid var(--rule);">典型應用</th>
-              <th style="padding: 12px; background: var(--cream); border-bottom: 1px solid var(--rule);">資安風險</th>
+              <th
+                style="padding: 12px 16px; background: var(--cream); border-bottom: 2px solid var(--rule); text-align: left;">
+                模式</th>
+              <th
+                style="padding: 12px 16px; background: var(--cream); border-bottom: 2px solid var(--rule); text-align: left;">
+                日常比喻</th>
+              <th
+                style="padding: 12px 16px; background: var(--cream); border-bottom: 2px solid var(--rule); text-align: left;">
+                一般人應用</th>
+              <th
+                style="padding: 12px 16px; background: var(--cream); border-bottom: 2px solid var(--rule); text-align: left;">
+                企業／技術應用</th>
+              <th
+                style="padding: 12px 16px; background: var(--cream); border-bottom: 2px solid var(--rule); text-align: left;">
+                注意事項</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td style="padding: 10px; border-bottom: 1px solid var(--rule);"><strong>🔗 RAG</strong></td>
-              <td style="padding: 10px; border-bottom: 1px solid var(--rule);">知識庫問答</td>
-              <td style="padding: 10px; border-bottom: 1px solid var(--rule);">客服機器人、情資分析</td>
-              <td style="padding: 10px; border-bottom: 1px solid var(--rule);">檢索內容汙染</td>
+              <td style="padding: 10px 16px; border-bottom: 1px solid var(--rule);"><strong>🔗 RAG</strong></td>
+              <td style="padding: 10px 16px; border-bottom: 1px solid var(--rule);">帶著資料庫查文件再回答的專家</td>
+              <td style="padding: 10px 16px; border-bottom: 1px solid var(--rule);">公司規章問答、合約查詢</td>
+              <td style="padding: 10px 16px; border-bottom: 1px solid var(--rule);">客服機器人、SOC 情資分析</td>
+              <td style="padding: 10px 16px; border-bottom: 1px solid var(--rule);">⚠️ 資料來源需可信，否則「垃圾進、垃圾出」</td>
+            </tr>
+            <tr style="background: #fafafa;">
+              <td style="padding: 10px 16px; border-bottom: 1px solid var(--rule);"><strong>🤖 Agent</strong></td>
+              <td style="padding: 10px 16px; border-bottom: 1px solid var(--rule);">自動跑腿、自主決策的助理</td>
+              <td style="padding: 10px 16px; border-bottom: 1px solid var(--rule);">自動訂票、整理信箱、查帳</td>
+              <td style="padding: 10px 16px; border-bottom: 1px solid var(--rule);">自動修補漏洞、自動交易、CI/CD 審查</td>
+              <td style="padding: 10px 16px; border-bottom: 1px solid var(--rule);">⚠️ 權限要嚴格控管，出錯代價高</td>
             </tr>
             <tr>
-              <td style="padding: 10px; border-bottom: 1px solid var(--rule);"><strong>🤖 Agent</strong></td>
-              <td style="padding: 10px; border-bottom: 1px solid var(--rule);">自主決策+工具調用</td>
-              <td style="padding: 10px; border-bottom: 1px solid var(--rule);">自動修補漏洞、自動交易</td>
-              <td style="padding: 10px; border-bottom: 1px solid var(--rule);">權限濫用、錯誤操作</td>
-            </tr>
-            <tr>
-              <td style="padding: 10px;"><strong>✍️ Copilot</strong></td>
-              <td style="padding: 10px;">即時輔助建議</td>
-              <td style="padding: 10px;">程式碼補全、指令生成</td>
-              <td style="padding: 10px;">建議注入、隱私洩漏</td>
+              <td style="padding: 10px 16px;"><strong>✍️ Copilot</strong></td>
+              <td style="padding: 10px 16px;">旁邊出主意、你來決定的顧問</td>
+              <td style="padding: 10px 16px;">寫信建議、行程規劃草稿</td>
+              <td style="padding: 10px 16px;">程式碼補全、指令生成、報告初稿</td>
+              <td style="padding: 10px 16px;">⚠️ 人仍需審核，不可盲目採納</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- 三種模式的視覺化卡片（加入圖片/圖示） -->
+      <!-- 三種模式視覺化卡片 -->
       <div class="three-mode-grid"
         style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.8rem; margin: 2rem 0;">
 
-        <!-- 模式 1：RAG + 架構圖 -->
+        <!-- 模式 1：RAG -->
         <div class="mode-card"
           style="background: var(--paper); border: 1px solid var(--rule); border-radius: 16px; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;">
           <div
             style="background: linear-gradient(135deg, #2c5f8a, #1a3a52); padding: 1rem; text-align: center; color: white;">
             <span style="font-size: 2rem;">🔗</span>
             <h3 style="margin: 0.5rem 0 0; font-size: 1.2rem;">RAG 知識增強</h3>
+            <div style="font-size: 0.75rem; opacity: 0.8; margin-top: 0.3rem;">Retrieval-Augmented Generation</div>
           </div>
           <div style="padding: 1.2rem;">
-            <!-- 示意圖：可以用 emoji 或 Unicode 繪製，也可以換成真實圖片 -->
+            <!-- 流程示意 -->
             <div
-              style="background: #f0f4f8; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; text-align: center; font-family: monospace; font-size: 0.75rem;">
-              📄 用戶問題 → 🔍 向量檢索 → 📚 知識庫 → 🤖 GPT → ✨ 回答
+              style="background: #f0f4f8; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; text-align: center; font-family: monospace; font-size: 0.75rem; line-height: 1.8;">
+              ❓ 用戶提問<br>↓<br>🔍 向量檢索相關段落<br>↓<br>📚 注入知識庫上下文<br>↓<br>🤖 GPT 綜合生成<br>↓<br>✨ 有依據的回答
             </div>
-            <p style="font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>資安威脅情資分析</strong></p>
-            <p style="font-size: 0.85rem; color: var(--ink-mid);">SOC 每日上千條告警，透過 RAG 讓 GPT 比對 CVE 資料庫，自動產出風險評估報告。</p>
-            <div style="margin-top: 1rem; font-size: 0.75rem; color: var(--accent2);">🔧 技術棧：ChromaDB / PGVector +
-              Embedding</div>
+            <!-- 日常例子 -->
+            <div
+              style="background: #e8f4e8; border-radius: 8px; padding: 0.75rem; margin-bottom: 0.75rem; font-size: 0.82rem;">
+              <strong>🏠 日常版</strong>：公司員工問「年假怎麼算」，系統自動去翻員工手冊第 12 頁再回答，而不是 GPT 自己「猜」。
+            </div>
+            <!-- 進階例子 -->
+            <p style="font-size: 0.85rem; color: var(--ink-mid);">
+              <strong>⚙️ 技術版</strong>：SOC 每日上千條告警，透過 RAG 讓 GPT 比對 CVE 資料庫，自動產出風險評估報告。
+            </p>
+            <div style="margin-top: 1rem; font-size: 0.75rem; color: var(--accent2);">
+              🔧 技術棧：ChromaDB / PGVector + Embedding 模型
+            </div>
           </div>
         </div>
 
-        <!-- 模式 2：Agent + 流程圖 -->
+        <!-- 模式 2：Agent -->
         <div class="mode-card"
           style="background: var(--paper); border: 1px solid var(--rule); border-radius: 16px; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;">
           <div
             style="background: linear-gradient(135deg, #c0392b, #8b2a1f); padding: 1rem; text-align: center; color: white;">
             <span style="font-size: 2rem;">🤖</span>
             <h3 style="margin: 0.5rem 0 0; font-size: 1.2rem;">Agent 代理模式</h3>
+            <div style="font-size: 0.75rem; opacity: 0.8; margin-top: 0.3rem;">Agentic Workflow</div>
           </div>
           <div style="padding: 1.2rem;">
+            <!-- 流程示意 -->
             <div
-              style="background: #f0f4f8; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; text-align: center; font-family: monospace; font-size: 0.75rem;">
-              🔍 偵測漏洞 → 🧠 決策分析 → 🔧 呼叫工具 → 📤 發送 PR → ✅ 審核
+              style="background: #f0f4f8; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; text-align: center; font-family: monospace; font-size: 0.75rem; line-height: 1.8;">
+              🎯 設定目標<br>↓<br>🧠 GPT 自主拆解步驟<br>↓<br>🔧 呼叫工具執行<br>↓<br>🔄 自我檢查 / 修正<br>↓<br>📤 完成並回報
             </div>
-            <p style="font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>自動化 Code Review</strong></p>
-            <p style="font-size: 0.85rem; color: var(--ink-mid);">CI/CD 流水線中偵測 SQL Injection，Agent 自動定位並發送修補 PR。</p>
-            <div style="margin-top: 1rem; font-size: 0.75rem; color: var(--accent2);">🔧 技術棧：Function Calling +
-              LangChain + GitHub API</div>
+            <!-- 日常例子 -->
+            <div
+              style="background: #e8f4e8; border-radius: 8px; padding: 0.75rem; margin-bottom: 0.75rem; font-size: 0.82rem;">
+              <strong>🏠 日常版</strong>：你說「幫我查下週台北天氣，找一間評分 4.5 以上的早午餐，加進我的 Google 行事曆」——它自己搞定。
+            </div>
+            <!-- 進階例子 -->
+            <p style="font-size: 0.85rem; color: var(--ink-mid);">
+              <strong>⚙️ 技術版</strong>：CI/CD 流水線中偵測 SQL Injection，Agent 自動定位漏洞、生成修補程式並發送 Pull Request。
+            </p>
+            <div style="margin-top: 1rem; font-size: 0.75rem; color: var(--accent2);">
+              🔧 技術棧：Function Calling + LangChain + GitHub API
+            </div>
           </div>
         </div>
 
-        <!-- 模式 3：Copilot + 示意圖 -->
+        <!-- 模式 3：Copilot -->
         <div class="mode-card"
           style="background: var(--paper); border: 1px solid var(--rule); border-radius: 16px; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;">
           <div
             style="background: linear-gradient(135deg, #d4b896, #a07e56); padding: 1rem; text-align: center; color: white;">
             <span style="font-size: 2rem;">✍️</span>
             <h3 style="margin: 0.5rem 0 0; font-size: 1.2rem;">Copilot 輔助模式</h3>
+            <div style="font-size: 0.75rem; opacity: 0.8; margin-top: 0.3rem;">Human-in-the-Loop</div>
           </div>
           <div style="padding: 1.2rem;">
+            <!-- 流程示意 -->
             <div
-              style="background: #f0f4f8; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; text-align: center; font-family: monospace; font-size: 0.75rem;">
-              ⌨️ 使用者輸入 → 💡 AI 即時建議 → ✅ 人類決策 → 🚀 執行
+              style="background: #f0f4f8; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; text-align: center; font-family: monospace; font-size: 0.75rem; line-height: 1.8;">
+              ⌨️ 使用者輸入<br>↓<br>💡 AI 即時產生建議<br>↓<br>👁️ 人類審視判斷<br>↓<br>✅ 採納 / 修改 / 拒絕<br>↓<br>🚀 人類決策後執行
             </div>
-            <p style="font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>Linux 核心配置輔助</strong></p>
-            <p style="font-size: 0.85rem; color: var(--ink-mid);">終端機中即時產生 iptables 規則，管理員審視後決定是否採用。</p>
-            <div style="margin-top: 1rem; font-size: 0.75rem; color: var(--accent2);">🔧 技術棧：終端機插件 + 本地 LLM + 權限管控</div>
+            <!-- 日常例子 -->
+            <div
+              style="background: #e8f4e8; border-radius: 8px; padding: 0.75rem; margin-bottom: 0.75rem; font-size: 0.82rem;">
+              <strong>🏠 日常版</strong>：你打信的第一行，它自動補完整封；你覺得哪句語氣不對，改掉就好。最終是你發出去的。
+            </div>
+            <!-- 進階例子 -->
+            <p style="font-size: 0.85rem; color: var(--ink-mid);">
+              <strong>⚙️ 技術版</strong>：終端機中即時產生 iptables 防火牆規則，管理員審視確認後才套用，人始終握有最終控制權。
+            </p>
+            <div style="margin-top: 1rem; font-size: 0.75rem; color: var(--accent2);">
+              🔧 技術棧：終端機插件 + 本地 LLM + 權限管控層
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 「哪種模式適合你？」決策樹 -->
+      <div class="summary-strip" style="background: #fdf6ea; border-left: 3px solid #d4b896; margin: 2rem 0 1.5rem;">
+        <h4 style="font-family: var(--serif); font-size: 1rem; margin-bottom: 0.75rem;">🤔 不確定該用哪種模式？快速判斷：</h4>
+        <div
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; font-size: 0.85rem;">
+          <div style="background: white; border-radius: 10px; padding: 0.75rem; border: 1px solid #e8ddd0;">
+            <div style="font-weight: bold; margin-bottom: 0.4rem;">❓ 需要查企業內部資料？</div>
+            <div style="color: #2c5f8a;">→ 用 <strong>RAG</strong></div>
+          </div>
+          <div style="background: white; border-radius: 10px; padding: 0.75rem; border: 1px solid #e8ddd0;">
+            <div style="font-weight: bold; margin-bottom: 0.4rem;">❓ 想讓 AI 自己跑完整個任務？</div>
+            <div style="color: #c0392b;">→ 用 <strong>Agent</strong>（但要管好權限）</div>
+          </div>
+          <div style="background: white; border-radius: 10px; padding: 0.75rem; border: 1px solid #e8ddd0;">
+            <div style="font-weight: bold; margin-bottom: 0.4rem;">❓ 想要建議、但自己拍板？</div>
+            <div style="color: #a07e56;">→ 用 <strong>Copilot</strong></div>
+          </div>
+          <div style="background: white; border-radius: 10px; padding: 0.75rem; border: 1px solid #e8ddd0;">
+            <div style="font-weight: bold; margin-bottom: 0.4rem;">❓ 以上都要？</div>
+            <div style="color: #555;">→ 混合架構（大多數企業系統的實際做法）</div>
           </div>
         </div>
       </div>
 
-      <!-- 技術棧區塊（保留原有但加上視覺化） -->
-      <div class="summary-strip" style="background: #fdf6ea; border-left: 3px solid #d4b896; margin: 2rem 0;">
-        <h4 style="font-family: var(--serif); font-size: 1.1rem; margin-bottom: 0.75rem;">🔧 實務整合技術棧 (Tech Stack) — 2026
-          生產環境標準</h4>
+      <!-- 技術棧區塊 -->
+      <div class="summary-strip" style="background: #fdf6ea; border-left: 3px solid #d4b896; margin: 1.5rem 0;">
+        <h4 style="font-family: var(--serif); font-size: 1.1rem; margin-bottom: 0.75rem;">
+          🔧 實務整合技術棧（Tech Stack）— 2026 生產環境標準
+        </h4>
+        <p style="font-size: 0.85rem; color: var(--ink-mid); margin-bottom: 1rem;">
+          把 GPT 從「示範 demo」推進到「企業正式上線」，需要在模型前後各加一層防護與管控——
+          就像一家餐廳不只要有好廚師，還需要食材把關、出餐品管和財務稽核。
+        </p>
 
         <div style="display: flex; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 1rem;">
           <span style="background: #e8e0d5; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">🛡️ 輸入防護層</span>
-          <span style="background: #e8e0d5; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">📚 檢索層 (GraphRAG
-            / PGVector)</span>
-          <span style="background: #e8e0d5; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">🧠 推論核心 (GPT-5 /
-            DeepSeek-R1)</span>
-          <span style="background: #e8e0d5; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">🚧 輸出護欄 (Llama
-            Guard / WAF)</span>
-          <span style="background: #e8e0d5; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">📊 可觀測性
-            (Langfuse / OpenTelemetry)</span>
+          <span style="background: #e8e0d5; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">📚 檢索層（GraphRAG
+            / PGVector）</span>
+          <span style="background: #e8e0d5; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">🧠 推論核心（GPT-5.5
+            / DeepSeek-R1）</span>
+          <span style="background: #e8e0d5; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">🚧 輸出護欄（Llama
+            Guard / WAF）</span>
+          <span style="background: #e8e0d5; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">📊 可觀測性（Langfuse
+            / OpenTelemetry）</span>
         </div>
 
-        <ul style="margin-left: 1.2rem;">
-          <li><strong>輸入防護層</strong>：利用動態語意防禦模型與邊緣檢測，在閘道端即時攔截複雜的間接提示注入（Indirect Prompt Injection）與越獄攻擊。</li>
-          <li><strong>檢索層</strong>：超越傳統純向量比對，採用 <em>GraphRAG</em>（知識圖譜增強檢索）串接企業核心資料庫，提供具備全局語意理解（Global Query）的動態上下文。
+        <ul style="margin-left: 1.2rem; font-size: 0.9rem; line-height: 1.9;">
+          <li>
+            <strong>🛡️ 輸入防護層</strong>
+            <span style="color: var(--ink-mid);">（進門前先過安檢）</span>：
+            在閘道端即時攔截「提示注入（Prompt Injection）」與越獄攻擊——
+            就像信件進公司前先過掃毒機，避免壞人透過輸入文字騙走 AI 的控制權。
           </li>
-          <li><strong>推論核心</strong>：採混合專家模式（MoE），高難度邏輯調用具備 System-2 原生推理鏈的 <em>GPT-5 /
-              DeepSeek-R1</em>，常規對話與指令路由則由輕量化端側模型（如 <em>Llama 3.3 / Qwen-2.5</em>）提供低延遲推論。</li>
-          <li><strong>輸出護欄</strong>：設定 <em>NeMo Guardrails</em> 與自動化結構化校驗，嚴格隔離並遮罩未授權代碼、幻覺錯誤資訊（Inaccurate
-            Information）與機敏個人隱私（PII）。</li>
-          <li><strong>可觀測性</strong>：全面導入 <em>Langfuse</em> 或原生 <em>OpenTelemetry</em> 協定，全時追蹤 AI Agent
-            複雜工具呼叫與長鏈思考（Extended Thinking）的執行軌跡，以便進行即時稽核與對齊微調。</li>
+          <li>
+            <strong>📚 檢索層</strong>
+            <span style="color: var(--ink-mid);">（給 AI 配專屬圖書館）</span>：
+            採用 <em>GraphRAG</em>（知識圖譜增強檢索），
+            不只比對文字相似度，更能理解「這份合約的當事人和那個案件有什麼關係」這類跨文件語意。
+          </li>
+          <li>
+            <strong>🧠 推論核心</strong>
+            <span style="color: var(--ink-mid);">（視難度決定派哪個大腦）</span>：
+            採混合專家模式（MoE）——簡單問題由輕量本地模型（如 <em>Llama / Qwen</em>）快速回應；
+            複雜推理才調用 <em>GPT-5.5 / DeepSeek-R1</em>，兼顧速度與成本。
+          </li>
+          <li>
+            <strong>🚧 輸出護欄</strong>
+            <span style="color: var(--ink-mid);">（出餐前的品管）</span>：
+            <em>NeMo Guardrails</em> 自動攔截包含個資（PII）、錯誤資訊或未授權內容的回應，
+            確保送到使用者手上的都是「可以公開」的答案。
+          </li>
+          <li>
+            <strong>📊 可觀測性</strong>
+            <span style="color: var(--ink-mid);">（全程錄影存證）</span>：
+            <em>Langfuse</em> 或 <em>OpenTelemetry</em> 記錄每一次 AI 的推理步驟與工具呼叫，
+            事後能追查「它當時到底做了什麼決定、為什麼」，是稽核與修正的關鍵。
+          </li>
         </ul>
       </div>
 
-      <!-- 趨勢洞察 + 視覺化圖表 -->
+      <!-- 趨勢洞察 -->
       <div class="tech-note"
-        style="margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center;">
-        <div style="flex: 2;">
-          <p><strong>💡 趨勢洞察：</strong> 軟體工程已正式邁入「代理工作流 (Agentic
-            Workflow)」時代。現代系統架構已屏棄將大語言模型僅視為單一「無狀態文字輸入與輸出」的聊天終端，轉而透過自主規劃、連續自我反思（Self-Reflection）與異質工具鏈編排（Tool
-            Orchestration）建構複雜系統。然而，當我們賦予模型自主電腦操作（Computer Use）與高權限 API 的「行動決策權」時，其受攻擊面（Attack
-            Surface）與權限劫持風險將呈現非線性暴增。身為新一代工程人員，落實「防禦性架構設計（Design for Defense）」與動態防護護欄，其重要性已遠超模型本身的參數選用。</p>
+        style="margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start;">
+        <div style="flex: 2; min-width: 220px;">
+          <p>
+            <strong>💡 給所有人的關鍵結論：</strong>
+            GPT 最強大的地方，不是它有多聰明，而是它能被「嵌進幾乎任何工作流程」。
+            從幫家長解釋作業、幫餐廳老闆寫菜單，到幫工程師審程式碼、幫醫院整理病歷，
+            它的能力高度取決於<strong>「你怎麼把它和你的資料、工具、流程連起來」</strong>。
+          </p>
+          <p style="margin-top: 0.75rem;">
+            <strong>⚠️ 給技術人的提醒：</strong>
+            當 AI Agent 獲得「電腦使用權（Computer Use）」與高權限 API 存取後，
+            一旦被惡意輸入操控，出錯的代價會遠比人工失誤大得多。
+            2026 年，<strong>防禦性架構設計（Design for Defense）</strong>的重要性，
+            已不亞於模型本身的能力選型。
+          </p>
         </div>
-        <div
-          style="flex: 1; text-align: center; background: var(--cream); border-radius: 12px; padding: 1.2rem; min-width: 180px;">
-          <div
-            style="font-family: var(--mono); font-size: 0.62rem; color: var(--accent); font-weight: bold; letter-spacing: 0.05em; text-transform: uppercase;">
-            ⚠️ Agentic Risk Index</div>
-          <div style="font-size: 1.8rem; font-weight: bold; color: var(--accent); margin: 0.3rem 0;">3× ~ 10×</div>
-          <div style="font-size: 0.72rem; font-weight: 600; color: var(--ink);">間接注入與越權風險增幅</div>
-          <div
-            style="font-size: 0.58rem; color: var(--ink-light); margin-top: 0.4rem; border-top: 1px dashed var(--rule); padding-top: 4px;">
-            資料來源：OWASP v2.0 &<br>Anthropic 紅隊安全報告 (2025-2026)</div>
+        <div style="flex: 1; min-width: 180px; display: flex; flex-direction: column; gap: 1rem;">
+          <div style="text-align: center; background: var(--cream); border-radius: 12px; padding: 1.2rem;">
+            <div
+              style="font-family: var(--mono); font-size: 0.62rem; color: var(--accent); font-weight: bold; letter-spacing: 0.05em; text-transform: uppercase;">
+              ⚠️ Agent 化安全風險
+            </div>
+            <div style="font-size: 0.9rem; font-weight: 600; color: var(--ink); margin: 0.5rem 0;">攻擊面顯著擴大</div>
+            <div style="font-size: 0.75rem; color: var(--ink-mid);">間接提示注入成功率可量化<br>OWASP LLM Top 10 v2025 已納入</div>
+            <div
+              style="font-size: 0.58rem; color: var(--ink-light); margin-top: 0.4rem; border-top: 1px dashed var(--rule); padding-top: 4px;">
+              來源：Anthropic 2026 紅隊報告 &<br>Gray Swan AI + Meta + UK AISI 協作研究
+            </div>
+          </div>
+          <div style="text-align: center; background: var(--cream); border-radius: 12px; padding: 1.2rem;">
+            <div
+              style="font-family: var(--mono); font-size: 0.62rem; color: #2c5f8a; font-weight: bold; letter-spacing: 0.05em; text-transform: uppercase;">
+              📈 企業 AI 採用率
+            </div>
+            <div style="font-size: 1.8rem; font-weight: bold; color: #2c5f8a; margin: 0.3rem 0;">78% (2024) / 88% (2025)
+            </div>
+            <div style="font-size: 0.72rem; font-weight: 600; color: var(--ink);">已使用 Copilot / RAG / Agent 之一</div>
+            <div
+              style="font-size: 0.58rem; color: var(--ink-light); margin-top: 0.4rem; border-top: 1px dashed var(--rule); padding-top: 4px;">
+              來源：McKinsey State of AI 2024 & 2025<br>2026 AI Trust Maturity Survey（約 500 家企業）
+            </div>
+          </div>
         </div>
       </div>
+
     </section>
 
     <section id="security" class="section">
@@ -2292,9 +2499,10 @@
           <div>
             <h4 style="margin: 0 0 0.3rem 0; font-size: 1rem;">🏥 醫療聊天機器人誤導患者</h4>
             <p style="margin: 0; font-size: 0.9rem; color: var(--ink-mid);">多個醫療 LLM
-              在測試中給出錯誤用藥建議，或將良性症狀診斷為癌症。史丹佛研究顯示，即使是最先進的模型，在醫療問答中的幻覺率高達 20-30%。</p>
+              在測試中給出錯誤用藥建議，或將良性症狀診斷為癌症。多篇研究顯示，早期模型在醫療問答中的幻覺率約 20-30%；
+              但 Nature npj Digital Medicine 2025 研究指出，先進模型在臨床摘要任務中幻覺率可降至 1.47%。</p>
             <p style="margin: 0.5rem 0 0 0; font-size: 0.75rem; color: var(--ink-light);"><strong>教訓：</strong>
-              高風險領域（醫療、法律、金融）不能直接依賴 LLM 輸出。</p>
+              高風險領域（醫療、法律、金融）不能直接依賴 LLM 輸出，且模型能力演進迅速，需持續關注最新評測。</p>
           </div>
         </div>
 
@@ -2324,11 +2532,12 @@
               <h4 style="margin: 0; font-size: 1rem;">原生推理思維鏈（System-2 Reasoning CoT）</h4>
             </div>
             <p style="font-size: 0.85rem; margin: 0; color: var(--ink-mid);">
-              模型在回應前強制執行內部推理鏈（Extended Thinking），透過系統二（Slow Thinking）進行強化學習自我修正。已從「提示詞技巧」演進為現代 LLM（如 GPT-5
-              推理模式、DeepSeek-R1、o-series）的底層架構標配。
+              模型在回應前強制執行內部推理鏈（Extended Thinking），透過強化學習自我修正。已從「提示詞技巧」演進為現代 LLM 的底層架構標配。
             </p>
             <div style="margin-top: 0.8rem; font-size: 0.75rem; color: var(--ink-light);">
-              📈 <strong>成效：</strong>在 GPQA 院士級難度基準測試中，原生推理將準確率從傳統直覺生成的 40% 拉升至 85% 以上
+              📈 <strong>成效：</strong>在 GPQA Diamond 院士級難度基準上，GPT-4 Few-shot CoT 約為 38–40%（Rein et al., 2023），OpenAI o1
+              提升至 77.3%（OpenAI, 2024），
+              2025–2026 年前沿模型（如 Gemini 3.1 Pro、GPT-5.5）已突破 93–94%，超越 PhD 專家基線 69.7%。
             </div>
           </div>
 
@@ -2745,6 +2954,7 @@
     <div class="footer-inner">
       <h3>參考文獻 / References</h3>
       <ol style="line-height: 1.9; font-size: 0.9rem;">
+        <!-- 原始論文 -->
         <li>Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., & Polosukhin, I.
           (2017). Attention Is All You Need. <em>Advances in Neural Information Processing Systems, 30</em>.
           <a href="https://doi.org/10.48550/arXiv.1706.03762" target="_blank"
@@ -2755,6 +2965,12 @@
           <a href="https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf"
             target="_blank"
             rel="noopener noreferrer">https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf</a>
+        </li>
+        <li>Radford, A., Wu, J., Child, R., Luan, D., Amodei, D., & Sutskever, I. (2019). <em>Language Models are
+            Unsupervised Multitask Learners</em>. OpenAI.
+          <a href="https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf"
+            target="_blank"
+            rel="noopener noreferrer">https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf</a>
         </li>
         <li>Brown, T. B., Mann, B., Ryder, N., Subbiah, M., Kaplan, J., Dhariwal, P.,... & Amodei, D. (2020). Language
           Models are Few-Shot Learners. <em>Advances in Neural Information Processing Systems, 33</em>, 1877–1901.
@@ -2795,6 +3011,71 @@
           <a href="https://arxiv.org/abs/2501.12948" target="_blank"
             rel="noopener noreferrer">https://arxiv.org/abs/2501.12948</a>
         </li>
+        <li>Rein, D., et al. (2023). GPQA: A Graduate-Level Google-Proof Q&A Benchmark. <em>arXiv:2311.12022</em>.
+          <a href="https://arxiv.org/pdf/2311.12022" target="_blank"
+            rel="noopener noreferrer">https://arxiv.org/pdf/2311.12022</a>
+        </li>
+
+        <!-- 新增 OpenAI GPT-5 相關官方公告 -->
+        <li>OpenAI. (2025, August 7). <em>Introducing GPT-5</em>. OpenAI Blog.
+          <a href="https://openai.com/index/introducing-gpt-5/" target="_blank"
+            rel="noopener noreferrer">https://openai.com/index/introducing-gpt-5/</a>
+        </li>
+        <li>OpenAI. (2025, August 13). <em>GPT-5 System Card</em>. OpenAI.
+          <a href="https://cdn.openai.com/gpt-5-system-card.pdf" target="_blank"
+            rel="noopener noreferrer">https://cdn.openai.com/gpt-5-system-card.pdf</a>
+        </li>
+        <li>OpenAI. (2026, April 23). <em>Introducing GPT-5.5 (Spud)</em>. OpenAI Blog.
+          <a href="https://openai.com/index/gpt-5-5/" target="_blank"
+            rel="noopener noreferrer">https://openai.com/index/gpt-5-5/</a>
+        </li>
+
+        <!-- McKinsey 相關報告 -->
+        <li>McKinsey & Company. (2024, May). <em>The State of AI in 2024: How organizations are rewiring to capture
+            value</em>.
+          <a href="https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai" target="_blank"
+            rel="noopener noreferrer">https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai</a>
+        </li>
+        <li>McKinsey & Company. (2025, April). <em>The State of AI in 2025: Capturing value from generative AI</em>.
+          <a href="https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai" target="_blank"
+            rel="noopener noreferrer">https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai</a>
+        </li>
+        <li>McKinsey & Company. (2026, March 25). <em>State of AI trust in 2026: Shifting to the agentic era</em>.
+          <a href="https://www.mckinsey.com/capabilities/tech-and-ai/our-insights/tech-forward/state-of-ai-trust-in-2026-shifting-to-the-agentic-era"
+            target="_blank"
+            rel="noopener noreferrer">https://www.mckinsey.com/capabilities/tech-and-ai/our-insights/tech-forward/state-of-ai-trust-in-2026-shifting-to-the-agentic-era</a>
+        </li>
+
+        <!-- 醫療幻覺相關研究 -->
+        <li>Van Veen, D., et al. (2025). A framework to assess clinical safety and hallucination rates of LLMs for
+          medical text summarisation. <em>Nature npj Digital Medicine, 8</em>, 101.
+          <a href="https://www.nature.com/articles/s41746-025-01670-7" target="_blank"
+            rel="noopener noreferrer">https://www.nature.com/articles/s41746-025-01670-7</a>
+        </li>
+        <li>Tang, L., et al. (2025). CHECK: A benchmarking framework for evaluating factuality of LLMs in systematic
+          review tasks. <em>arXiv preprint arXiv:2506.11129</em>.
+          <a href="https://arxiv.org/pdf/2506.11129" target="_blank"
+            rel="noopener noreferrer">https://arxiv.org/pdf/2506.11129</a>
+        </li>
+        <li>Stanford RegLab & Stanford HAI. (2024). <em>Hallucination in Large Language Models: A Study of Legal
+            Queries</em>. Stanford University.
+          <a href="https://hai.stanford.edu/news/large-language-models-hallucinate-high-rates-legal-queries-study-finds"
+            target="_blank"
+            rel="noopener noreferrer">https://hai.stanford.edu/news/large-language-models-hallucinate-high-rates-legal-queries-study-finds</a>
+        </li>
+
+        <!-- Agent 安全相關報告 -->
+        <li>Gray Swan AI, Anthropic, Meta, UK AISI, et al. (2026). How Vulnerable Are AI Agents to Indirect Prompt
+          Injections. <em>arXiv preprint arXiv:2603.15714</em>.
+          <a href="https://arxiv.org/pdf/2603.15714" target="_blank"
+            rel="noopener noreferrer">https://arxiv.org/pdf/2603.15714</a>
+        </li>
+        <li>Anthropic. (2026). <em>Prompt Injection Benchmarks & Sabotage Risk Report (Claude System Card)</em>.
+          <a href="https://www.anthropic.com/news/prompt-injection-benchmarks" target="_blank"
+            rel="noopener noreferrer">https://www.anthropic.com/news/prompt-injection-benchmarks</a>
+        </li>
+
+        <!-- 安全標準與其他 -->
         <li>Greshake, K., Abdelnabi, S., Mishra, S., Endres, C., Holz, T., & Fritz, M. (2023). Not what you've signed up
           for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection. <em>Proceedings of
             the 16th ACM Workshop on Artificial Intelligence and Security</em>, 79–90.
@@ -2802,11 +3083,10 @@
             rel="noopener noreferrer">https://arxiv.org/abs/2302.12173</a>
         </li>
         <li>OWASP Foundation. (2025, January). <em>OWASP Top 10 for Large Language Model Applications v2.0</em>.
-          Retrieved May 29, 2026.
           <a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/" target="_blank"
             rel="noopener noreferrer">https://owasp.org/www-project-top-10-for-large-language-model-applications/</a>
         </li>
-        <li>Unsplash. (2024). <em>Unsplash License</em>. Retrieved May 29, 2026.
+        <li>Unsplash. (2024). <em>Unsplash License</em>.
           <a href="https://unsplash.com/license" target="_blank"
             rel="noopener noreferrer">https://unsplash.com/license</a>
         </li>
